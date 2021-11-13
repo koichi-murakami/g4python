@@ -24,7 +24,7 @@ elif os.path.exists(_qt5_prefix_rh+"libQt5Core.so"):
 
 _qt5core_lib = find_library("Qt5Core")
 
-if _qt5core_lib != "libQt5Core.so":
+if _qt5core_lib != None and _qt5core_lib != "libQt5Core.so" :
     ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Core.so")
     ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Gui.so")
     ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Widgets.so")
