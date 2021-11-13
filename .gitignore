@@ -1,0 +1,31 @@
+#
+# .gitignore
+#
+
+*.i
+*.ii
+*.gpu
+*.ptx
+*.cubin
+*.fatbin
+.tags*
+*.pyc
+
+# compiled object files
+*.slo
+*.lo
+*.o
+
+# compiled dynamic libraries
+*.so
+
+# compiled static libraries
+*.lai
+*.la
+*.a
+
+# directories
+build*/
+*zzz/
+.vscode/
+.vs/

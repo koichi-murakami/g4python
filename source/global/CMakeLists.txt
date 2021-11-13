@@ -1,0 +1,52 @@
+# - build module
+#------------------------------------------------------------------------------
+set(MODULE pyG4global)
+#------------------------------------------------------------------------------
+add_library(${MODULE} SHARED)
+
+target_sources(${MODULE} PRIVATE
+  G4PyCoutDestination.cc
+#  pyG4ApplicationState.cc
+#  pyG4Exception.cc
+#  pyG4ExceptionHandler.cc
+#  pyG4ExceptionSeverity.cc
+#  pyG4RandomDirection.cc
+#  pyG4RotationMatrix.cc
+#  pyG4StateManager.cc
+#  pyG4String.cc
+  pyG4ThreeVector.cc
+#  pyG4Timer.cc
+#  pyG4Transform3D.cc
+  pyG4TwoVector.cc
+#  pyG4UnitsTable.cc
+#  pyG4UserLimits.cc
+#  pyG4Version.cc
+#  pyRandomEngines.cc
+#  pyRandomize.cc
+#  pygeomdefs.cc
+  pyglobals.cc
+  pymodG4global.cc
+)
+
+target_include_directories(${MODULE} PRIVATE
+  ${GEANT4_INCLUDE_DIR}
+  ${PYTHON_INCLUDE_DIR}
+  ${PYBIND11_INCLUDE_DIR}
+)
+
+target_link_directories(${MODULE} PRIVATE ${GEANT4_LIBRARY_DIR})
+
+target_link_libraries(${MODULE} PRIVATE
+  ${GEANT4_LIBRARIES} global_cflags
+)
+
+set_target_properties(${MODULE} PROPERTIES PREFIX "")
+set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4global")
+set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
+set_target_properties(${MODULE}
+                      PROPERTIES INSTALL_RPATH
+                      ${GEANT4_LIBRARY_DIR}
+                      BUILD_WITH_INSTALL_RPATH TRUE)
+
+# install
+install(TARGETS ${MODULE} LIBRARY DESTINATION ${G4MODULES_INSTALL_DIR})
