@@ -11,7 +11,7 @@ target_sources(${MODULE} PRIVATE
 
 target_include_directories(${MODULE} PRIVATE
   ${GEANT4_INCLUDE_DIR}
-  ${PYTHON_INCLUDE_DIR}
+  ${Python3_INCLUDE_DIRS}
   ${PYBIND11_INCLUDE_DIR}
 )
 

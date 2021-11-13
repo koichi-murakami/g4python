@@ -10,9 +10,9 @@ endforeach()
 add_custom_target (geant4 ALL)
 
 add_custom_command (TARGET geant4
-  COMMAND ${PYTHON_EXECUTABLE}
+  COMMAND ${Python3_EXECUTABLE}
     ARGS -m compileall -f ${CMAKE_CURRENT_BINARY_DIR}
-  COMMAND ${PYTHON_EXECUTABLE}
+  COMMAND ${Python3_EXECUTABLE}
     ARGS -O -m compileall -f ${CMAKE_CURRENT_BINARY_DIR}
 )
 

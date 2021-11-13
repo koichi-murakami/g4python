@@ -41,8 +41,7 @@ if(GEANT4_FOUND)
   endif()
 endif()
 
-find_package(PythonInterp REQUIRED)
-find_package(PythonLibs REQUIRED)
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
 # c++17
 add_library(global_cflags INTERFACE)
@@ -90,7 +89,8 @@ message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "GEANT4_VERSION: ${GEANT4_VERSION}")
 message(STATUS "GEANT4_LIBRARY_DIR: ${GEANT4_LIBRARY_DIR}")
-message(STATUS "PYTHON_INCLUDE_DIR: ${PYTHON_INCLUDE_DIR}")
+message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
+message(STATUS "PYTHON3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
 message(STATUS "PYBIND11_INCLUDE_DIR: ${PYBIND11_INCLUDE_DIR}")
 message(STATUS "--------------------------------------------------------")
 
