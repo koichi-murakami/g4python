@@ -42,6 +42,7 @@ if(GEANT4_FOUND)
 endif()
 
 find_package(PythonInterp REQUIRED)
+find_package(PythonLibs REQUIRED)
 
 # c++17
 add_library(global_cflags INTERFACE)
@@ -89,9 +90,9 @@ message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "GEANT4_VERSION: ${GEANT4_VERSION}")
 message(STATUS "GEANT4_LIBRARY_DIR: ${GEANT4_LIBRARY_DIR}")
-message(STATUS "Pybind11 path: ${PYBIND11_INCLUDE_DIR}")
+message(STATUS "PYTHON_INCLUDE_DIR: ${PYTHON_INCLUDE_DIR}")
+message(STATUS "PYBIND11_INCLUDE_DIR: ${PYBIND11_INCLUDE_DIR}")
 message(STATUS "--------------------------------------------------------")
-
 
 #------------------------------------------------------------------------------
 # adding sub directories to the project
