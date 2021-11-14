@@ -43,6 +43,8 @@ endif()
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
+find_package(Pybind11 REQUIRED)
+
 # c++17
 add_library(global_cflags INTERFACE)
 target_compile_features(global_cflags INTERFACE cxx_std_17)
@@ -68,11 +70,6 @@ if(NOT CMAKE_BUILD_TYPE)
   endif()
 endif()
 
-# Apple
-if(APPLE)
-  set(cxx_flags -I/opt/homebrew/include)
-enfif()
-
 add_library(dev_flags INTERFACE)
 target_compile_options(dev_flags INTERFACE
   $<$<COMPILE_LANGUAGE:CXX>:${cxx_flags}>)
@@ -96,7 +93,7 @@ message(STATUS "GEANT4_VERSION: ${GEANT4_VERSION}")
 message(STATUS "GEANT4_LIBRARY_DIR: ${GEANT4_LIBRARY_DIR}")
 message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
 message(STATUS "PYTHON3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
-message(STATUS "PYBIND11_INCLUDE_DIR: ${PYBIND11_INCLUDE_DIR}")
+message(STATUS "PYBIND11_INCLUDE_DIRS: ${PYBIND11_INCLUDE_DIRS}")
 message(STATUS "--------------------------------------------------------")
 
 #------------------------------------------------------------------------------
