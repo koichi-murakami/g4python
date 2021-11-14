@@ -24,6 +24,9 @@ if(GEANT4_CONFIG)
   execute_process(COMMAND ${GEANT4_CONFIG} --has-feature opengl-x11
                   OUTPUT_VARIABLE _GEANT4_VIS_YES_OR_NO
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(COMMAND ${GEANT4_CONFIG} --has-feature gdml
+                  OUTPUT_VARIABLE _GEANT4_GDML_YES_OR_NO
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
 
   if ( ${_GEANT4_VIS_YES_OR_NO} MATCHES "yes" )
     set(GEANT4_VIS true)
@@ -31,8 +34,15 @@ if(GEANT4_CONFIG)
     set(GEANT4_VIS false)
   endif()
 
+  if ( ${_GEANT4_GDML_YES_OR_NO} MATCHES "yes" )
+    set(GEANT4_GDML true)
+  else()
+    set(GEANT4_GDML false)
+  endif()
+
   message(STATUS "Found Geant4: ${GEANT4_PREFIX} (${GEANT4_VERSION})")
   message(STATUS "Geant4 Visualization: ${GEANT4_VIS}")
+  message(STATUS "Geant4 GDML: ${GEANT4_GDML}")
 
 else()
   set(GEANT4_FOUND FALSE)
