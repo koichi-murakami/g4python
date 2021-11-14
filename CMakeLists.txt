@@ -68,6 +68,11 @@ if(NOT CMAKE_BUILD_TYPE)
   endif()
 endif()
 
+# Apple
+if(APPLE)
+  set(cxx_flags -I/opt/homebrew/include)
+enfif()
+
 add_library(dev_flags INTERFACE)
 target_compile_options(dev_flags INTERFACE
   $<$<COMPILE_LANGUAGE:CXX>:${cxx_flags}>)
