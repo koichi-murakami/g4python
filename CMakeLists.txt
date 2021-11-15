@@ -42,8 +42,8 @@ if(GEANT4_FOUND)
 endif()
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-
-find_package(Pybind11 REQUIRED)
+#find_package(pybind11 REQUIRED PATH ${PYBIND11_SEARCH_PATH})
+find_package(pybind11 REQUIRED)
 
 # c++17
 add_library(global_cflags INTERFACE)
@@ -93,7 +93,8 @@ message(STATUS "GEANT4_VERSION: ${GEANT4_VERSION}")
 message(STATUS "GEANT4_LIBRARY_DIR: ${GEANT4_LIBRARY_DIR}")
 message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
 message(STATUS "PYTHON3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
-message(STATUS "PYBIND11_INCLUDE_DIRS: ${PYBIND11_INCLUDE_DIRS}")
+message(STATUS "pybind11_VERSION: ${pybind11_VERSION}")
+message(STATUS "pybind11_INCLUDE_DIR: ${pybind11_INCLUDE_DIR}")
 message(STATUS "--------------------------------------------------------")
 
 #------------------------------------------------------------------------------

@@ -12,7 +12,7 @@ target_sources(${MODULE} PRIVATE
 target_include_directories(${MODULE} PRIVATE
   ${GEANT4_INCLUDE_DIR}
   ${Python3_INCLUDE_DIRS}
-  ${PYBIND11_INCLUDE_DIRS}
+  ${pybind11_INCLUDE_DIR}
 )
 
 target_link_directories(${MODULE} PRIVATE ${GEANT4_LIBRARY_DIR})

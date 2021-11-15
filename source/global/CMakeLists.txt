@@ -13,7 +13,7 @@ target_sources(${MODULE} PRIVATE
 #  pyG4RandomDirection.cc
 #  pyG4RotationMatrix.cc
 #  pyG4StateManager.cc
-#  pyG4String.cc
+  pyG4String.cc
   pyG4ThreeVector.cc
 #  pyG4Timer.cc
 #  pyG4Transform3D.cc
@@ -31,7 +31,7 @@ target_sources(${MODULE} PRIVATE
 target_include_directories(${MODULE} PRIVATE
   ${GEANT4_INCLUDE_DIR}
   ${Python3_INCLUDE_DIRS}
-  ${PYBIND11_INCLUDE_DIRS}
+  ${pybind11_INCLUDE_DIR}
 )
 
 target_link_directories(${MODULE} PRIVATE ${GEANT4_LIBRARY_DIR})
