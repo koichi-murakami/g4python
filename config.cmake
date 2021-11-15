@@ -15,5 +15,10 @@ set(GEANT4_INSTALL $ENV{HOME}/opt/geant4/11.0
     CACHE STRING "Geant4 installation path")
 
 # Pybind11 header files location (pybind11)
-set(pybind11_DIR /opt/pybind11/share/cmake/pybind11
+# Mac Homebrew
+set(pybind11_DIR /opt/homebrew/share/cmake/pybind11
     CACHE STRING "Pybind11 search path")
+
+# alternaive pybind11
+#set(pybind11_DIR /opt/pybind11/share/cmake/pybind11
+#    CACHE STRING "Pybind11 search path")
