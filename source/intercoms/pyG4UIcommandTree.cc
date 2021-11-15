@@ -22,61 +22,38 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4UIcommandTree.cc
-//
-//                                         2006 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4UIcommandTree.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4UIcommandTree {
-
-// GetTree
-G4UIcommandTree*(G4UIcommandTree::*f1_GetTree)(G4int)=
-  &G4UIcommandTree::GetTree;
-G4UIcommandTree*(G4UIcommandTree::*f2_GetTree)(const char*)=
-  &G4UIcommandTree::GetTree;
-
-}
-
-using namespace pyG4UIcommandTree;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4UIcommandTree()
+// ==========================================================================
+void export_G4UIcommandTree(py::module& m)
 {
-  class_<G4UIcommandTree, G4UIcommandTree*>
-    ("G4UIcommandTree", "UI command tree")
-    // constructors
-    .def(init<const char*>())
+  py::class_<G4UIcommandTree>(m, "G4UIcommandTree")
+    .def(py::init<const char*>())
     // ---
     .def("FindPath",           &G4UIcommandTree::FindPath,
-         return_value_policy<reference_existing_object>())
+                               py::return_value_policy::reference)
     .def("List",               &G4UIcommandTree::List)
     .def("ListCurrent",        &G4UIcommandTree::ListCurrent)
     .def("ListCurrentWithNum", &G4UIcommandTree::ListCurrentWithNum)
     .def("CreateHTML",         &G4UIcommandTree::CreateHTML)
     .def("GetGuidance",        &G4UIcommandTree::GetGuidance,
-         return_value_policy<reference_existing_object>())
+                               py::return_value_policy::reference)
     .def("GetPathName",        &G4UIcommandTree::GetPathName)
-    // ---
     .def("GetTreeEntry",       &G4UIcommandTree::GetTreeEntry)
     .def("GetCommandEntry",    &G4UIcommandTree::GetCommandEntry)
-    .def("GetTree",            f1_GetTree,
-         return_value_policy<reference_existing_object>())
-    .def("GetTree",            f2_GetTree,
-         return_value_policy<reference_existing_object>())
+    .def("GetTree",
+         static_cast<G4UIcommandTree* (G4UIcommandTree::*)(G4int)>
+         (&G4UIcommandTree::GetTree),
+         py::return_value_policy::reference)
+    .def("GetTree",
+         static_cast<G4UIcommandTree* (G4UIcommandTree::*)(const char*)>
+         (&G4UIcommandTree::GetTree),
+         py::return_value_policy::reference)
     .def("GetCommand",         &G4UIcommandTree::GetCommand,
-         return_value_policy<reference_existing_object>())
-    // ---
+         py::return_value_policy::reference)
     .def("GetTitle",           &G4UIcommandTree::GetTitle)
     ;
 }

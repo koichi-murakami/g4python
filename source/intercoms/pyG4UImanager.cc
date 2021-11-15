@@ -122,7 +122,7 @@ void export_G4UImanager(py::module& m)
  .def("GetVerboseLevel",        &G4UImanager::GetVerboseLevel)
  // ---
  .def("GetTree",                &G4UImanager::GetTree,
-      py::return_value_policy::reference)
+                                 py::return_value_policy::reference)
   ;
 
   // ---

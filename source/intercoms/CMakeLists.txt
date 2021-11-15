@@ -6,7 +6,7 @@ add_library(${MODULE} SHARED)
 
 target_sources(${MODULE} PRIVATE
   #pyG4UIcommand.cc
-  #pyG4UIcommandTree.cc
+  pyG4UIcommandTree.cc
   pyG4UImanager.cc
   #pyG4UIparameter.cc
   pymodG4intercoms.cc

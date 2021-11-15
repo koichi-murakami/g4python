@@ -23,204 +23,187 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
+#include <iostream>
 #include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
 
 namespace py = pybind11;
+using c = G4ThreeVector;
 using namespace CLHEP;
 
-// --------------------------------------------------------------------------
 namespace {
 
-/*
-G4double(XXX::*f1_theta)() const= &XXX::theta;
-G4double(XXX::*f2_theta)(const XXX&) const = &XXX::theta;
+std::string vec_to_string(const G4ThreeVector& vec)
+{
+  std::string message = "(";
+  message += std::to_string(vec.getX()) + ", ";
+  message += std::to_string(vec.getY()) + ", ";
+  message += std::to_string(vec.getZ()) + ")";
 
-G4double(XXX::*f1_cosTheta)() const= &XXX::cosTheta;
-G4double(XXX::*f2_cosTheta)(const XXX&) const = &XXX::cosTheta;
-
-G4double(XXX::*f1_cos2Theta)() const= &XXX::cos2Theta;
-G4double(XXX::*f2_cos2Theta)(const XXX&) const = &XXX::cos2Theta;
-
-G4double(XXX::*f1_perp2)() const= &XXX::perp2;
-G4double(XXX::*f2_perp2)(const XXX&) const = &XXX::perp2;
-
-G4double(XXX::*f1_perp)() const= &XXX::perp;
-G4double(XXX::*f2_perp)(const XXX&) const = &XXX::perp;
-
-G4double(XXX::*f1_angle)() const= &XXX::angle;
-G4double(XXX::*f2_angle)(const XXX&) const = &XXX::angle;
-
-G4double(XXX::*f1_eta)() const= &XXX::eta;
-G4double(XXX::*f2_eta)(const XXX&) const = &XXX::eta;
-
-XXX(XXX::*f1_project)() const= &XXX::project;
-XXX(XXX::*f2_project)(const XXX&) const = &XXX::project;
-
-XXX(XXX::*f1_perpPart)() const= &XXX::perpPart;
-XXX(XXX::*f2_perpPart)(const XXX&) const = &XXX::perpPart;
-
-G4double(XXX::*f1_rapidity)() const= &XXX::rapidity;
-G4double(XXX::*f2_rapidity)(const XXX&) const = &XXX::rapidity;
-
-G4double(XXX::*f1_polarAngle)(const XXX&) const= &XXX::polarAngle;
-G4double(XXX::*f2_polarAngle)(const XXX&, const XXX&) const = &XXX::polarAngle;
-
-G4double(XXX::*f1_azimAngle)(const XXX&) const= &XXX::azimAngle;
-G4double(XXX::*f2_azimAngle)(const XXX&, const XXX&) const = &XXX::azimAngle;
-
-XXX&(XXX::*f1_rotate)(G4double, const XXX&)= &XXX::rotate;
-XXX&(XXX::*f2_rotate)(const XXX&, G4double)= &XXX::rotate;
-XXX&(XXX::*f3_rotate)(const HepAxisAngle&)= &XXX::rotate;
-XXX&(XXX::*f4_rotate)(const HepEulerAngles&)= &XXX::rotate;
-XXX&(XXX::*f5_rotate)(G4double, G4double, G4double)= &XXX::rotate;
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_isNear, isNear, 1, 2)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_isParallel, isParallel, 1, 2)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_isOrthogonal, isOrthogonal, 1, 2)
-*/
+  return message;
+}
 
 }
 
 // ==========================================================================
-void export_G4ThreeVector(py::module& m)
+void export_G4ThreeVector(py::module& mod)
 {
-  py::class_<G4ThreeVector>(m, "G4ThreeVector")
+  double tolerance = c::getTolerance();
+
+  py::class_<G4ThreeVector>(mod, "G4ThreeVector")
   .def(py::init<G4double>())
-  .def("x", &G4ThreeVector::x)
-  .def("setX", &G4ThreeVector::setX);
+  .def(py::init<G4double, G4double>())
+  .def(py::init<G4double, G4double, G4double>())
+  .def(py::init<const G4ThreeVector&>())
+  // ---
+  .def_property("x",   &c::getX, &c::setX)
+  .def_property("y",   &c::getY, &c::setY)
+  .def_property("z",   &c::getZ, &c::setZ)
+  .def("setX",         &c::setX)
+  .def("setY",         &c::setY)
+  .def("setZ",         &c::setZ)
+  .def("getX",         &c::getX)
+  .def("getX",         &c::getY)
+  .def("getX",         &c::getZ)
+  // ---
+  .def("set",          &c::set)
+  .def("phi",          &c::phi)
+  .def("mag",          &c::mag)
+  .def("mag2",         &c::mag2)
+  .def("setPhi",       &c::setPhi)
+  .def("setTheta",     &c::setTheta)
+  .def("setMag",       &c::setMag)
+  .def("setPerp",      &c::setPerp)
+  .def("setCylTheta",  &c::setCylTheta)
+  .def("howNear",      &c::howNear)
+  .def("deltaR",       &c::deltaR)
+  .def("unit",         &c::unit)
+  .def("orthogonal",   &c::orthogonal)
+  .def("dot",          &c::dot)
+  .def("cross",        &c::cross)
+  .def("pseudoRapidity", &c::pseudoRapidity)
+  .def("setEta",       &c::setEta)
+  .def("setCylEta",    &c::setCylEta)
+  .def("setRThetaPhi", &c::setRThetaPhi)
+  .def("setREtaPhi",   &c::setREtaPhi)
+  .def("setRhoPhiZ",   &c::setRhoPhiZ)
+  .def("setRhoPhiEta", &c::setRhoPhiEta)
+  .def("getR",         &c::getR)
+  .def("getTheta",     &c::getTheta)
+  .def("getPhi",       &c::getPhi)
+  .def("r",            &c::r)
+  .def("rho",          &c::rho)
+  .def("getRho",       &c::getRho)
+  .def("getEta",       &c::getEta)
+  .def("setR",         &c::setR)
+  .def("setRho",       &c::setRho)
+  .def("compare",      &c::compare)
+  .def("diff2",        &c::diff2)
+  .def_static("setTolerance", &c::setTolerance)
+  .def_static("getTolerance", &c::getTolerance)
+  .def("isNear",       &c::isNear,
+                       py::arg("vec"),
+                       py::arg("epsilon")=tolerance)
+  .def("isParallel",   &c::isParallel,
+                       py::arg("vec"),
+                       py::arg("epsilon")=tolerance)
+  .def("isOrthogonal", &c::isOrthogonal,
+                       py::arg("vec"),
+                       py::arg("epsilon")=tolerance)
+  .def("howParallel",  &c::howParallel)
+  .def("howOrthogonal",&c::howOrthogonal)
+  .def("beta",         &c::beta)
+  .def("gamma",        &c::gamma)
+  .def("deltaPhi",     &c::deltaPhi)
+  .def("coLinearRapidity", &c::coLinearRapidity)
+  // ---
+  .def("theta", static_cast<double (c::*)() const>(&c::theta))
+  .def("theta", static_cast<double (c::*)(const Hep3Vector&) const>(&c::theta))
 
-  //py::module m("G4global", "G4global module");
+  .def("cosTheta", static_cast<double (c::*)() const>(&c::cosTheta))
+  .def("cosTheta", static_cast<double (c::*)(const Hep3Vector&) const>
+                   (&c::cosTheta))
 
-  //PYBIND11_MODULE(G4global, m) {
-    //py::class_<G4ThreeVector>(m, "G4ThreeVector")
-    //.def(py::init<G4double>())
-    //.def("x", &G4ThreeVector::x)
-    //.def("setX", &G4ThreeVector::setX)
-    //;
-  //}
+  .def("cos2Theta", static_cast<double (c::*)() const>(&c::cos2Theta))
+  .def("cos2Theta", static_cast<double (c::*)(const Hep3Vector&) const>
+                   (&c::cos2Theta))
+
+  .def("perp2", static_cast<double (c::*)() const>(&c::perp2))
+  .def("perp2", static_cast<double (c::*)(const Hep3Vector&) const>(&c::perp2))
+
+  .def("angle", static_cast<double (c::*)() const>(&c::angle))
+  .def("angle", static_cast<double (c::*)(const Hep3Vector&) const>(&c::angle))
+
+  .def("eta", static_cast<double (c::*)() const>(&c::eta))
+  .def("eta", static_cast<double (c::*)(const Hep3Vector&) const>(&c::eta))
+
+  .def("rapidity", static_cast<double (c::*)() const>(&c::rapidity))
+  .def("rapidity", static_cast<double (c::*)(const Hep3Vector&) const>
+                   (&c::rapidity))
+
+  .def("polarAngle", static_cast<double (c::*)(const Hep3Vector&) const>
+                     (&c::polarAngle))
+  .def("polarAngle", static_cast<double (c::*)(const Hep3Vector&,
+                                               const Hep3Vector&) const>
+                     (&c::polarAngle))
+
+  .def("azimAngle", static_cast<double (c::*)(const Hep3Vector&) const>
+                    (&c::azimAngle))
+  .def("azimAngle", static_cast<double (c::*)(const Hep3Vector&,
+                                              const Hep3Vector&) const>
+                    (&c::azimAngle))
+
+  .def("project", static_cast<Hep3Vector (c::*)() const>(&c::project))
+  .def("project", static_cast<Hep3Vector (c::*)(const Hep3Vector&) const>
+                  (&c::project))
+
+  .def("perpPart", static_cast<Hep3Vector (c::*)() const>(&c::perpPart))
+  .def("perpPart", static_cast<Hep3Vector (c::*)(const Hep3Vector&) const>
+                   (&c::perpPart))
+
+  // ---
+  .def("rotateX",   &c::rotateX,   py::return_value_policy::reference)
+  .def("rotateY",   &c::rotateY,   py::return_value_policy::reference)
+  .def("rotateZ",   &c::rotateZ,   py::return_value_policy::reference)
+  .def("rotateUz",  &c::rotateUz,  py::return_value_policy::reference)
+  .def("transform", &c::transform, py::return_value_policy::reference)
+
+  .def("rotate", static_cast<Hep3Vector& (c::*)(double, const Hep3Vector&)>
+                 (&c::rotate),     py::return_value_policy::reference)
+
+  .def("rotate", static_cast<Hep3Vector& (c::*)(const Hep3Vector&, double)>
+                 (&c::rotate),     py::return_value_policy::reference)
+
+  .def("rotate", static_cast<Hep3Vector& (c::*)(const HepAxisAngle&)>
+                 (&c::rotate),     py::return_value_policy::reference)
+
+  //.def("rotate", static_cast<Hep3Vector& (c::*)(const HepEulerAngles&)>
+  //               (&c::rotate),     py::return_value_policy::reference)
+
+  .def("rotate", static_cast<Hep3Vector& (c::*)(double, double, double)>
+                 (&c::rotate),     py::return_value_policy::reference)
+
+  // operators
+  .def(py::self == py::self)
+  .def(py::self != py::self)
+  .def(py::self += py::self)
+  .def(py::self -= py::self)
+  .def(py::self -  py::self)
+  .def(py::self +  py::self)
+  .def(py::self *  py::self)
+  .def(py::self *  double())
+  .def(py::self /  double())
+  .def(double() * py::self)
+  .def(py::self *= double())
+  .def(py::self /= double())
+  .def(py::self >  py::self)
+  .def(py::self <  py::self)
+  .def(py::self >= py::self)
+  .def(py::self <= py::self)
+
+  // ---
+  .def("__str__",   [](const c&v) {return ::vec_to_string(v);})
+  .def("__repr__",   [](const c&v) {return ::vec_to_string(v);})
+  ;
 }
-
-  /*
-  class_<G4ThreeVector>("G4ThreeVector", "general 3-vector")
-    // constructors
-    .def(init<G4double>())
-    .def(init<G4double, G4double>())
-    .def(init<G4double, G4double, G4double>())
-    .def(init<const XXX&>())
-
-    // property
-    .add_property("x", &XXX::x, &XXX::setX)
-    .add_property("y", &XXX::y, &XXX::setY)
-    .add_property("z", &XXX::z, &XXX::setZ)
-
-    // methods
-    .def("set",      &XXX::set)
-    .def("phi",      &XXX::phi)
-    .def("mag",      &XXX::mag)
-    .def("mag2",     &XXX::mag2)
-    .def("setPhi",   &XXX::setPhi)
-    .def("setTheta", &XXX::setTheta)
-    .def("setMag",   &XXX::setMag)
-    .def("setPerp",  &XXX::setPerp)
-    .def("setCylTheta", &XXX::setCylTheta)
-    .def("howNear",  &XXX::howNear)
-    .def("deltaR",   &XXX::deltaR)
-    .def("unit",     &XXX::unit)
-    .def("orthogonal", &XXX::orthogonal)
-    .def("dot",      &XXX::dot)
-    .def("cross",    &XXX::cross)
-    .def("pseudoRapidity", &XXX::pseudoRapidity)
-    .def("setEta",   &XXX::setEta)
-    .def("setCylEta",&XXX::setCylEta)
-    .def("setRThetaPhi", &XXX::setRThetaPhi)
-    .def("setREtaPhi",   &XXX::setREtaPhi)
-    .def("setRhoPhiZ",   &XXX::setRhoPhiZ)
-    .def("setRhoPhiEta", &XXX::setRhoPhiEta)
-    .def("getX",     &XXX::getX)
-    .def("getY",     &XXX::getY)
-    .def("getZ",     &XXX::getZ)
-    .def("getR",     &XXX::getR)
-    .def("getTheta", &XXX::getTheta)
-    .def("getPhi",   &XXX::getPhi)
-    .def("r",        &XXX::r)
-    .def("rho",      &XXX::rho)
-    .def("getRho",   &XXX::getRho)
-    .def("getEta",   &XXX::getEta)
-    .def("setR",     &XXX::setR)
-    .def("setRho",   &XXX::setRho)
-    .def("compare",  &XXX::compare)
-    .def("diff2",    &XXX::diff2)
-    .def("setTolerance",  &XXX::setTolerance)
-    .staticmethod("setTolerance")
-    .def("getTolerance",  &XXX::getTolerance)
-    .staticmethod("getTolerance")
-    .def("isNear",       &XXX::isNear,       f_isNear())
-    .def("isParallel",   &XXX::isParallel,   f_isParallel())
-    .def("isOrthogonal", &XXX::isOrthogonal, f_isOrthogonal())
-    .def("howParallel",   &XXX::howParallel)
-    .def("howOrthogonal", &XXX::howOrthogonal)
-    .def("beta",     &XXX::beta)
-    .def("gamma",    &XXX::gamma)
-    .def("deltaPhi", &XXX::deltaPhi)
-    .def("coLinearRapidity", &XXX::coLinearRapidity)
-    .def("theta",     f1_theta)
-    .def("theta",     f2_theta)
-    .def("cosTheta",  f1_cosTheta)
-    .def("cosTheta",  f2_cosTheta)
-    .def("cos2Theta", f1_cos2Theta)
-    .def("cos2Theta", f2_cos2Theta)
-    .def("perp2",     f1_perp2)
-    .def("perp2",     f2_perp2)
-    .def("angle",     f1_angle)
-    .def("angle",     f2_angle)
-    .def("eta",       f1_eta)
-    .def("eta",       f2_eta)
-    .def("project",   f1_project)
-    .def("project",   f2_project)
-    .def("perpPart",  f1_perpPart)
-    .def("perpPart",  f2_perpPart)
-    .def("rapidity",  f1_rapidity)
-    .def("rapidity",  f2_rapidity)
-    .def("polarAngle",f1_polarAngle)
-    .def("polarAngle",f2_polarAngle)
-    .def("azimAngle", f1_azimAngle)
-    .def("azimAngle", f2_azimAngle)
-    .def("rotateX",   &XXX::rotateX,
-	 return_value_policy<reference_existing_object>())
-    .def("rotateY",   &XXX::rotateY,
-	 return_value_policy<reference_existing_object>())
-    .def("rotateZ",   &XXX::rotateZ,
-	 return_value_policy<reference_existing_object>())
-    .def("rotateUz", &XXX::rotateUz,
-	 return_value_policy<reference_existing_object>())
-    .def("transform",&XXX::transform,
-	 return_value_policy<reference_existing_object>())
-    .def("rotate",   f1_rotate,
-	 return_value_policy<reference_existing_object>())
-    .def("rotate",   f2_rotate,
-	 return_value_policy<reference_existing_object>())
-    .def("rotate",   f5_rotate,
-	 return_value_policy<reference_existing_object>())
-
-    // operators
-    .def(self_ns::str(self))
-    .def(self == self)
-    .def(self != self)
-    .def(self += self)
-    .def(self -= self)
-    .def(self -  self)
-    .def(self + self)
-    .def(self * self)
-    .def(self * G4double())
-    .def(self / G4double())
-    .def(G4double() * self)
-    .def(self *= G4double())
-    .def(self /= G4double())
-    .def(self >  self)
-    .def(self <  self)
-    .def(self >= self)
-    .def(self <= self)
-    ;
-}
-*/

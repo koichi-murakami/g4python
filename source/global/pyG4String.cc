@@ -34,6 +34,8 @@ void export_G4String(py::module& m)
   py::class_<G4String>(m, "G4String")
   .def(py::init<const G4String&>())
   .def(py::init<const char*>())
+
+  // operatots
   .def(py::self + py::self)
   .def(py::self += py::self)
   .def(py::self += std::string())
@@ -41,8 +43,9 @@ void export_G4String(py::module& m)
   .def(py::self == std::string())
   .def(py::self != py::self)
   .def(py::self != std::string())
-  .def("__str__",   [](const G4String&a) {return a.data();})
-  .def("__repr__",  [](const G4String&a) {return a.data();})
+  // ---
+  .def("__str__",   [](const G4String&v) {return v.data();})
+  .def("__repr__",  [](const G4String&v) {return v.data();})
   ;
 
   py::implicitly_convertible<const char* ,G4String>();
