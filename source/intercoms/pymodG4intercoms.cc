@@ -22,30 +22,21 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pymodG4intercoms.cc [Geant4Py module]
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
+// --------------------------------------------------------------------------
+void export_G4UImanager(py::module&);
+void export_G4UIcommandTree(py::module&);
+void export_G4UIcommand(py::module&);
+void export_G4UIparameter(py::module&);
 
-void export_G4UImanager();
-void export_G4UIcommandTree();
-void export_G4UIcommand();
-void export_G4UIparameter();
-
-BOOST_PYTHON_MODULE(G4intercoms)
+// --------------------------------------------------------------------------
+PYBIND11_MODULE(G4intercoms, m)
 {
-  export_G4UImanager();
-  export_G4UIcommandTree();
-  export_G4UIcommand();
-  export_G4UIparameter();
+  export_G4UImanager(m);
+  //export_G4UIcommandTree();
+  //export_G4UIcommand();
+  //export_G4UIparameter();
 }
-

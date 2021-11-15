@@ -1,9 +1,9 @@
 # - add module components
 
-add_subdirectory(python)
-add_subdirectory(global)
+add_subdirectory(intercoms)
 add_subdirectory(interface)
-#add_subdirectory(intercoms)
+add_subdirectory(global)
+add_subdirectory(python)
 add_subdirectory(run)
 #add_subdirectory(event)
 #add_subdirectory(tracking)

@@ -24,12 +24,12 @@
 // ********************************************************************
 #include <vector>
 #include <pybind11/pybind11.h>
-#include "G4Version.hh"
-#include "G4UImanager.hh"
+#include "G4PyCoutDestination.hh"
+#include "G4strstreambuf.hh"
 #include "G4ThreeVector.hh"
 #include "G4TwoVector.hh"
-#include "G4strstreambuf.hh"
-#include "G4PyCoutDestination.hh"
+#include "G4UImanager.hh"
+#include "G4Version.hh"
 //#include "pyG4indexing.hh"
 
 namespace py = pybind11;
@@ -53,10 +53,10 @@ void ResetG4PyCoutDestination()
 }
 
 using G4intVector = std::vector<G4int>;
-//using std::vector<G4double>  = G4doubleVector;
-//using std::vector<G4String>  = G4StringVector;
-//using std::vector<G4ThreeVector> = G4ThreeVectorVector;
-//using std::vector<G4TwoVector>   = G4TwoVectorVector;
+using G4doubleVector = std::vector<G4double>;
+using G4StringVector = std::vector<G4String>;
+using G4ThreeVectorVector = std::vector<G4ThreeVector>;
+using G4TwoVectorVector = std::vector<G4TwoVector>;
 
 }
 

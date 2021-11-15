@@ -30,8 +30,7 @@ namespace py = pybind11;
 // ==========================================================================
 void export_G4Version(py::module& m)
 {
-  py::scope current;
-  current.attr("G4VERSION_NUMBER")= G4VERSION_NUMBER;
-  current.attr("G4Version")= G4Version.c_str();
-  current.attr("G4Date")= G4Date.c_str();
+  m.attr("G4VERSION_NUMBER")= G4VERSION_NUMBER;
+  m.attr("G4Version")= G4Version.c_str();
+  m.attr("G4Date")= G4Date.c_str();
 }

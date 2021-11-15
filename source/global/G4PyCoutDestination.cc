@@ -32,7 +32,6 @@ G4int G4PyCoutDestination::ReceiveG4cout(const G4String& coutString)
   return 0;
 }
 
-
 // --------------------------------------------------------------------------
 G4int G4PyCoutDestination::ReceiveG4cerr(const G4String& cerrString)
 {

@@ -32,7 +32,7 @@ if _qt5core_lib != None and _qt5core_lib != "libQt5Core.so" :
 # --------------------------------------------------------------------------
 # import submodules
 from .G4interface import *
-#from .G4intercoms import *
+from .G4intercoms import *
 from .G4run import *
 #from .G4event import *
 #from .G4tracking import *
@@ -81,7 +81,7 @@ gRunManager = G4RunManager.GetRunManager()
 #gRunManagerKernel = G4RunManagerKernel.GetRunManagerKernel()
 
 # gUImanager
-#gUImanager = G4UImanager.GetUIpointer()
+gUImanager = G4UImanager.GetUIpointer()
 
 # gEventManager
 #gEventManager = G4EventManager.GetEventManager()
@@ -177,24 +177,26 @@ if G4VisManager.GetConcreteInstance() == None:
   gVisManager.Initialize()
 """
 
-# version information
-#gG4Version = G4Version
-#gG4Date = G4Date
-#gG4VERSION_NUMBER = G4VERSION_NUMBER
-
 # ------------------------------------------------------------------
 # functions
 # ------------------------------------------------------------------
-#gControlExecute = gUImanager.ExecuteMacroFile
-#gApplyUICommand = G4intercoms.ApplyUICommand
-#gGetCurrentValues = gUImanager.GetCurrentValues
 gStartUISession = G4interface.StartUISession
+StartUISession = gStartUISession
+
+gControlExecute = gUImanager.ExecuteMacroFile
+ControlExecute = gControlExecute
+
+gApplyUICommand = G4intercoms.ApplyUICommand
+ApplyUICommand = gApplyUICommand
+
+gGetCurrentValues = gUImanager.GetCurrentValues
+GetCurrentValues = gGetCurrentValues
 
 
 # ==================================================================
 # extentions
 # ==================================================================
-"""
+
 # ------------------------------------------------------------------
 # generate one event
 # ------------------------------------------------------------------
@@ -204,6 +206,7 @@ def _one_event(self):
 
 G4RunManager.OneEvent = _one_event
 
+""""
 # ------------------------------------------------------------------
 # list material information
 # ------------------------------------------------------------------
@@ -238,20 +241,14 @@ def _list_material(self):
 
 G4MaterialTable.ListMaterial = _list_material
 
-
-# ------------------------------------------------------------------
-# termination
-# ------------------------------------------------------------------
-def gTerminate():
-    gGeometryManager.OpenGeometry()
-
+"""
 
 # ------------------------------------------------------------------
 # signal handler
 # ------------------------------------------------------------------
 import signal
 import threading
-
+""""
 def _run_abort(signum, frame):
   state = gStateManager.GetCurrentState()
 

@@ -42,7 +42,7 @@ void export_G4ThreeVector(py::module&);
 //void export_G4RandomDirection();
 //void export_G4UserLimits();
 //void export_G4Timer();
-//void export_G4Version();
+void export_G4Version(py::module&);
 //void export_G4Exception();
 //void export_G4ExceptionHandler();
 //void export_G4ExceptionSeverity();
@@ -54,4 +54,5 @@ PYBIND11_MODULE(G4global, m)
   export_G4String(m);
   export_G4TwoVector(m);
   export_G4ThreeVector(m);
+  export_G4Version(m);
 }

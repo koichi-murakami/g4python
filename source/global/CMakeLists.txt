@@ -20,7 +20,7 @@ target_sources(${MODULE} PRIVATE
   pyG4TwoVector.cc
 #  pyG4UnitsTable.cc
 #  pyG4UserLimits.cc
-#  pyG4Version.cc
+  pyG4Version.cc
 #  pyRandomEngines.cc
 #  pyRandomize.cc
 #  pygeomdefs.cc
@@ -41,6 +41,7 @@ target_link_libraries(${MODULE} PRIVATE
   global_cflags
 )
 
+#------------------------------------------------------------------------------
 set_target_properties(${MODULE} PROPERTIES PREFIX "")
 set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4global")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")

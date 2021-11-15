@@ -22,129 +22,121 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4UImanager.cc
-//
-//   G4UImanager class is pure singleton, so it cannnot be exposed
-//   from BPL. Functionality of G4UImanager is exposed in global
-//   name space via wrappers.
-//                                         2006 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "G4UImanager.hh"
+#include <pybind11/pybind11.h>
 #include "G4UIcommandTree.hh"
+#include "G4UImanager.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4UImanager {
+// --------------------------------------------------------------------------
+namespace {
 
-// ApplyCommand
-G4int(G4UImanager::*f1_ApplyCommand)(const char*) = &G4UImanager::ApplyCommand;
-G4int(G4UImanager::*f2_ApplyCommand)(const G4String&) =
-  &G4UImanager::ApplyCommand;
-
-// CreateHTML
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_CreateHTML, CreateHTML, 0, 1)
-
-
-//////////////////////////////////////////////
-G4int ApplyUICommand_1(const G4String& cmdstr)
-//////////////////////////////////////////////
+G4UIcommandStatus ApplyUICommand(const G4String& cmdstr)
 {
-  G4UImanager* UImgr= G4UImanager::GetUIpointer();
-  G4int returnVal= UImgr-> ApplyCommand(cmdstr);
-  if( returnVal == fCommandSucceeded ) return returnVal;
+  auto UImgr = G4UImanager::GetUIpointer();
 
-  G4int paramIndex= returnVal % 100;
-  G4int commandStatus= returnVal - paramIndex;
+  auto returnVal = UImgr-> ApplyCommand(cmdstr);
+  if( returnVal == fCommandSucceeded ) {
+    return fCommandSucceeded;
+  }
 
-  switch(commandStatus) {
+  auto paramIndex = returnVal % 100;
+  int commandStatus = returnVal - paramIndex;
+
+
+  switch( commandStatus ) {
     case fCommandSucceeded:
+      return fCommandSucceeded;
       break;
 
     case fCommandNotFound:
       G4cout << "command <" << UImgr-> SolveAlias(cmdstr)
-	     << "> not found" << G4endl;
+             << "> not found" << G4endl;
+      return fCommandNotFound;
       break;
 
     case fIllegalApplicationState:
       G4cout << "illegal application state -- command refused"
-	     << G4endl;
+	           << G4endl;
+      return fIllegalApplicationState;
       break;
 
     case fParameterOutOfRange:
+      return fParameterOutOfRange;
       break;
 
     case fParameterOutOfCandidates:
       G4cout << "Parameter is out of candidate list (index "
-	     << paramIndex << ")"
-	     << G4endl;
+	           << paramIndex << ")"
+	           << G4endl;
+      return fParameterOutOfCandidates;
       break;
 
     case fParameterUnreadable:
       G4cout << "Parameter is wrong type and/or is not omittable (index "
-	     << paramIndex << ")" << G4endl;
+	           << paramIndex << ")" << G4endl;
+      return fParameterUnreadable;
       break;
 
     case fAliasNotFound:
+      return fAliasNotFound;
       break;
 
     default:
       G4cout << "command refused (" << commandStatus << ")" << G4endl;
+      return fCommandNotFound;
       break;
   }
 
-  return returnVal;
+  return fCommandSucceeded;
 }
 
-/////////////////////////////////////////////////
-G4int ApplyUICommand_2(const std::string& cmdstr)
-/////////////////////////////////////////////////
+}
+
+// ==========================================================================
+void export_G4UImanager(py::module& m)
 {
-  return ApplyUICommand_1(cmdstr);
-}
-
-}
-
-using namespace pyG4UImanager;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4UImanager()
-{
- class_<G4UImanager, boost::noncopyable>
-   ("G4UImanager", "UI manager class", no_init)
-   .def("GetUIpointer",  &G4UImanager::GetUIpointer,
-        return_value_policy<reference_existing_object>())
-   .staticmethod("GetUIpointer")
-   // ---
-   .def("GetCurrentValues", &G4UImanager::GetCurrentValues)
-   .def("ExecuteMacroFile", &G4UImanager::ExecuteMacroFile)
-   .def("ApplyCommand",     f1_ApplyCommand)
-   .def("ApplyCommand",     f2_ApplyCommand)
-   .def("CreateHTML",       &G4UImanager::CreateHTML, f_CreateHTML())
-   .def("SetMacroSearchPath", &G4UImanager::SetMacroSearchPath)
-   .def("GetMacroSearchPath", &G4UImanager::GetMacroSearchPath,
-        return_value_policy<return_by_value>())
-   // ---
-   .def("SetPauseAtBeginOfEvent", &G4UImanager::SetPauseAtBeginOfEvent)
-   .def("GetPauseAtBeginOfEvent", &G4UImanager::GetPauseAtBeginOfEvent)
-   .def("SetPauseAtEndOfEvent",   &G4UImanager::SetPauseAtEndOfEvent)
-   .def("GetPauseAtEndOfEvent",   &G4UImanager::GetPauseAtEndOfEvent)
-   .def("SetVerboseLevel",        &G4UImanager::SetVerboseLevel)
-   .def("GetVerboseLevel",        &G4UImanager::GetVerboseLevel)
-   // ---
-   .def("GetTree",   &G4UImanager::GetTree,
-        return_value_policy<reference_existing_object>())
-   ;
+ py::class_<G4UImanager>(m, "G4UImanager")
+ .def_static("GetUIpointer",  &G4UImanager::GetUIpointer,
+                              py::return_value_policy::reference)
+ // ---
+ .def("GetCurrentValues",     &G4UImanager::GetCurrentValues)
+ .def("ExecuteMacroFile",     &G4UImanager::ExecuteMacroFile)
+ .def("ApplyCommand",
+       static_cast<int (G4UImanager::*)(const char*)>
+       (&G4UImanager::ApplyCommand))
+ .def("ApplyCommand",
+       static_cast<int (G4UImanager::*)(const G4String&)>
+      (&G4UImanager::ApplyCommand))
+ .def("CreateHTML",           &G4UImanager::CreateHTML,
+      py::arg("dir") = "/")
+ .def("SetMacroSearchPath",   &G4UImanager::SetMacroSearchPath)
+ .def("GetMacroSearchPath",   &G4UImanager::GetMacroSearchPath,
+                              py::return_value_policy::copy)
+  // ---
+ .def("SetPauseAtBeginOfEvent", &G4UImanager::SetPauseAtBeginOfEvent)
+ .def("GetPauseAtBeginOfEvent", &G4UImanager::GetPauseAtBeginOfEvent)
+ .def("SetPauseAtEndOfEvent",   &G4UImanager::SetPauseAtEndOfEvent)
+ .def("GetPauseAtEndOfEvent",   &G4UImanager::GetPauseAtEndOfEvent)
+ .def("SetVerboseLevel",        &G4UImanager::SetVerboseLevel)
+ .def("GetVerboseLevel",        &G4UImanager::GetVerboseLevel)
+ // ---
+ .def("GetTree",                &G4UImanager::GetTree,
+      py::return_value_policy::reference)
+  ;
 
   // ---
-  def("ApplyUICommand",    ApplyUICommand_1);
-  def("ApplyUICommand",    ApplyUICommand_2);
+  m.def("ApplyUICommand",  &::ApplyUICommand);
+
+  // ---
+  py::enum_<G4UIcommandStatus>(m, "G4UIcommandStatus")
+  .value("fCommandSucceeded",       G4UIcommandStatus::fCommandSucceeded)
+  .value("fCommandNotFound",        G4UIcommandStatus::fCommandNotFound)
+  .value("fIllegalApplicationState",G4UIcommandStatus::fIllegalApplicationState)
+  .value("fParameterOutOfRange",    G4UIcommandStatus::fParameterOutOfRange)
+  .value("fParameterUnreadable",    G4UIcommandStatus::fParameterUnreadable)
+  .value("fParameterOutOfCandidates",G4UIcommandStatus::fParameterOutOfCandidates)
+  .value("fAliasNotFound",          G4UIcommandStatus::fAliasNotFound)
+  ;
 
 }

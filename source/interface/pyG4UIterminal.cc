@@ -36,8 +36,7 @@ namespace {
 void StartUISession()
 {
   if (session == nullptr ) {
-    auto tcsh = new G4UItcsh("g4py(%s)[%/]:");
-    tcsh-> SetLsColor(BLUE,RED);
+    auto tcsh = new G4UItcsh("geant4(%s)[%/]:");
 
     session = new G4UIterminal(tcsh, false);
   }
