@@ -1,10 +1,6 @@
 """
 # ==================================================================
-#   Python module
-#
-#   Visualization Control Panel
-#
-#                                              Q, 2005
+#  [visualization control panel] module package
 # ==================================================================
 """
 from G4interface import *
@@ -29,7 +25,7 @@ class G4Scene :
                    (self.volume, self.copyno))
     ApplyUICommand("/vis/scene/add/trajectories")
     self.update_scene()
-      
+
   def update_scene(self):
     ApplyUICommand("/vis/scene/select " + self.name)
     ApplyUICommand("/vis/sceneHandler/attach")
@@ -45,8 +41,8 @@ class G4VisCP :
   "G4 Visualization Control Panel"
 
   def __init__(self, gsys="OGLIX"):
-    self.gsystem=    gsys    
-    self.scenelist=  [G4Scene("default")]    
+    self.gsystem=    gsys
+    self.scenelist=  [G4Scene("default")]
     self.viewpoint=  [270., 90.]
 
     rc= ApplyUICommand("/vis/open " + gsys)
@@ -60,9 +56,8 @@ class G4VisCP :
 
   def add_scene(self, ascene):
     self.scenelist.append(ascene)
-    
+
   def select_scene(self, iscene):
     self.scenelist[iscene].update_scene()
     ApplyUICommand("/vis/viewer/set/viewpointThetaPhi %f %f"
                    % (self.viewpoint[0], self.viewpoint[1]) )
-
