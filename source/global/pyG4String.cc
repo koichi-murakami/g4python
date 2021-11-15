@@ -23,35 +23,28 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
+#include "G4String.hh"
 
 namespace py = pybind11;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-//void export_G4Version();
-//void export_G4Exception();
-//void export_G4ExceptionHandler();
-//void export_G4ExceptionSeverity();
-
 // ==========================================================================
-PYBIND11_MODULE(G4global, m)
+void export_G4String(py::module& m)
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
+  py::class_<G4String>(m, "G4String")
+  .def(py::init<const G4String&>())
+  .def(py::init<const char*>())
+  .def(py::self + py::self)
+  .def(py::self += py::self)
+  .def(py::self += std::string())
+  .def(py::self == py::self)
+  .def(py::self == std::string())
+  .def(py::self != py::self)
+  .def(py::self != std::string())
+  .def("__str__",   [](const G4String&a) {return a.data();})
+  .def("__repr__",  [](const G4String&a) {return a.data();})
+  ;
+
+  py::implicitly_convertible<const char* ,G4String>();
+  py::implicitly_convertible<std::string ,G4String>();
 }

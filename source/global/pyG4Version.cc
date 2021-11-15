@@ -23,35 +23,15 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include "G4Version.hh"
 
 namespace py = pybind11;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-//void export_G4Version();
-//void export_G4Exception();
-//void export_G4ExceptionHandler();
-//void export_G4ExceptionSeverity();
-
 // ==========================================================================
-PYBIND11_MODULE(G4global, m)
+void export_G4Version(py::module& m)
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
+  py::scope current;
+  current.attr("G4VERSION_NUMBER")= G4VERSION_NUMBER;
+  current.attr("G4Version")= G4Version.c_str();
+  current.attr("G4Date")= G4Date.c_str();
 }
