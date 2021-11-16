@@ -22,27 +22,19 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pymodG4tracking.cc [Geant4Py module]
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4TrackingManager();
-void export_G4UserSteppingAction();
-void export_G4UserTrackingAction();
+// --------------------------------------------------------------------------
+void export_G4TrackingManager(py::module&);
+void export_G4UserSteppingAction(py::module&);
+void export_G4UserTrackingAction(py::module&);
 
-BOOST_PYTHON_MODULE(G4tracking)
+// --------------------------------------------------------------------------
+PYBIND11_MODULE(G4tracking, m)
 {
-  export_G4TrackingManager();
-  export_G4UserSteppingAction();
-  export_G4UserTrackingAction();
+  //export_G4TrackingManager(m);
+  //export_G4UserSteppingAction(m);
+  //export_G4UserTrackingAction(m);
 }
-

@@ -22,31 +22,23 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pymodG4track.cc [Geant4Py module]
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Track();
-void export_G4TrackStatus();
-void export_G4Step();
-void export_G4StepPoint();
-void export_G4StepStatus();
+// --------------------------------------------------------------------------
+void export_G4Track(py::module&);
+void export_G4TrackStatus(py::module&);
+void export_G4Step(py::module&);
+void export_G4StepPoint(py::module&);
+void export_G4StepStatus(py::module&);
 
-BOOST_PYTHON_MODULE(G4track)
+// --------------------------------------------------------------------------
+PYBIND11_MODULE(G4track, m)
 {
-  export_G4Track();
-  export_G4TrackStatus();
-  export_G4Step();
-  export_G4StepPoint();
-  export_G4StepStatus();
+  //export_G4Track(m);
+  //export_G4TrackStatus(m);
+  //export_G4Step(m);
+  //export_G4StepPoint(m);
+  //export_G4StepStatus(m);
 }
-

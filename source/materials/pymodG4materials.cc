@@ -22,37 +22,31 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pymodG4materials.cc [Geant4Py module]
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Material();
-void export_G4MaterialTable();
-void export_G4Element();
+// --------------------------------------------------------------------------
+void export_G4Material(py::module&);
+void export_G4MaterialTable(py::module&);
+void export_G4Element(py::module&);
 void export_G4ElementTable();
-//void export_G4ElementVector();
-void export_G4Isotope();
-void export_G4NistManager();
-void export_G4AtomicShells();
+//void export_G4ElementVector(py::module&);
+void export_G4Isotope(py::module&);
+void export_G4NistManager(py::module&);
+void export_G4AtomicShells(py::module&);
 
-BOOST_PYTHON_MODULE(G4materials)
+// --------------------------------------------------------------------------
+PYBIND11_MODULE(G4materials, m)
 {
-  export_G4Material();
-  export_G4MaterialTable();
-  export_G4Element();
-  export_G4ElementTable();
+  /*
+  export_G4Material(m);
+  export_G4MaterialTable(m);
+  export_G4Element(m);
+  export_G4ElementTable(m);
   //export_G4ElementVector();
-  export_G4Isotope();
-  export_G4NistManager();
-  export_G4AtomicShells();
+  export_G4Isotope(m);
+  export_G4NistManager(m);
+  export_G4AtomicShells(m);
+  */
 }
-

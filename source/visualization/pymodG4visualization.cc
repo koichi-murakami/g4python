@@ -27,24 +27,38 @@
 namespace py = pybind11;
 
 // --------------------------------------------------------------------------
-void export_G4ParticleDefinition(py::module&);
-void export_G4DynamicParticle(py::module&);
-void export_G4ParticleTable(py::module&);
-void export_G4DecayTable(py::module&);
-void export_G4PrimaryParticle(py::module&);
-void export_G4PrimaryVertex(py::module&);
-void export_PyG4ParticleList(py::module&);
+void export_G4VisManager(py::module&);
+void export_G4VGraphicsSystem(py::module&);
+void export_G4VRML1File(py::module&);
+void export_G4VRML2File(py::module&);
+void export_G4DAWNFILE(py::module&);
+void export_G4HepRep(py::module&);
+void export_G4HepRepFile(py::module&);
+void export_G4ASCIITree(py::module&);
+void export_G4RayTracer(py::module&);
+
+#ifdef G4VIS_USE_OPENGLX
+void export_G4OpenGLStoredX(py::module&);
+void export_G4OpenGLImmediateX(py::module&);
+#endif
 
 // --------------------------------------------------------------------------
-PYBIND11_MODULE(G4particles, m)
+PYBIND11_MODULE(G4visualization, m)
 {
   /*
-  export_G4ParticleDefinition(m);
-  export_G4DynamicParticle(m);
-  export_G4ParticleTable(m);
-  export_G4DecayTable(m);
-  export_G4PrimaryParticle(m);
-  export_G4PrimaryVertex(m);
-  export_PyG4ParticleList(m);
-  */
+  export_G4VisManager(m);
+  export_G4VGraphicsSystem(m);
+  export_G4VRML1File(m);
+  export_G4VRML2File(m);
+  export_G4DAWNFILE(m);
+  export_G4HepRep(m);
+  export_G4HepRepFile(m);
+  export_G4ASCIITree(m);
+  export_G4RayTracer(m);
+
+#ifdef G4VIS_USE_OPENGLX
+  export_G4OpenGLStoredX(m);
+  export_G4OpenGLImmediateX(m);
+#endif
+*/
 }

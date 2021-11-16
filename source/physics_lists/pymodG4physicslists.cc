@@ -22,23 +22,15 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pymodG4physicslists.cc [Geant4Py module]
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_PhysicsLists();
+// --------------------------------------------------------------------------
+void export_PhysicsLists(py::module&);
 
-BOOST_PYTHON_MODULE(G4physicslists)
+// --------------------------------------------------------------------------
+PYBIND11_MODULE(G4physicslists, m)
 {
-  export_PhysicsLists();
+  //export_PhysicsLists(m);
 }
-

@@ -1,16 +1,13 @@
 # - build module
 #------------------------------------------------------------------------------
-set(MODULE pyG4track)
+set(MODULE pyG4graphics_reps)
 #------------------------------------------------------------------------------
 add_library(${MODULE} SHARED)
 
 target_sources(${MODULE} PRIVATE
-  #pyG4Step.cc
-  #pyG4StepPoint.cc
-  #pyG4StepStatus.cc
-  #pyG4Track.cc
-  #pyG4TrackStatus.cc
-  pymodG4track.cc
+  #pyG4Colour.cc
+  #pyG4VisAttributes.cc
+  pymodG4graphics_reps.cc
 )
 
 target_include_directories(${MODULE} PRIVATE
@@ -28,7 +25,7 @@ target_link_libraries(${MODULE} PRIVATE
 
 #------------------------------------------------------------------------------
 set_target_properties(${MODULE} PROPERTIES PREFIX "")
-set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4track")
+set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4graphics_reps")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
 set_target_properties(${MODULE}
                       PROPERTIES INSTALL_RPATH

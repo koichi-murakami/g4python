@@ -22,29 +22,57 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pyG4Colour.cc
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "G4Colour.hh"
+#include "G4Color.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_G4ParticleDefinition(py::module&);
-void export_G4DynamicParticle(py::module&);
-void export_G4ParticleTable(py::module&);
-void export_G4DecayTable(py::module&);
-void export_G4PrimaryParticle(py::module&);
-void export_G4PrimaryVertex(py::module&);
-void export_PyG4ParticleList(py::module&);
-
-// --------------------------------------------------------------------------
-PYBIND11_MODULE(G4particles, m)
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4Colour()
 {
-  /*
-  export_G4ParticleDefinition(m);
-  export_G4DynamicParticle(m);
-  export_G4ParticleTable(m);
-  export_G4DecayTable(m);
-  export_G4PrimaryParticle(m);
-  export_G4PrimaryVertex(m);
-  export_PyG4ParticleList(m);
-  */
+  class_<G4Colour> ("G4Color", "color class", no_init)
+    // constructors
+    .def(init<>())
+    .def(init<G4double>())
+    .def(init<G4double, G4double>())
+    .def(init<G4double, G4double, G4double>())
+    .def(init<G4double, G4double, G4double, G4double>())
+    .def(init<G4ThreeVector>())
+    // ---
+    .def("GetRed",     &G4Colour::GetRed)
+    .def("GetGreen",   &G4Colour::GetGreen)
+    .def("GetBlue",    &G4Colour::GetBlue)
+    .def("GetAlpha",   &G4Colour::GetAlpha)
+    // operators
+    .def(self_ns::str(self))
+    .def(self != self)
+    ;
+
+  //class_<G4Color> ("G4Color", "color class", no_init)
+  //  // constructors
+  //  .def(init<>())
+  //  .def(init<G4double>())
+  //  .def(init<G4double, G4double>())
+  //  .def(init<G4double, G4double, G4double>())
+  //  .def(init<G4double, G4double, G4double, G4double>())
+  //  .def(init<G4ThreeVector>())
+  //  // ---
+  //  .def("GetRed",     &G4Colour::GetRed)
+  //  .def("GetGreen",   &G4Colour::GetGreen)
+  //  .def("GetBlue",    &G4Colour::GetBlue)
+  //  .def("GetAlpha",   &G4Colour::GetAlpha)
+  //  // operators
+  //  .def(self_ns::str(self))
+  //  .def(self != self)
+  //  ;
 }
+

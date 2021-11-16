@@ -1,16 +1,25 @@
 # - build module
 #------------------------------------------------------------------------------
-set(MODULE pyG4track)
+set(MODULE pyG4visualization)
 #------------------------------------------------------------------------------
 add_library(${MODULE} SHARED)
 
 target_sources(${MODULE} PRIVATE
-  #pyG4Step.cc
-  #pyG4StepPoint.cc
-  #pyG4StepStatus.cc
-  #pyG4Track.cc
-  #pyG4TrackStatus.cc
-  pymodG4track.cc
+  #pyG4ASCIITree.cc
+  #pyG4DAWNFILE.cc
+  #pyG4HepRep.cc
+  #pyG4HepRepFile.cc
+  #pyG4OpenGLImmediateX.cc
+  #pyG4OpenGLImmediateXm.cc
+  #pyG4OpenGLStoredX.cc
+  #pyG4OpenGLStoredXm.cc
+  #pyG4RayTracer.cc
+  #pyG4RayTracerX.cc
+  #pyG4VGraphicsSystem.cc
+  #pyG4VRML1File.cc
+  #pyG4VRML2File.cc
+  #pyG4VisManager.cc
+  pymodG4visualization.cc
 )
 
 target_include_directories(${MODULE} PRIVATE
@@ -28,7 +37,7 @@ target_link_libraries(${MODULE} PRIVATE
 
 #------------------------------------------------------------------------------
 set_target_properties(${MODULE} PROPERTIES PREFIX "")
-set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4track")
+set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4visualization")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
 set_target_properties(${MODULE}
                       PROPERTIES INSTALL_RPATH

@@ -22,29 +22,24 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pyG4VGraphicsSystem.cc
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "G4VGraphicsSystem.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_G4ParticleDefinition(py::module&);
-void export_G4DynamicParticle(py::module&);
-void export_G4ParticleTable(py::module&);
-void export_G4DecayTable(py::module&);
-void export_G4PrimaryParticle(py::module&);
-void export_G4PrimaryVertex(py::module&);
-void export_PyG4ParticleList(py::module&);
-
-// --------------------------------------------------------------------------
-PYBIND11_MODULE(G4particles, m)
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4VGraphicsSystem()
 {
-  /*
-  export_G4ParticleDefinition(m);
-  export_G4DynamicParticle(m);
-  export_G4ParticleTable(m);
-  export_G4DecayTable(m);
-  export_G4PrimaryParticle(m);
-  export_G4PrimaryVertex(m);
-  export_PyG4ParticleList(m);
-  */
+  class_<G4VGraphicsSystem, G4VGraphicsSystem*, boost::noncopyable>
+    ("G4VGraphicsSystem", "base class of graphics system", no_init)
+    ;
 }
+
