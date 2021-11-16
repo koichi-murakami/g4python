@@ -28,22 +28,22 @@ if _qt5core_lib != None and _qt5core_lib != "libQt5Core.so" :
 
 # --------------------------------------------------------------------------
 # import submodules
+from .G4global import *
 from .G4interface import *
 from .G4intercoms import *
 from .G4run import *
-#from .G4event import *
+from .G4event import *
+from .G4geometry import *
+from .G4processes import *
 #from .G4tracking import *
 #from .G4track import *
 #from .G4particles import *
-#from .G4processes import *
-#from .G4geometry import *
 #from .G4materials import *
 #from .G4physicslists import *
 #from .G4digits_hits import *
 #from .G4visualization import *
 #from .G4gdml import *
 #from .G4graphics_reps import *
-from .G4global import *
 from .hepunit import *
 from .colortable import *
 
@@ -91,7 +91,7 @@ gUImanager = G4UImanager.GetUIpointer()
 
 # gStateManager
 #gStateManager = G4StateManager.GetStateManager()
-#gExceptionHandler = G4ExceptionHandler() # automatically registered
+gExceptionHandler = G4ExceptionHandler() # automatically registered
 
 # gGeometryManager
 #gGeometryManager = G4GeometryManager.GetInstance()

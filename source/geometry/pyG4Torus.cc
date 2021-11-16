@@ -22,40 +22,52 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pyG4Torus.cc
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "G4Torus.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
+// ====================================================================
+// wrappers
+// ====================================================================
+namespace pyG4Torus {
 
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+G4Torus* CreateTorus(const G4String& name, G4double pRmin, G4double pRmax,
+                     G4double pRtor, G4double pSPhi, G4double pDPhi)
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  return new G4Torus(name, pRmin, pRmax, pRtor, pSPhi, pDPhi);
+}
+
+}
+
+using namespace pyG4Torus;
+
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4Torus()
+{
+  class_<G4Torus, G4Torus*, bases<G4VSolid> >
+    ("G4Torus", "Torus solid class", no_init)
+    // constructors
+    .def(init<const G4String&, G4double, G4double, G4double,
+         G4double, G4double>())
+    // ---
+    .def("GetRmin", &G4Torus::GetRmin)
+    .def("GetRmax", &G4Torus::GetRmax)
+    .def("GetRtor", &G4Torus::GetRtor)
+    .def("GetSPhi", &G4Torus::GetSPhi)
+    .def("GetDPhi", &G4Torus::GetDPhi)
+    // operators
+    .def(self_ns::str(self))
+    ;
+
+    // Create solid
+    def("CreateTorus", CreateTorus, return_value_policy<manage_new_object>());
 }

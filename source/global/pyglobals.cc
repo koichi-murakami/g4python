@@ -40,15 +40,15 @@ namespace {
 // G4cout/cerr are set to Python stdout
 void SetG4PyCoutDestination()
 {
-  G4UImanager* UImgr= G4UImanager::GetUIpointer();
-  G4PyCoutDestination* pycout= new G4PyCoutDestination();
+  auto UImgr= G4UImanager::GetUIpointer();
+  auto pycout= new G4PyCoutDestination();
   G4coutbuf.SetDestination(pycout);
   G4cerrbuf.SetDestination(pycout);
 }
 
 void ResetG4PyCoutDestination()
 {
-  G4UImanager* UImgr= G4UImanager::GetUIpointer();
+  auto UImgr= G4UImanager::GetUIpointer();
   UImgr-> SetCoutDestination(0);
 }
 

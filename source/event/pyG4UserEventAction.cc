@@ -22,40 +22,54 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pyG4UserEventAction.cc
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "G4UserEventAction.hh"
+#include "G4Event.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
+// ====================================================================
+// thin wrappers
+// ====================================================================
+struct CB_G4UserEventAction : G4UserEventAction, 
+			     wrapper<G4UserEventAction> {
+  // BeginOfEventAction
+  void BeginOfEventAction(const G4Event* anEvent) {
+    if(const override& f= get_override("BeginOfEventAction")) {
+      f(boost::ref(anEvent));
+    } else
+      G4UserEventAction::BeginOfEventAction(anEvent);
+  }
 
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+  // EndOfEventAction
+  void EndOfEventAction(const G4Event* anEvent) {
+    if(const override& f= get_override("EndOfEventAction")) {
+      f(boost::ref(anEvent));
+    } else {
+      G4UserEventAction::EndOfEventAction(anEvent);
+    }    
+  }
+};
+
+
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4UserEventAction()
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  class_<CB_G4UserEventAction, CB_G4UserEventAction*, boost::noncopyable>
+    ( "G4UserEventAction", "event action class")
+    
+    .def("BeginOfEventAction", &G4UserEventAction::BeginOfEventAction,
+	 &CB_G4UserEventAction::BeginOfEventAction)
+    .def("EndOfEventAction", &G4UserEventAction::EndOfEventAction,
+	 &CB_G4UserEventAction::EndOfEventAction)
+    ;
 }
+

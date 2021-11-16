@@ -23,39 +23,32 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include "G4Event.hh"
 
 namespace py = pybind11;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
-
 // ==========================================================================
-PYBIND11_MODULE(G4global, m)
+void export_G4Event(py::module& m)
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  py::class_<G4Event>(m, "G4Event")
+  .def(py::init<>())
+  .def(py::init<G4int>())
+  // ---
+  .def("Print",                    &G4Event::Print)
+  .def("Draw",                     &G4Event::Draw)
+  .def("SetEventID",               &G4Event::SetEventID)
+  .def("GetEventID",               &G4Event::GetEventID)
+  .def("SetEventAborted",          &G4Event::SetEventAborted)
+  .def("IsAborted",                &G4Event::IsAborted)
+  // ---
+  .def("AddPrimaryVertex",         &G4Event::AddPrimaryVertex)
+  .def("GetNumberOfPrimaryVertex", &G4Event::GetNumberOfPrimaryVertex)
+  .def("GetPrimaryVertex",         &G4Event::GetPrimaryVertex, py::arg("i")=0)
+  // ---
+  .def("GetTrajectoryContainer",   &G4Event::GetTrajectoryContainer,
+       py::return_value_policy::reference)
+  .def("SetUserInformation",       &G4Event::SetUserInformation)
+  .def("GetUserInformation",       &G4Event::GetUserInformation,
+       py::return_value_policy::reference)
+  ;
 }

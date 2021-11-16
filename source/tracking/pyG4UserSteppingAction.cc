@@ -22,40 +22,44 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pyG4UserSteppingAction.cc
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "G4UserSteppingAction.hh"
+#include "G4Step.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
+// ====================================================================
+// thin wrappers
+// ====================================================================
+struct CB_G4UserSteppingAction : G4UserSteppingAction,
+				 wrapper<G4UserSteppingAction> {
+  // UserSteppingAction
+  void UserSteppingAction(const G4Step* astep) {
+    if(const override& f= get_override("UserSteppingAction")) {
+      f(boost::ref(astep));
+    } else {
+      G4UserSteppingAction::UserSteppingAction(astep);
+    }
+  }
+};
 
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4UserSteppingAction()
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  class_<CB_G4UserSteppingAction, CB_G4UserSteppingAction*, boost::noncopyable>
+    ("G4UserSteppingAction", "stepping action class")
+
+    .def("UserSteppingAction", &G4UserSteppingAction::UserSteppingAction,
+         &CB_G4UserSteppingAction::UserSteppingAction)
+    ;
 }
+

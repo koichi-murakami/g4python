@@ -22,40 +22,33 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pyG4Navigator.cc
+//
+//   Only limitted functionalities are exposed.
+//
+//                                         2007 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "G4Navigator.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
-
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4Navigator()
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  class_<G4Navigator, G4Navigator*, boost::noncopyable>
+    ("G4Navigator", "navigator")
+    // ---
+    .def("GetWorldVolume",        &G4Navigator::GetWorldVolume,
+         return_value_policy<reference_existing_object>())
+    .def("GetVerboseLevel",       &G4Navigator::GetVerboseLevel)
+    .def("SetVerboseLevel",       &G4Navigator::SetVerboseLevel)
+    .def("IsActive",              &G4Navigator::IsActive)
+    .def("PrintState",            &G4Navigator::PrintState)
+    ;
 }
+

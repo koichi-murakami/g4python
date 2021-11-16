@@ -22,40 +22,44 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pyG4ChordFinder.cc
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "G4ChordFinder.hh"
+#include "G4MagneticField.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
+// ====================================================================
+// thin wrappers
+// ====================================================================
+namespace pyG4ChordFinder {
 
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_SetVerbose, SetVerbose, 0, 1)
+
+}
+
+using namespace pyG4ChordFinder;
+
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4ChordFinder()
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  class_<G4ChordFinder, G4ChordFinder*, boost::noncopyable>
+    ("G4ChordFinder", "chord finder class", no_init)
+    // constructor
+    .def(init<G4MagneticField*>())
+    .def(init<G4MagneticField*, G4double>())
+    .def(init<G4MagneticField*, G4double, G4MagIntegratorStepper*>())
+    // ---
+    .def("GetDeltaChord",   &G4ChordFinder::GetDeltaChord)
+    .def("SetDeltaChord",   &G4ChordFinder::SetDeltaChord)
+    // ---
+    .def("SetVerbose",      &G4ChordFinder::SetVerbose, f_SetVerbose())
+    ;
 }

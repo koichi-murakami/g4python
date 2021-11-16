@@ -22,40 +22,36 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pymodG4particles.cc
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4ParticleDefinition();
+void export_G4DynamicParticle();
+void export_G4ParticleTable();
+void export_G4DecayTable();
+void export_G4PrimaryParticle();
+void export_G4PrimaryVertex();
+void export_PyG4ParticleList();
 
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+
+BOOST_PYTHON_MODULE(G4particles)
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  export_G4ParticleDefinition();
+  export_G4DynamicParticle();
+  export_G4ParticleTable();
+  export_G4DecayTable();
+  export_G4PrimaryParticle();
+  export_G4PrimaryVertex();
+  export_PyG4ParticleList();
 }
+

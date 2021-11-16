@@ -23,39 +23,30 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include "G4VProcess.hh"
 
 namespace py = pybind11;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
-
 // ==========================================================================
-PYBIND11_MODULE(G4global, m)
+void export_G4VProcess(py::module& m)
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  py::class_<G4VProcess>(m, "G4VProcess")
+  // ---
+  //.def("SetPILfactor",         &G4VProcess::SetPILfactor)
+  //.def("GetPILfactor",         &G4VProcess::GetPILfactor)
+  //.def("IsApplicable",         &G4VProcess::IsApplicable)
+  //.def("BuildPhysicsTable",    &G4VProcess::BuildPhysicsTable)
+  //.def("PreparePhysicsTable",  &G4VProcess::PreparePhysicsTable)
+  //.def("StorePhysicsTable",    &G4VProcess::StorePhysicsTable)
+  //.def("RetrievePhysicsTable", &G4VProcess::RetrievePhysicsTable)
+  //.def("GetPhysicsTableFileName", &G4VProcess::GetPhysicsTableFileName,
+  //f_GetPhysicsTableFileName()
+  //[return_value_policy<return_by_value>()])
+  //.def("GetProcessName",       &G4VProcess::GetProcessName,
+  //return_value_policy<return_by_value>())
+  //.def("GetProcessType",       &G4VProcess::GetProcessType)
+  .def("DumpInfo",             &G4VProcess::DumpInfo)
+  .def("SetVerboseLevel",      &G4VProcess::SetVerboseLevel)
+  .def("GetVerboseLevel",      &G4VProcess::GetVerboseLevel)
+  ;
 }

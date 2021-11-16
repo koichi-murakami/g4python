@@ -22,40 +22,35 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pyG4BooleanSolid.cc
+//
+//                                         2007 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "G4BooleanSolid.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
-
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4BooleanSolid()
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  class_<G4BooleanSolid, G4BooleanSolid*, bases<G4VSolid>, boost::noncopyable>
+    ("G4BooleanSolid", "boolean solid class", no_init)
+    // ---
+    .def("GetCubVolStatistics",   &G4BooleanSolid::GetCubVolStatistics)
+    .def("GetCubVolEpsilon",      &G4BooleanSolid::GetCubVolEpsilon)
+    .def("SetCubVolStatistics",   &G4BooleanSolid::SetCubVolStatistics)
+    .def("SetCubVolEpsilon",      &G4BooleanSolid::SetCubVolEpsilon)
+    .def("GetAreaStatistics",     &G4BooleanSolid::GetAreaStatistics)
+    .def("GetAreaAccuracy",       &G4BooleanSolid::GetAreaAccuracy)
+    .def("SetAreaStatistics",     &G4BooleanSolid::SetAreaStatistics)
+    .def("SetAreaAccuracy",       &G4BooleanSolid::SetAreaAccuracy)
+    .def("GetPointOnSurface",     &G4BooleanSolid::GetPointOnSurface)
+    ;
+
 }
+

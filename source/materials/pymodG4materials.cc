@@ -22,40 +22,37 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pymodG4materials.cc [Geant4Py module]
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4Material();
+void export_G4MaterialTable();
+void export_G4Element();
+void export_G4ElementTable();
+//void export_G4ElementVector();
+void export_G4Isotope();
+void export_G4NistManager();
+void export_G4AtomicShells();
 
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+BOOST_PYTHON_MODULE(G4materials)
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  export_G4Material();
+  export_G4MaterialTable();
+  export_G4Element();
+  export_G4ElementTable();
+  //export_G4ElementVector();
+  export_G4Isotope();
+  export_G4NistManager();
+  export_G4AtomicShells();
 }
+

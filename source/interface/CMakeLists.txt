@@ -22,6 +22,7 @@ target_link_libraries(${MODULE} PRIVATE
   global_cflags
 )
 
+#------------------------------------------------------------------------------
 set_target_properties(${MODULE} PROPERTIES PREFIX "")
 set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4interface")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")

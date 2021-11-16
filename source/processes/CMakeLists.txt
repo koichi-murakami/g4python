@@ -1,31 +1,20 @@
 # - build module
 #------------------------------------------------------------------------------
-set(MODULE pyG4global)
+set(MODULE pyG4processes)
 #------------------------------------------------------------------------------
 add_library(${MODULE} SHARED)
 
 target_sources(${MODULE} PRIVATE
-  G4PyCoutDestination.cc
-#  pyG4ApplicationState.cc
-  pyG4Exception.cc
-  pyG4ExceptionHandler.cc
-  pyG4ExceptionSeverity.cc
-#  pyG4RandomDirection.cc
-#  pyG4RotationMatrix.cc
-#  pyG4StateManager.cc
-  pyG4String.cc
-  pyG4ThreeVector.cc
-#  pyG4Timer.cc
-#  pyG4Transform3D.cc
-  pyG4TwoVector.cc
-#  pyG4UnitsTable.cc
-#  pyG4UserLimits.cc
-  pyG4Version.cc
-#  pyRandomEngines.cc
-#  pyRandomize.cc
-#  pygeomdefs.cc
-  pyglobals.cc
-  pymodG4global.cc
+  #pyG4CrossSectionHandler.cc
+  #pyG4EmCalculator.cc
+  #pyG4ProcVector.cc
+  #pyG4ProcessManager.cc
+  #pyG4ProcessTable.cc
+  #pyG4ProcessType.cc
+  #pyG4ProductionCutsTable.cc
+  #pyG4VCrossSectionHandler.cc
+  pyG4VProcess.cc
+  pymodG4processes.cc
 )
 
 target_include_directories(${MODULE} PRIVATE
@@ -43,10 +32,9 @@ target_link_libraries(${MODULE} PRIVATE
 
 #------------------------------------------------------------------------------
 set_target_properties(${MODULE} PROPERTIES PREFIX "")
-set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4global")
+set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4processes")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
-set_target_properties(${MODULE}
-                      PROPERTIES INSTALL_RPATH
+set_target_properties(${MODULE} PROPERTIES INSTALL_RPATH
                       ${GEANT4_LIBRARY_DIR}
                       BUILD_WITH_INSTALL_RPATH TRUE)
 

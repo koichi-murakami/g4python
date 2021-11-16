@@ -23,39 +23,34 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include "G4Box.hh"
 
 namespace py = pybind11;
 
 // --------------------------------------------------------------------------
-void export_globals(py::module&);
-//void export_geomdefs();
-//void export_G4StateManager();
-//void export_G4ApplicationState();
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-//void export_G4RotationMatrix();
-//void export_G4Transform3D();
-//void export_G4UnitsTable();
-//void export_Randomize();
-//void export_RandomEngines();
-//void export_G4RandomDirection();
-//void export_G4UserLimits();
-//void export_G4Timer();
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
+namespace {
+
+G4Box* CreateBox(const std::string& name, double dx, double dy, double dz)
+{
+  return new G4Box(name, dx, dy, dz);
+}
+
+}
 
 // ==========================================================================
-PYBIND11_MODULE(G4global, m)
+void export_G4Box(py::module& m)
 {
-  export_globals(m);
-  export_G4String(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  py::class_<G4Box, G4VSolid>(m, "G4Box")
+  .def(py::init<const G4String&, G4double, G4double, G4double>())
+  // ---
+  .def("SetXHalfLength",   &G4Box::SetXHalfLength)
+  .def("SetYHalfLength",   &G4Box::SetYHalfLength)
+  .def("SetZHalfLength",   &G4Box::SetZHalfLength)
+  .def("GetXHalfLength",   &G4Box::GetXHalfLength)
+  .def("GetYHalfLength",   &G4Box::GetYHalfLength)
+  .def("GetZHalfLength",   &G4Box::GetZHalfLength)
+  ;
+
+  // ---
+  m.def("CreateBox", &::CreateBox, py::return_value_policy::reference);
 }
