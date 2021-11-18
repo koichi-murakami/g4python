@@ -22,53 +22,43 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4ParticleList.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4ParticleTable.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// internal class
-// ====================================================================
-
+// --------------------------------------------------------------------------
 class PyG4ParticleList {
 public:
-  typedef std::vector<G4ParticleDefinition*> ParticleList;
-  typedef ParticleList::iterator p_iterator;
+  using ParticleList = std::vector<G4ParticleDefinition*> ;
+  using p_iterator = ParticleList::iterator;
 
   static ParticleList particleTableCache;
 
   p_iterator p_begin() {
-    G4ParticleTable* particleTable= G4ParticleTable::GetParticleTable();
+    auto particleTable = G4ParticleTable::GetParticleTable();
+
     if(particleTableCache.size() != particleTable-> size() ) {
       particleTableCache.clear();
-      G4ParticleTable::G4PTblDicIterator* 
-	theParticleIterator= particleTable-> GetIterator();
+      auto theParticleIterator = particleTable-> GetIterator();
       theParticleIterator-> reset();
-      while( (*theParticleIterator)() ){
-	G4ParticleDefinition* particle= theParticleIterator-> value();
-	particleTableCache.push_back(particle);
+      while( (*theParticleIterator)() ) {
+        auto particle= theParticleIterator-> value();
+        particleTableCache.push_back(particle);
       }
     }
     return particleTableCache.begin();
   }
 
   p_iterator p_end() {
-    G4ParticleTable* particleTable= G4ParticleTable::GetParticleTable();
-    if(particleTableCache.size() != particleTable-> size() ) {
+    auto particleTable= G4ParticleTable::GetParticleTable();
+    if( particleTableCache.size() != particleTable-> size() ) {
       particleTableCache.clear();
-      G4ParticleTable::G4PTblDicIterator* 
-	theParticleIterator= particleTable-> GetIterator();
+      auto theParticleIterator = particleTable-> GetIterator();
       theParticleIterator-> reset();
       while( (*theParticleIterator)() ){
-	G4ParticleDefinition* particle= theParticleIterator-> value();
-	particleTableCache.push_back(particle);
+        auto particle = theParticleIterator-> value();
+        particleTableCache.push_back(particle);
       }
     }
     return particleTableCache.end();
@@ -77,16 +67,12 @@ public:
 
 PyG4ParticleList::ParticleList PyG4ParticleList::particleTableCache;
 
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_PyG4ParticleList()
+// ==========================================================================
+void export_PyG4ParticleList(py::module& m)
 {
-  class_<PyG4ParticleList>("PyG4ParticleList", "particle list")
+  py::class_<PyG4ParticleList>(m, "PyG4ParticleList")
     .def("__iter__",  iterator<PyG4ParticleList::ParticleList>())
-    .add_property("particles", range(&PyG4ParticleList::p_begin, 
-				     &PyG4ParticleList::p_end))
+    .def_property("particles", range(&PyG4ParticleList::p_begin,
+				                             &PyG4ParticleList::p_end))
     ;
 }
-

@@ -5,7 +5,7 @@ set(MODULE pyG4physicslists)
 add_library(${MODULE} SHARED)
 
 target_sources(${MODULE} PRIVATE
-  #pyPhysicsLists.cc
+  pyPhysicsLists.cc
   pymodG4physicslists.cc
 )
 

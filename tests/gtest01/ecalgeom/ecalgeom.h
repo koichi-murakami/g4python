@@ -22,38 +22,17 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+#ifndef ECAL_GEOM_H_
+#define ECAL_GEOM_H_
+
 #include "G4VUserDetectorConstruction.hh"
-#include "G4VPhysicalVolume.hh"
 
-namespace py = pybind11;
-
-// --------------------------------------------------------------------------
-namespace {
-
-class PyG4VUserDetectorConstruction : public G4VUserDetectorConstruction {
+class EcalGeom : public G4VUserDetectorConstruction {
 public:
-  using G4VUserDetectorConstruction::G4VUserDetectorConstruction;
+  EcalGeom() = default;
+  ~EcalGeom() = default;
 
-  G4VPhysicalVolume* Construct() override {
-    PYBIND11_OVERLOAD_PURE(
-      G4VPhysicalVolume*,
-      G4VUserDetectorConstruction,
-      Construct,
-    );
-  }
+  virtual G4VPhysicalVolume* Construct();
 };
 
-}
-
-// ==========================================================================
-void export_G4VUserDetectorConstruction(py::module& m)
-{
-  py::class_<G4VUserDetectorConstruction, PyG4VUserDetectorConstruction>
-  (m, "G4VUserDetectorConstruction")
-  // ---
-  .def(py::init<>())
-  .def("Construct",  &G4VUserDetectorConstruction::Construct,
-       py::return_value_policy::reference)
-  ;
-}
+#endif

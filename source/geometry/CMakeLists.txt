@@ -2,9 +2,7 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4geometry)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
+pybind11_add_module(${MODULE}
   #pyG4BooleanSolid.cc
   pyG4Box.cc
   #pyG4ChordFinder.cc

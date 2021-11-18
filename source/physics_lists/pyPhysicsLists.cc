@@ -22,13 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyPhysicsLists.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include <vector>
 #include <algorithm>
 #include "FTFP_BERT.hh"
@@ -38,6 +32,7 @@
 #include "FTFP_INCLXX.hh"
 #include "FTFP_INCLXX_HP.hh"
 #include "FTF_BIC.hh"
+#include "FTFQGSP_BERT.hh"
 #include "LBE.hh"
 #include "NuBeam.hh"
 #include "QBBC.hh"
@@ -51,29 +46,32 @@
 #include "QGSP_INCLXX_HP.hh"
 #include "QGS_BIC.hh"
 #include "Shielding.hh"
+#include "ShieldingLEND.hh"
 
+namespace py = pybind11;
 
+// --------------------------------------------------------------------------
 // macro for adding physics lists
 #define ADD_PHYSICS_LIST(plname) \
-  class_<plname, plname*, bases<G4VUserPhysicsList>, boost::noncopyable> \
-    (#plname, #plname " physics list") \
-    ; \
+  py::class_<plname, G4VModularPhysicsList, G4VUserPhysicsList>(m, #plname)\
+  .def(py::init<>());\
   AddPhysicsList(#plname);
 
-using namespace boost::python;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyPhysicsLists {
+//.def("DumpList",  &plname::DumpList);
 
-  static std::vector<std::string> plList;
+// --------------------------------------------------------------------------
+namespace {
 
-void AddPhysicsList(const G4String& plname) {
+static std::vector<std::string> plList;
+
+void AddPhysicsList(const G4String& plname)
+{
   plList.push_back(plname);
 }
 
-void ListPhysicsList() {
+void ListPhysicsList()
+{
   for (G4int i=0; i< plList.size(); i++) {
     G4cout << plList[i] << G4endl;
   }
@@ -81,14 +79,10 @@ void ListPhysicsList() {
 
 }
 
-using namespace pyPhysicsLists;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_PhysicsLists()
+// ==========================================================================
+void export_PhysicsLists(py::module& m)
 {
-  def("ListPhysicsList",   ListPhysicsList);
+  m.def("ListPhysicsList",  &::ListPhysicsList);
 
   ADD_PHYSICS_LIST(FTFP_BERT);
   ADD_PHYSICS_LIST(FTFP_BERT_ATL);
@@ -96,10 +90,9 @@ void export_PhysicsLists()
   ADD_PHYSICS_LIST(FTFP_BERT_TRV);
   ADD_PHYSICS_LIST(FTFP_INCLXX);
   ADD_PHYSICS_LIST(FTFP_INCLXX_HP);
+  ADD_PHYSICS_LIST(FTFQGSP_BERT);
   ADD_PHYSICS_LIST(FTF_BIC);
-  ADD_PHYSICS_LIST(LBE);
-  ADD_PHYSICS_LIST(NuBeam);
-  ADD_PHYSICS_LIST(QBBC);
+  //
   ADD_PHYSICS_LIST(QGSP_BERT);
   ADD_PHYSICS_LIST(QGSP_BERT_HP);
   ADD_PHYSICS_LIST(QGSP_BIC);
@@ -109,8 +102,12 @@ void export_PhysicsLists()
   ADD_PHYSICS_LIST(QGSP_INCLXX);
   ADD_PHYSICS_LIST(QGSP_INCLXX_HP);
   ADD_PHYSICS_LIST(QGS_BIC);
+  //
+  //ADD_PHYSICS_LIST(LBE);
+  ADD_PHYSICS_LIST(NuBeam);
+  ADD_PHYSICS_LIST(QBBC);
   ADD_PHYSICS_LIST(Shielding);
+  ADD_PHYSICS_LIST(ShieldingLEND);
 
-  // sort PL vector
   std::sort(plList.begin(), plList.end());
 }

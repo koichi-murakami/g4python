@@ -2,9 +2,7 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4event)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
+pybind11_add_module(${MODULE}
   #pyG4ClassificationOfNewTrack.cc
   pyG4Event.cc
   #pyG4EventManager.cc
@@ -12,6 +10,7 @@ target_sources(${MODULE} PRIVATE
   #pyG4StackManager.cc
   #pyG4UserEventAction.cc
   #pyG4UserStackingAction.cc
+  pyParticleGun.cc
   pymodG4event.cc
 )
 

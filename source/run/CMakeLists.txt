@@ -2,18 +2,16 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4run)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
-  #pyG4Run.cc
+pybind11_add_module(${MODULE}
+  pyG4Run.cc
   pyG4RunManager.cc
   #pyG4RunManagerKernel.cc
-  #pyG4UserRunAction.cc
-  #pyG4VModularPhysicsList.cc
+  pyG4UserRunAction.cc
+  pyG4VModularPhysicsList.cc
   #pyG4VPhysicsConstructor.cc
-  #pyG4VUserDetectorConstruction.cc
-  #pyG4VUserPhysicsList.cc
-  #pyG4VUserPrimaryGeneratorAction.cc
+  pyG4VUserDetectorConstruction.cc
+  pyG4VUserPhysicsList.cc
+  pyG4VUserPrimaryGeneratorAction.cc
   pymodG4run.cc
 )
 

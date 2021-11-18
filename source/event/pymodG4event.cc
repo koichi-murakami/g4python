@@ -34,6 +34,7 @@ void export_G4UserEventAction(py::module&);
 void export_G4UserStackingAction(py::module&);
 void export_G4ClassificationOfNewTrack(py::module&);
 void export_G4ParticleGun(py::module&);
+void export_ParticleGun(py::module&);
 
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4event, m)
@@ -45,4 +46,5 @@ PYBIND11_MODULE(G4event, m)
   //export_G4UserStackingAction(m);
   //export_G4ClassificationOfNewTrack(m);
   //export_G4ParticleGun(m);
+  export_ParticleGun(m);
 }

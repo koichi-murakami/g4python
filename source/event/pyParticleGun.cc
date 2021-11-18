@@ -23,37 +23,57 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
-#include "G4VUserDetectorConstruction.hh"
-#include "G4VPhysicalVolume.hh"
+#include "G4ParticleGun.hh"
+#include "G4VUserPrimaryGeneratorAction.hh"
 
 namespace py = pybind11;
 
 // --------------------------------------------------------------------------
-namespace {
-
-class PyG4VUserDetectorConstruction : public G4VUserDetectorConstruction {
+class ParticleGun : public G4VUserPrimaryGeneratorAction {
 public:
-  using G4VUserDetectorConstruction::G4VUserDetectorConstruction;
+  ParticleGun();
+  virtual ~ParticleGun();
 
-  G4VPhysicalVolume* Construct() override {
-    PYBIND11_OVERLOAD_PURE(
-      G4VPhysicalVolume*,
-      G4VUserDetectorConstruction,
-      Construct,
-    );
-  }
+  G4ParticleGun* GetGun() const;
+
+  void GeneratePrimaries(G4Event* event) override;
+
+private:
+  G4ParticleGun* gun_;
+
 };
 
+// --------------------------------------------------------------------------
+ParticleGun::ParticleGun()
+  : gun_{nullptr}
+{
+  gun_ = new G4ParticleGun();
+}
+
+// --------------------------------------------------------------------------
+ParticleGun::~ParticleGun()
+{
+  delete gun_;
+}
+
+// --------------------------------------------------------------------------
+void ParticleGun::GeneratePrimaries(G4Event* event)
+{
+  gun_-> GeneratePrimaryVertex(event);
+}
+
+// --------------------------------------------------------------------------
+inline G4ParticleGun* ParticleGun::GetGun() const
+{
+  return gun_;
 }
 
 // ==========================================================================
-void export_G4VUserDetectorConstruction(py::module& m)
+void export_ParticleGun(py::module& m)
 {
-  py::class_<G4VUserDetectorConstruction, PyG4VUserDetectorConstruction>
-  (m, "G4VUserDetectorConstruction")
-  // ---
+  py::class_<ParticleGun, G4VUserPrimaryGeneratorAction>(m, "ParticleGun")
   .def(py::init<>())
-  .def("Construct",  &G4VUserDetectorConstruction::Construct,
-       py::return_value_policy::reference)
+  .def("GetGun",  &ParticleGun::GetGun,
+                  py::return_value_policy::reference)
   ;
 }

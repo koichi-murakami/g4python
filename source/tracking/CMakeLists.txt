@@ -2,9 +2,7 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4tracking)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
+pybind11_add_module(${MODULE}
   #pyG4TrackingManager.cc
   #pyG4UserSteppingAction.cc
   #pyG4UserTrackingAction.cc

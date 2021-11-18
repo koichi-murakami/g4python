@@ -2,10 +2,8 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4intercoms)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
-  #pyG4UIcommand.cc
+pybind11_add_module(${MODULE}
+#pyG4UIcommand.cc
   pyG4UIcommandTree.cc
   pyG4UImanager.cc
   #pyG4UIparameter.cc

@@ -32,5 +32,5 @@ void export_PhysicsLists(py::module&);
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4physicslists, m)
 {
-  //export_PhysicsLists(m);
+  export_PhysicsLists(m);
 }

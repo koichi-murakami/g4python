@@ -2,9 +2,10 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4digis_hits)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
+#add_library(${MODULE} SHARED)
+#target_sources(${MODULE} PRIVATE
 
-target_sources(${MODULE} PRIVATE
+pybind11_add_module(${MODULE}
   #pyG4VSensitiveDetector.cc
   pymodG4digits_hits.cc
 )

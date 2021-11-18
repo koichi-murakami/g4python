@@ -2,9 +2,7 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4materials)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
+pybind11_add_module(${MODULE}
   #pyG4AtomicShells.cc
   #pyG4Element.cc
   #pyG4ElementTable.cc

@@ -2,9 +2,7 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4track)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
+pybind11_add_module(${MODULE}
   #pyG4Step.cc
   #pyG4StepPoint.cc
   #pyG4StepStatus.cc

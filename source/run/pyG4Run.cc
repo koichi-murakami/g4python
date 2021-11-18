@@ -22,42 +22,25 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Run.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Run.hh"
 #include "G4HCtable.hh"
 #include "G4DCtable.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Run()
+// ==========================================================================
+
+void export_G4Run(py::module& m)
 {
-  class_<G4Run, G4Run*, boost::noncopyable>("G4Run", "run class")
-    // ---
-    .def("GetRunID",         &G4Run::GetRunID)
-    .def("SetRunID",         &G4Run::SetRunID)
-    .def("GetNumberOfEvent", &G4Run::GetNumberOfEvent)
-    .def("GetNumberOfEventToBeProcessed", 
-	 &G4Run::GetNumberOfEventToBeProcessed)
-    .def("SetNumberOfEventToBeProcessed", 
-	 &G4Run::SetNumberOfEventToBeProcessed)
-    ;
-
-    // reduced functionality...
-    //.def("RecordEvent",      &G4Run::RecordEvent) // virtual
-    //.def("GetHCtable",       &G4Run::GetHCtable,
-    //return_internal_reference<>())
-    //.def("SetHCtable",       &G4Run::SetHCtable)
-    //.def("GetDCtable",       &G4Run::GetDCtable,
-    //return_internal_reference<>())
-    //.def("SetDCtable",       &G4Run::SetDCtable)	 
-
+  py::class_<G4Run>(m, "G4Run")
+  .def(py::init<>())
+  .def("GetRunID",             &G4Run::GetRunID)
+  .def("SetRunID",             &G4Run::SetRunID)
+  .def("GetNumberOfEvent",     &G4Run::GetNumberOfEvent)
+  .def("GetNumberOfEventToBeProcessed",
+                               &G4Run::GetNumberOfEventToBeProcessed)
+  .def("SetNumberOfEventToBeProcessed",
+                               &G4Run::SetNumberOfEventToBeProcessed)
+  ;
 }

@@ -22,47 +22,39 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4VUserPrimaryGeneratorAction.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4Event.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4VUserPrimaryGeneratorAction {
+// --------------------------------------------------------------------------
+namespace {
 
-struct CB_G4VUserPrimaryGeneratorAction :
-  G4VUserPrimaryGeneratorAction, wrapper<G4VUserPrimaryGeneratorAction> {
+class PyG4VUserPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
+public:
+  using G4VUserPrimaryGeneratorAction::G4VUserPrimaryGeneratorAction;
 
-  void GeneratePrimaries(G4Event* anEvent) {
-    get_override("GeneratePrimaries")(boost::ref(anEvent));
+  void GeneratePrimaries(G4Event* event) override {
+    PYBIND11_OVERLOAD_PURE(
+      void,
+      G4VUserPrimaryGeneratorAction,
+      GeneratePrimaries,
+      event
+    );
   }
 };
 
 }
 
-using namespace pyG4VUserPrimaryGeneratorAction;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4VUserPrimaryGeneratorAction()
+// ==========================================================================
+void export_G4VUserPrimaryGeneratorAction(py::module& m)
 {
-  class_<CB_G4VUserPrimaryGeneratorAction, CB_G4VUserPrimaryGeneratorAction*,
-    boost::noncopyable>
-    ("G4VUserPrimaryGeneratorAction",
+  py::class_<G4VUserPrimaryGeneratorAction, PyG4VUserPrimaryGeneratorAction>
+  (m, "G4VUserPrimaryGeneratorAction",
      "base class of user primary generator action")
-
-    .def("GeneratePrimaries",
-	 pure_virtual(&G4VUserPrimaryGeneratorAction::GeneratePrimaries))
-    ;
+  // ---
+  .def(py::init<>())
+  .def("GeneratePrimaries", &G4VUserPrimaryGeneratorAction::GeneratePrimaries)
+  ;
 }
-

@@ -22,22 +22,14 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4ParticleTable.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Version.hh"
 #include "G4ParticleTable.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4ParticleTable {
+/*
+namespace {
 
 // contains...
 G4bool(G4ParticleTable::*f1_contains)(const G4ParticleDefinition*) const
@@ -68,11 +60,12 @@ G4ParticleDefinition*(G4ParticleTable::*f3_FindAntiParticle)(
 
 // DumpTable
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_DumpTable, DumpTable, 0, 1)
-
+*/
 
 // --------------------------------------------------------------------
 // GetParticleList (returning python list)
 
+/*
 list GetParticleList(G4ParticleTable* particleTable)
 {
   list particleList;
@@ -86,22 +79,17 @@ list GetParticleList(G4ParticleTable* particleTable)
 
   return particleList;
 }
-
 }
+*/
 
-using namespace pyG4ParticleTable;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4ParticleTable()
+// ==========================================================================
+void export_G4ParticleTable(py::module& m)
 {
-  class_<G4ParticleTable, G4ParticleTable*, boost::noncopyable>
-    ("G4ParticleTable", "particle table", no_init)
+  py::class_<G4ParticleTable>(m, "G4ParticleTable")
     // ---
-    .def("GetParticleTable",  &G4ParticleTable::GetParticleTable,
-         return_value_policy<reference_existing_object>())
-    .staticmethod("GetParticleTable")
+    .def_static("GetParticleTable",  &G4ParticleTable::GetParticleTable,
+                                     py::return_value_policy::reference)
+    /*
     .def("contains",          f1_contains)
     .def("contains",          f2_contains)
     .def("entries",           &G4ParticleTable::entries)
@@ -135,5 +123,6 @@ void export_G4ParticleTable()
     // ---
     // additionals
     .def("GetParticleList",   GetParticleList)
+    */
     ;
 }

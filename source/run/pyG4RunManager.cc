@@ -46,8 +46,12 @@ namespace {
 
 void CreateRunManager()
 {
-  G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default,
+  G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly,
                                         nullptr, true, 1);
+
+  //G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default,
+  //                                        nullptr, true, 1);
+
 }
 
 }
@@ -55,8 +59,9 @@ void CreateRunManager()
 // ==========================================================================
 void export_G4RunManager(py::module& m)
 {
-  m.def("CreateRunManager", &::CreateRunManager);
+  m.def("CreateRunManager",     &::CreateRunManager);
 
+  // --------------------------------------------------------------------------
   py::class_<G4RunManager>(m, "G4RunManager")
   .def_static("GetRunManager",  &G4RunManager::GetRunManager,
                                 py::return_value_policy::reference)
@@ -66,8 +71,10 @@ void export_G4RunManager(py::module& m)
   .def("GetVerboseLevel",       &G4RunManager::GetVerboseLevel)
   .def("GetVersionString",      &G4RunManager::GetVersionString,
                                 py::return_value_policy::copy)
-  // ---
-  .def("Initialize",            &G4RunManager::Initialize)
+  .def("SetNumberOfThreads",    &G4RunManager::SetNumberOfThreads)
+  .def("GetNumberOfThreads",    &G4RunManager::GetNumberOfThreads)
+   // ---
+   .def("Initialize",           &G4RunManager::Initialize)
   .def("BeamOn",                &G4RunManager::BeamOn,
                                 py::arg("n_event"),
                                 py::arg("macroFile") = nullptr,
@@ -75,7 +82,7 @@ void export_G4RunManager(py::module& m)
   .def("AbortRun",              &G4RunManager::AbortRun,
                                 py::arg("softAbort") = false)
   .def("AbortEvent",            &G4RunManager::AbortEvent)
-  // ---
+ // ---
   .def("SetUserInitialization",
        py::overload_cast<G4VUserDetectorConstruction*>(
          &G4RunManager::SetUserInitialization))
@@ -156,4 +163,16 @@ void export_G4RunManager(py::module& m)
   .def("GetRandomNumberStore",    &G4RunManager::GetRandomNumberStore)
   ;
 
+  // --------------------------------------------------------------------------
+  py::class_<G4MTRunManager, G4RunManager>(m, "G4MTRunManager")
+  // ---
+  .def("SetNumberOfThreads",    &G4MTRunManager::SetNumberOfThreads)
+  .def("GetNumberOfThreads",    &G4MTRunManager::GetNumberOfThreads)
+  ;
+
+  // --------------------------------------------------------------------------
+  py::class_<G4TaskRunManager, G4MTRunManager>(m, "G4TaskRunManager")
+  .def("SetNumberOfThreads",    &G4TaskRunManager::SetNumberOfThreads)
+  .def("GetNumberOfThreads",    &G4TaskRunManager::GetNumberOfThreads)
+  ;
 }

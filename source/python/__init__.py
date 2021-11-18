@@ -100,7 +100,7 @@ gExceptionHandler = G4ExceptionHandler() # automatically registered
 #gTransportationManager = G4TransportationManager.GetTransportationManager()
 
 # gParticleTable
-#gParticleTable = G4ParticleTable.GetParticleTable()
+gParticleTable = G4ParticleTable.GetParticleTable()
 #gParticleIterator = PyG4ParticleList()
 
 # gProcessTable

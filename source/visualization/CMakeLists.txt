@@ -2,9 +2,7 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4visualization)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
+pybind11_add_module(${MODULE}
   #pyG4ASCIITree.cc
   #pyG4DAWNFILE.cc
   #pyG4HepRep.cc

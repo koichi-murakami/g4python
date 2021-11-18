@@ -28,25 +28,25 @@ namespace py = pybind11;
 
 // --------------------------------------------------------------------------
 void export_G4RunManager(py::module&);
-//void export_G4RunManagerKernel();
-//void export_G4Run();
-//void export_G4UserRunAction();
-//void export_G4VUserPrimaryGeneratorAction();
-//void export_G4VUserDetectorConstruction();
-//void export_G4VUserPhysicsList();
-//void export_G4VModularPhysicsList();
-//void export_G4VPhysicsConstructor();
+void export_G4RunManagerKernel(py::module&);
+void export_G4Run(py::module&);
+void export_G4VUserDetectorConstruction(py::module&);
+void export_G4UserRunAction(py::module&);
+void export_G4VUserPrimaryGeneratorAction(py::module&);
+void export_G4VUserPhysicsList(py::module&);
+void export_G4VModularPhysicsList(py::module&);
+void export_G4VPhysicsConstructor(py::module&);
 
 // ==========================================================================
 PYBIND11_MODULE(G4run, m)
 {
   export_G4RunManager(m);
-  //export_G4RunManagerKernel();
-  //export_G4Run();
-  //export_G4UserRunAction();
-  //export_G4VUserPrimaryGeneratorAction();
-  //export_G4VUserDetectorConstruction();
-  //export_G4VUserPhysicsList();
-  //export_G4VModularPhysicsList();
-  //export_G4VPhysicsConstructor();
+  //export_G4RunManagerKernel(m);
+  export_G4Run(m);
+  export_G4VUserDetectorConstruction(m);
+  export_G4UserRunAction(m);
+  export_G4VUserPrimaryGeneratorAction(m);
+  export_G4VUserPhysicsList(m);
+  export_G4VModularPhysicsList(m);
+  //export_G4VPhysicsConstructor(m);
 }

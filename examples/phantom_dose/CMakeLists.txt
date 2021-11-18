@@ -1,25 +1,31 @@
 #==============================================================================
-#  CMakeLists.txt for buidlig Geant4-Python
-#
-#  ***************************
-#  !! DONOT EDIT THIS FILE  !!
-#  ***************************
+#  CMakeLists.txt for buidlig Python module
 #==============================================================================
 cmake_minimum_required(VERSION 3.16...3.21)
 
+# Installation prefixes
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX $ENV{HOME}/opt/geant4/pymodules CACHE
+      PATH "Install prefix" FORCE)
+endif()
+
 #==============================================================================
-project(Geaant4-Python CXX)
+project(pymodule CXX)
 #==============================================================================
-include(config.cmake)
+set(MODULE ecalgeom)
+
+# Geant4 installation path
+set(GEANT4_INSTALL $ENV{HOME}/opt/geant4/11.0
+    CACHE STRING "Geant4 installation path")
+
+# python module install path
+set(G4MODULES_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${MODULE})
 
 #------------------------------------------------------------------------------
 # cmake modules
 set(CMAKE_MODULE_PATH
-    ${PROJECT_SOURCE_DIR}/cmake/Modules
+    ${PROJECT_SOURCE_DIR}/../../cmake/Modules
     ${CMAKE_MODULE_PATH})
-
-# python module install path
-set(G4MODULES_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/geant4)
 
 # find packages
 find_package(Geant4 REQUIRED)
@@ -37,31 +43,6 @@ add_library(global_cflags INTERFACE)
 target_compile_features(global_cflags INTERFACE cxx_std_17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# compiler flags
-set(cxx_flags)
-
-# build options
-if(NOT CMAKE_BUILD_TYPE)
-  if(DEBUG)
-    set(CMAKE_BUILD_TYPE "Debug")
-    if(MSVC)
-      set(cxx_flags ${cxx_flags} /DDEBUG)
-    else()
-      set(cxx_flags ${cxx_flags} -DDEBUG)
-    endif()
-  elseif(OPTIMIZE)
-    set(CMAKE_BUILD_TYPE "Release")
-  else()
-    set(CMAKE_BUILD_TYPE "RelWithDebInfo")
-  endif()
-endif()
-
-# rpath setting
-if(UNIX)
-  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  set(CMAKE_EXE_LINKER_FLAGS -Wl,--disable-new-dtags)
-endif()
-
 #------------------------------------------------------------------------------
 # parameters for building
 message(STATUS "--------------------------------------------------------")
@@ -77,8 +58,22 @@ message(STATUS "pybind11_INCLUDE_DIR: ${pybind11_INCLUDE_DIR}")
 message(STATUS "--------------------------------------------------------")
 
 #------------------------------------------------------------------------------
-# add source
-add_subdirectory(source)
+pybind11_add_module(${MODULE} ecalgeom/ecalgeom.cc)
+set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
 
-# add tests
-add_subdirectory(tests/gtest01)
+target_include_directories(${MODULE} PRIVATE
+  ${GEANT4_INCLUDE_DIR}
+  ${Python3_INCLUDE_DIRS}
+  ${pybind11_INCLUDE_DIR}
+)
+
+target_link_directories(${MODULE} PRIVATE ${GEANT4_LIBRARY_DIR})
+
+target_link_libraries(${MODULE} PRIVATE
+  ${GEANT4_LIBRARIES} ${Python3_LIBRARIES}
+  global_cflags
+)
+
+#------------------------------------------------------------------------------
+# install
+install(TARGETS ${MODULE} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})

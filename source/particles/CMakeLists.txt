@@ -9,7 +9,7 @@ target_sources(${MODULE} PRIVATE
   #pyG4DynamicParticle.cc
   #pyG4ParticleDefinition.cc
   #pyG4ParticleList.cc
-  #pyG4ParticleTable.cc
+  pyG4ParticleTable.cc
   #pyG4PrimaryParticle.cc
   #pyG4PrimaryVertex.cc
   pymodG4particles.cc

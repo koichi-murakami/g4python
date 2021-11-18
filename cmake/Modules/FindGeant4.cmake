@@ -8,6 +8,18 @@
 # GEANT4_LIBRARIES_WITH_VIS  Most common libraries with visualization
 # GEANT4_VIS                 Availabiliy of Vis package (bool)
 
+# library path (lib or lib64)
+if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+  set(_LIBDIR_DEFAULT lib)
+  if(CMAKE_SYSTEM_NAME MATCHES "Linux"
+     AND NOT EXISTS "/etc/debian_version")
+    if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+      set(_LIBDIR_DEFAULT lib64)
+    endif()
+  endif()
+  set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX}/${_LIBDIR_DEFAULT})
+endif()
+
 find_program(GEANT4_CONFIG NAMES geant4-config
              PATHS ${GEANT4_INSTALL}/bin
                    /usr/local/bin /opt/local/bin)

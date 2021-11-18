@@ -22,61 +22,24 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4VModularPhysicsList.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4VModularPhysicsList.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4VModularPhysicsList {
-
-struct CB_G4VModularPhysicsList :
-  G4VModularPhysicsList, wrapper<G4VModularPhysicsList> {
-
-  void SetCuts() {
-    get_override("SetCuts")();
-  }
-
-};
-
-// GetPhysics()
-const G4VPhysicsConstructor*
-      (G4VModularPhysicsList::*f1_GetPhysics)(G4int) const
-  = &G4VModularPhysicsList::GetPhysics;
-const G4VPhysicsConstructor*
-      (G4VModularPhysicsList::*f2_GetPhysics)(const G4String&) const
-  = &G4VModularPhysicsList::GetPhysics;
-
-}
-
-using namespace pyG4VModularPhysicsList;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4VModularPhysicsList()
+// ==========================================================================
+void export_G4VModularPhysicsList(py::module& m)
 {
-  class_<CB_G4VModularPhysicsList, bases<G4VUserPhysicsList>,
-    boost::noncopyable>
-    ("G4VModularPhysicsList", "base class of modular physics list")
+  py::class_<G4VModularPhysicsList, G4VUserPhysicsList>
+    (m, "G4VModularPhysicsList")
+    //.def("SetCuts",            pure_virtual(&G4VModularPhysicsList::SetCuts))
+    //.def("ConstructParticle",  &G4VModularPhysicsList::ConstructParticle)
+    //.def("ConstructProcess",   &G4VModularPhysicsList::ConstructProcess)
     // ---
-    .def("SetCuts",            pure_virtual(&G4VModularPhysicsList::SetCuts))
-    .def("ConstructParticle",  &G4VModularPhysicsList::ConstructParticle)
-    .def("ConstructProcess",   &G4VModularPhysicsList::ConstructProcess)
-    // ---
-    .def("RegisterPhysics",     &G4VModularPhysicsList::RegisterPhysics)
-    .def("GetPhysics",         f1_GetPhysics,
-         return_value_policy<reference_existing_object>())
-    .def("GetPhysics",         f2_GetPhysics,
-         return_value_policy<reference_existing_object>())
+    //.def("RegisterPhysics",     &G4VModularPhysicsList::RegisterPhysics)
+    //.def("GetPhysics",         f1_GetPhysics,
+    //     return_value_policy<reference_existing_object>())
+    //.def("GetPhysics",         f2_GetPhysics,
+    //     return_value_policy<reference_existing_object>())
     ;
 }
-

@@ -2,10 +2,8 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4graphics_reps)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
-  #pyG4Colour.cc
+pybind11_add_module(${MODULE}
+ #pyG4Colour.cc
   #pyG4VisAttributes.cc
   pymodG4graphics_reps.cc
 )

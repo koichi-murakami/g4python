@@ -2,9 +2,7 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4global)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
+pybind11_add_module(${MODULE}
   G4PyCoutDestination.cc
 #  pyG4ApplicationState.cc
   pyG4Exception.cc

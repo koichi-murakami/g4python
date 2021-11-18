@@ -1,10 +1,9 @@
 # - build module
 #------------------------------------------------------------------------------
-set(MODULE pyG4interface)
+set(MODULE gtest01)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
-  pyG4UIterminal.cc
-  pymodG4interface.cc
+  ecalgeom/ecalgeom.cc
 )
 
 target_include_directories(${MODULE} PRIVATE
@@ -22,11 +21,12 @@ target_link_libraries(${MODULE} PRIVATE
 
 #------------------------------------------------------------------------------
 set_target_properties(${MODULE} PROPERTIES PREFIX "")
-set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4interface")
+set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "gtest01")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
-set_target_properties(${MODULE} PROPERTIES INSTALL_RPATH
+set_target_properties(${MODULE}
+                      PROPERTIES INSTALL_RPATH
                       ${GEANT4_LIBRARY_DIR}
                       BUILD_WITH_INSTALL_RPATH TRUE)
-
-# install
-install(TARGETS ${MODULE} LIBRARY DESTINATION ${G4MODULES_INSTALL_DIR})
+#------------------------------------------------------------------------------
+configure_file(run.py run.py COPYONLY)
+configure_file(vis.mac vis.mac COPYONLY)

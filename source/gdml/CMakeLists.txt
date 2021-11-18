@@ -2,10 +2,8 @@
 #------------------------------------------------------------------------------
 set(MODULE pyG4gdml)
 #------------------------------------------------------------------------------
-add_library(${MODULE} SHARED)
-
-target_sources(${MODULE} PRIVATE
-  #pyG4GDMLParser.cc
+pybind11_add_module(${MODULE}
+ #pyG4GDMLParser.cc
   pymodG4g4gdml.cc
 )
 
