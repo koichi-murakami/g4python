@@ -1,6 +1,6 @@
 # vis.mac
 
-/vis/open OGL 600x600-0+0
+/vis/open OGL 600x600
 
 /vis/drawVolume
 

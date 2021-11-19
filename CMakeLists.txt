@@ -37,29 +37,15 @@ add_library(global_cflags INTERFACE)
 target_compile_features(global_cflags INTERFACE cxx_std_17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# compiler flags
-set(cxx_flags)
-
 # build options
 if(NOT CMAKE_BUILD_TYPE)
   if(DEBUG)
     set(CMAKE_BUILD_TYPE "Debug")
-    if(MSVC)
-      set(cxx_flags ${cxx_flags} /DDEBUG)
-    else()
-      set(cxx_flags ${cxx_flags} -DDEBUG)
-    endif()
   elseif(OPTIMIZE)
     set(CMAKE_BUILD_TYPE "Release")
   else()
     set(CMAKE_BUILD_TYPE "RelWithDebInfo")
   endif()
-endif()
-
-# rpath setting
-if(UNIX)
-  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  set(CMAKE_EXE_LINKER_FLAGS -Wl,--disable-new-dtags)
 endif()
 
 #------------------------------------------------------------------------------

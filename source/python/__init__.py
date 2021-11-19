@@ -21,10 +21,22 @@ elif os.path.exists(_qt5_prefix_rh+"libQt5Core.so"):
 
 _qt5core_lib = find_library("Qt5Core")
 
-if _qt5core_lib != None and _qt5core_lib != "libQt5Core.so" :
-    ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Core.so")
-    ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Gui.so")
-    ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Widgets.so")
+if _qt5core_lib != None:
+    print("""
+#####################################################################
+!!! Warning !!!
+A non-system python (e.g. Anaconda version of Python) is detected.
+If you have a problem with Qt5 library version,
+set the environment variables, "G4PY_QT5_PRELOAD = 1"
+to preload the system Qt5 library as a temporal solution.
+Please consider to install Geant4 library without the Qt feature.
+#####################################################################
+""")
+    if ( os.getenv('G4PY_QT5_PRELOAD') != None ):
+      ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Core.so")
+      ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Gui.so")
+      ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Widgets.so")
+      ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5OpenGL.so")
 
 # --------------------------------------------------------------------------
 # import submodules
@@ -183,7 +195,8 @@ GetCurrentValues = gGetCurrentValues
 import atexit
 
 def ResetCoutDestination():
-  ResetG4PyCoutDestination()
+    #gGeometryManager.OpenGeometry()
+    ResetG4PyCoutDestination()
 
 atexit.register(ResetCoutDestination)
 
@@ -191,10 +204,10 @@ atexit.register(ResetCoutDestination)
 # generate one event
 # ------------------------------------------------------------------
 def _one_event(self):
-  "generate one event."
-  self.BeamOn(1)
+    self.BeamOn(1)
 
 G4RunManager.OneEvent = _one_event
+
 
 """"
 # ------------------------------------------------------------------

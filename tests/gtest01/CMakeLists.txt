@@ -23,10 +23,7 @@ target_link_libraries(${MODULE} PRIVATE
 set_target_properties(${MODULE} PROPERTIES PREFIX "")
 set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "gtest01")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
-set_target_properties(${MODULE}
-                      PROPERTIES INSTALL_RPATH
-                      ${GEANT4_LIBRARY_DIR}
-                      BUILD_WITH_INSTALL_RPATH TRUE)
+
 #------------------------------------------------------------------------------
 configure_file(test.py test.py COPYONLY)
 configure_file(vis.mac vis.mac COPYONLY)

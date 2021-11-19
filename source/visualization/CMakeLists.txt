@@ -30,10 +30,6 @@ target_link_libraries(${MODULE} PRIVATE
 set_target_properties(${MODULE} PROPERTIES PREFIX "")
 set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4visualization")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
-set_target_properties(${MODULE}
-                      PROPERTIES INSTALL_RPATH
-                      ${GEANT4_LIBRARY_DIR}
-                      BUILD_WITH_INSTALL_RPATH TRUE)
 
 # install
 install(TARGETS ${MODULE} LIBRARY DESTINATION ${G4MODULES_INSTALL_DIR})
