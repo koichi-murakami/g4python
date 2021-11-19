@@ -108,7 +108,7 @@ G4VPhysicalVolume* EcalGeom::Construct()
   // vis attributes
   G4VisAttributes* va { nullptr };
   va = new G4VisAttributes(G4Color(1.,1.,1.));
-  va-> SetVisibility(true);
+  va-> SetVisibility(false);
   world_lv-> SetVisAttributes(va);
 
   va= new G4VisAttributes(G4Color(0.,0.8,0.8));

@@ -22,62 +22,73 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4VSensitiveDetector.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4VSensitiveDetector.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4VSensitiveDetector {
+// --------------------------------------------------------------------------
+namespace {
 
-class  CB_G4VSensitiveDetector :
-    public G4VSensitiveDetector,
-    public wrapper<G4VSensitiveDetector> {
-
+class PyG4VSensitiveDetector : public G4VSensitiveDetector {
 public:
-  CB_G4VSensitiveDetector() : G4VSensitiveDetector("") { }
-  CB_G4VSensitiveDetector(const G4String& name)
-    : G4VSensitiveDetector(name) { }
-  ~CB_G4VSensitiveDetector() { }
+  using G4VSensitiveDetector::G4VSensitiveDetector;
 
-  G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist) {
-    return get_override("ProcessHits")(&aStep, &ROhist);
+  PyG4VSensitiveDetector(G4String name)
+    : G4VSensitiveDetector(name) { }
+
+  void Initialize(G4HCofThisEvent* hc) override {
+    PYBIND11_OVERLOAD(void, G4VSensitiveDetector, Initialize, hc);
   }
+
+  void EndOfEvent(G4HCofThisEvent* hc) override {
+    PYBIND11_OVERLOAD(void, G4VSensitiveDetector, EndOfEvent, hc);
+  }
+
+  void clear() override {
+    PYBIND11_OVERLOAD(void, G4VSensitiveDetector, clear, );
+  }
+
+  void DrawAll() override {
+    PYBIND11_OVERLOAD(void, G4VSensitiveDetector, DrawAll, );
+  }
+
+  void PrintAll() override {
+    PYBIND11_OVERLOAD(void, G4VSensitiveDetector, PrintAll, );
+  }
+
+  G4bool ProcessHits(G4Step* step, G4TouchableHistory* ro_hist) override {
+    PYBIND11_OVERLOAD_PURE(G4bool, G4VSensitiveDetector, ProcessHits,
+                           step, ro_hist);
+  }
+};
+
+class PubG4VSensitiveDetector : public G4VSensitiveDetector {
+public:
+  using G4VSensitiveDetector::ProcessHits;
 };
 
 }
 
-using namespace pyG4VSensitiveDetector;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4VSensitiveDetector()
+// ==========================================================================
+void export_G4VSensitiveDetector(py::module& m)
 {
-  class_<CB_G4VSensitiveDetector, boost::noncopyable>
-    ("G4VSensitiveDetector", "base class of senstive detector")
+  py::class_<G4VSensitiveDetector, PyG4VSensitiveDetector>
+    (m, "G4VSensitiveDetector")
     // ---
-    .def(init<const G4String&>())
+    .def(py::init<G4String>())
+    // ---
+    .def("Hit",             &G4VSensitiveDetector::Hit)
     // ---
     .def("Initialize",      &G4VSensitiveDetector::Initialize)
     .def("EndOfEvent",      &G4VSensitiveDetector::EndOfEvent)
     .def("clear",           &G4VSensitiveDetector::clear)
     .def("DrawAll",         &G4VSensitiveDetector::DrawAll)
     .def("PrintAll",        &G4VSensitiveDetector::PrintAll)
-    .def("Hit",             &G4VSensitiveDetector::Hit)
-    .def("ProcessHits", pure_virtual(&CB_G4VSensitiveDetector::ProcessHits))
+    .def("ProcessHits",     &PubG4VSensitiveDetector::ProcessHits)
     // ---
-    .def("SetROgeometry",   &G4VSensitiveDetector::SetROgeometry)
     .def("GetNumberOfCollections",
-	 &G4VSensitiveDetector::GetNumberOfCollections)
+                            &G4VSensitiveDetector::GetNumberOfCollections)
     .def("GetCollectionName", &G4VSensitiveDetector::GetCollectionName)
     .def("SetVerboseLevel", &G4VSensitiveDetector::SetVerboseLevel)
     .def("Activate",        &G4VSensitiveDetector::Activate)
@@ -85,7 +96,5 @@ void export_G4VSensitiveDetector()
     .def("GetName",         &G4VSensitiveDetector::GetName)
     .def("GetPathName",     &G4VSensitiveDetector::GetPathName)
     .def("GetFullPathName", &G4VSensitiveDetector::GetFullPathName)
-    .def("GetROgeometry",   &G4VSensitiveDetector::GetROgeometry,
-	 return_internal_reference<>())
     ;
 }

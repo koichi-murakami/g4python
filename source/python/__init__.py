@@ -68,6 +68,9 @@ SetG4PyCoutDestination()
 # ==================================================================
 # globals, which start with "g"
 # ==================================================================
+# gUImanager
+gUImanager = G4UImanager.GetUIpointer()
+
 # create RunManager
 CreateRunManager()
 
@@ -77,11 +80,8 @@ gRunManager = G4RunManager.GetRunManager()
 #  gRunManager = G4RunManager.GetRunManager()
 #gRunManagerKernel = G4RunManagerKernel.GetRunManagerKernel()
 
-# gUImanager
-gUImanager = G4UImanager.GetUIpointer()
-
 # gEventManager
-#gEventManager = G4EventManager.GetEventManager()
+gEventManager = G4EventManager.GetEventManager()
 
 # gStackManager
 #gStackManager = gEventManager.GetStackManager()
@@ -123,56 +123,40 @@ gParticleTable = G4ParticleTable.GetParticleTable()
 #  gNistManager = G4NistManager.Instance()
 
 # gVisManager
-#_visdriver_list = dir(G4visualization)
-#_q_opengl_ix = "G4OpenGLImmediateX" in _visdriver_list
-#_q_opengl_sx = "G4OpenGLStoredX" in _visdriver_list
-#_q_opengl_ixm = "G4OpenGLImmediateXm" in _visdriver_list
-#_q_opengl_sxm = "G4OpenGLStoredXm" in _visdriver_list
-#_q_raytracer_x = "G4RayTracerX" in _visdriver_list
+_visdriver_list = dir(G4visualization)
+_q_opengl_ix = "G4OpenGLImmediateX" in _visdriver_list
+_q_opengl_sx = "G4OpenGLStoredX" in _visdriver_list
 
-"""
 if G4VisManager.GetConcreteInstance() == None:
   gVisManager = G4VisManager()
   if _q_opengl_ix:
     _opengl_ix = G4OpenGLImmediateX()
   if _q_opengl_sx:
     _opengl_sx = G4OpenGLStoredX()
-  if _q_opengl_ixm:
-    _opengl_ixm = G4OpenGLImmediateXm()
-  if _q_opengl_sxm:
-    _opengl_sxm = G4OpenGLStoredXm()
-  if _q_raytracer_x:
-    _raytracer_x = G4RayTracerX()
+    _opengl_sx.AddNickname("OGL")
 
-  _vrml1 = G4VRML1File()
-  _vrml2 = G4VRML2File()
-  _dawn = G4DAWNFILE()
-  _heprep_xml = G4HepRep()
-  _heprep_file = G4HepRepFile()
-  _atree = G4ASCIITree()
-  _raytracer = G4RayTracer()
+  #_vrml1 = G4VRML1File()
+  #_vrml2 = G4VRML2File()
+  #_dawn = G4DAWNFILE()
+  #_heprep_xml = G4HepRep()
+  #_heprep_file = G4HepRepFile()
+  #_atree = G4ASCIITree()
+  #_raytracer = G4RayTracer()
 
   if _q_opengl_ix:
     gVisManager.RegisterGraphicsSystem(_opengl_ix)
   if _q_opengl_sx:
     gVisManager.RegisterGraphicsSystem(_opengl_sx)
-  if _q_opengl_ixm:
-    gVisManager.RegisterGraphicsSystem(_opengl_ixm)
-  if _q_opengl_sxm:
-    gVisManager.RegisterGraphicsSystem(_opengl_sxm)
-  if _q_raytracer_x:
-    gVisManager.RegisterGraphicsSystem(_raytracer_x)
 
-  gVisManager.RegisterGraphicsSystem(_vrml1)
-  gVisManager.RegisterGraphicsSystem(_vrml2)
-  gVisManager.RegisterGraphicsSystem(_dawn)
-  gVisManager.RegisterGraphicsSystem(_heprep_xml)
-  gVisManager.RegisterGraphicsSystem(_heprep_file)
-  gVisManager.RegisterGraphicsSystem(_atree)
-  gVisManager.RegisterGraphicsSystem(_raytracer)
+  #gVisManager.RegisterGraphicsSystem(_vrml1)
+  #gVisManager.RegisterGraphicsSystem(_vrml2)
+  #gVisManager.RegisterGraphicsSystem(_dawn)
+  #gVisManager.RegisterGraphicsSystem(_heprep_xml)
+  #gVisManager.RegisterGraphicsSystem(_heprep_file)
+  #gVisManager.RegisterGraphicsSystem(_atree)
+  #gVisManager.RegisterGraphicsSystem(_raytracer)
 
   gVisManager.Initialize()
-"""
 
 # ------------------------------------------------------------------
 # functions
@@ -193,6 +177,15 @@ GetCurrentValues = gGetCurrentValues
 # ==================================================================
 # extentions
 # ==================================================================
+# ------------------------------------------------------------------
+# reset cout destination when exit
+# ------------------------------------------------------------------
+import atexit
+
+def ResetCoutDestination():
+  ResetG4PyCoutDestination()
+
+atexit.register(ResetCoutDestination)
 
 # ------------------------------------------------------------------
 # generate one event

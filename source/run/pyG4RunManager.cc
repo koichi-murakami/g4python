@@ -50,7 +50,7 @@ void CreateRunManager()
                                         nullptr, true, 1);
 
   //G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default,
-  //                                        nullptr, true, 1);
+  //                                         nullptr, true, 1);
 
 }
 

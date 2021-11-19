@@ -39,10 +39,10 @@ void export_ParticleGun(py::module&);
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4event, m)
 {
-  //export_G4EventManager(m);
+  export_G4EventManager(m);
   //export_G4StackManager(m);
   export_G4Event(m);
-  //export_G4UserEventAction(m);
+  export_G4UserEventAction(m);
   //export_G4UserStackingAction(m);
   //export_G4ClassificationOfNewTrack(m);
   //export_G4ParticleGun(m);

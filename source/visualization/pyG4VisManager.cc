@@ -22,77 +22,52 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4VisManager.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
+#include "G4VGraphicsSystem.hh"
 #include "G4VisManager.hh"
 #include "G4TrajectoryModelFactories.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
+// --------------------------------------------------------------------------
+namespace {
+
 class PyG4VisManager : public G4VisManager {
 public:
   PyG4VisManager() { SetVerboseLevel(quiet); }
   ~PyG4VisManager() { }
 
-  static PyG4VisManager* _get_concrete_instance() { 
+  static PyG4VisManager* _get_concrete_instance() {
     return dynamic_cast<PyG4VisManager*>(fpConcreteInstance);
   }
 
-  virtual void RegisterGraphicsSystems() { }
+  void RegisterGraphicsSystems() override { }
 
-  virtual void RegisterModelFactories() {
+  void RegisterModelFactories() override {
     RegisterModelFactory(new G4TrajectoryDrawByChargeFactory());
     RegisterModelFactory(new G4TrajectoryDrawByParticleIDFactory());
   }
 };
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4VisManager {
-
-void (PyG4VisManager::*f1_SetVerboseLevel)(G4int)
-  = &PyG4VisManager::SetVerboseLevel;
-void (PyG4VisManager::*f2_SetVerboseLevel)(const G4String&)
-  = &PyG4VisManager::SetVerboseLevel;
-void (PyG4VisManager::*f3_SetVerboseLevel)(G4VisManager::Verbosity)
-  = &PyG4VisManager::SetVerboseLevel;
-
 }
 
-using namespace pyG4VisManager;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4VisManager()
+// ==========================================================================
+void export_G4VisManager(py::module& m)
 {
-  scope in_PyG4VisManager =
-    class_<PyG4VisManager, boost::noncopyable>
-    ("G4VisManager", "visualization manager")    
+  py::class_<PyG4VisManager>(m, "G4VisManager")
+  .def(py::init<>())
+  .def_static("GetConcreteInstance", &PyG4VisManager::_get_concrete_instance,
+                                     py::return_value_policy::reference)
     // ---
-    .def("GetConcreteInstance", &PyG4VisManager::_get_concrete_instance,
-         "Get an instance of G4VisManager",
-         return_value_policy<reference_existing_object>())
-    .staticmethod("GetConcreteInstance")
-    // ---
-    .def("SetVerboseLevel", f1_SetVerboseLevel)
-    .def("SetVerboseLevel", f2_SetVerboseLevel)
-    .def("SetVerboseLevel", f3_SetVerboseLevel)
-    .def("GetVerbosity", &PyG4VisManager::GetVerbosity)
-    .staticmethod("GetVerbosity")
-    .def("Initialize", &PyG4VisManager::Initialize)
-    .def("RegisterGraphicsSystem", &PyG4VisManager::RegisterGraphicsSystem)
-    ;
+    //.def("SetVerboseLevel", f1_SetVerboseLevel)
+    //.def("SetVerboseLevel", f2_SetVerboseLevel)
+    //.def("SetVerboseLevel", f3_SetVerboseLevel)
+  .def_static("GetVerbosity",      &PyG4VisManager::GetVerbosity)
+  .def("Initialize",               &PyG4VisManager::Initialize)
+  .def("RegisterGraphicsSystem",   &PyG4VisManager::RegisterGraphicsSystem)
+  ;
 
+    /*
   // enum LineStyle
   enum_<G4VisManager::Verbosity>("Verbosity")
     .value("quiet",           G4VisManager::quiet)
@@ -103,5 +78,8 @@ void export_G4VisManager()
     .value("parameters",      G4VisManager::parameters)
     .value("all",             G4VisManager::all)
     ;
-}
+    */
 
+  py::class_<G4VGraphicsSystem>(m, "G4VGraphicSystem")
+  ;
+}

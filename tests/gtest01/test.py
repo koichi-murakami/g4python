@@ -27,25 +27,21 @@ class MyPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
 # ------------------------------------------------------------------
 class MyRunAction(G4UserRunAction):
     def BeginOfRunAction(self, run):
-        print("*** #event to be processed (BRA)=")
-        #run.GetNumberOfEventToBeProcessed()
+        print("*** #event to be processed (BRA) = ",
+              run.GetNumberOfEventToBeProcessed())
 
     def EndOfRunAction(self, run):
-        print ("*** run end run(ERA)=")
-        #print "*** run end run(ERA)=", run.GetRunID()
+      print ("*** run end run (ERA) = ", run.GetRunID())
 
 # ------------------------------------------------------------------
-""""
 class MyEventAction(G4UserEventAction):
-  "My Event Action"
+  def BeginOfEventAction(self, event):
+      print("*** current event (BEA)=", event.GetEventID())
 
-  #def BeginOfEventAction(self, event):
-    #print "*** current event (BEA)=", event.GetEventID()
-  #  pass
+  def EndOfEventAction(self, event):
+      print("*** current event (EEA)=", event.GetEventID())
 
-  #def EndOfEventAction(self, event):
-  #  print "*** current event (EEA)=", event.GetEventID()
-
+"""
 # ------------------------------------------------------------------
 class MySteppingAction(G4UserSteppingAction):
   "My Stepping Action"
@@ -73,44 +69,54 @@ class MyField(G4MagneticField):
 # ==================================================================
 # main
 # ==================================================================
-ecalgeom = gtest01.EcalGeom()
-gRunManager.SetUserInitialization(ecalgeom)
+def main():
+    global ecalgeom
+    ecalgeom = gtest01.EcalGeom()
+    gRunManager.SetUserInitialization(ecalgeom)
 
-phys_list = FTFP_BERT()
-gRunManager.SetUserInitialization(phys_list)
+    global phys_list
+    phys_list = FTFP_BERT()
+    gRunManager.SetUserInitialization(phys_list)
 
-# set user actions...
-particle_gun = ParticleGun()
-gRunManager.SetUserAction(particle_gun)
+    # set user actions...
+    global particle_gun
+    particle_gun = ParticleGun()
+    gRunManager.SetUserAction(particle_gun)
 
-myRA= MyRunAction()
-gRunManager.SetUserAction(myRA)
+    global myRA
+    myRA = MyRunAction()
+    gRunManager.SetUserAction(myRA)
 
-#myEA= MyEventAction()
-#gRunManager.SetUserAction(myEA)
+    global myEA
+    myEA = MyEventAction()
+    gRunManager.SetUserAction(myEA)
 
-#mySA= MySteppingAction()
-#gRunManager.SetUserAction(mySA)
+    #mySA= MySteppingAction()
+    #gRunManager.SetUserAction(mySA)
 
-# set particle gun
-#ApplyUICommand("/control/execute gun.mac")
-#pg= qPGA.GetParticleGun()
-#pg= myPGA.particleGun
-#pg.SetParticleByName("e-")
-#pg.SetParticleEnergy(200.*MeV)
-#pg.SetParticlePosition(G4ThreeVector(0.,0.,-14.9)*cm)
+    # set particle gun
+    #ApplyUICommand("/control/execute gun.mac")
+    #pg= qPGA.GetParticleGun()
+    #pg= myPGA.particleGun
+    #pg.SetParticleByName("e-")
+    #pg.SetParticleEnergy(200.*MeV)
+    #pg.SetParticlePosition(G4ThreeVector(0.,0.,-14.9)*cm)
 
-# magnetic field
-#fieldMgr= gTransportationManager.GetFieldManager()
-#myField= G4UniformMagField(G4ThreeVector(0.,10.*tesla,0.))
-##myField= MyField()
-#fieldMgr.SetDetectorField(myField)
-#fieldMgr.CreateChordFinder(myField)
+    # magnetic field
+    #fieldMgr= gTransportationManager.GetFieldManager()
+    #myField= G4UniformMagField(G4ThreeVector(0.,10.*tesla,0.))
+    ##myField= MyField()
+    #fieldMgr.SetDetectorField(myField)
+    #fieldMgr.CreateChordFinder(myField)
 
-#gRunManager.Initialize()
+    gRunManager.Initialize()
 
-# visualization
-#gControlExecute("vis.mac")
+    # visualization
+    gControlExecute("vis.mac")
 
-# beamOn
-#gRunManager.BeamOn(10)
+    # beamOn
+    gRunManager.BeamOn(100)
+
+# ==================================================================
+if __name__ == '__main__':
+  main()

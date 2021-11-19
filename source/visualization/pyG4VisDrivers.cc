@@ -22,27 +22,15 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4OpenGLStoredXm.cc
-//
-//                                         2005 Q
-// ====================================================================
-#ifdef G4VIS_USE_OPENGLXM
+#include <pybind11/pybind11.h>
+#include "G4ASCIITree.hh"
 
-#include <boost/python.hpp>
-#include "G4OpenGLStoredXm.hh"
+namespace py = pybind11;
 
-using namespace boost::python;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4OpenGLStoredXm()
+// ==========================================================================
+void export_G4ASCIITree(py::module& m)
 {
-  class_<G4OpenGLStoredXm, G4OpenGLStoredXm*, bases<G4VGraphicsSystem> >
-    ("G4OpenGLStoredXm", "OpenGL(Stored XM) visualization module")
-    ;
+  //py::class_<G4ASCIITree, G4ASCIITree*, bases<G4VGraphicsSystem> >
+  //  ("G4ASCIITree", "ASCII tree visualization module")
+  //  ;
 }
-
-#endif

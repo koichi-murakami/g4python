@@ -32,5 +32,5 @@ void export_G4VSensitiveDetector(py::module&);
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4digits_hits, m)
 {
-  //export_G4VSensitiveDetector(m);
+  export_G4VSensitiveDetector(m);
 }

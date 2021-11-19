@@ -28,13 +28,13 @@
 // --------------------------------------------------------------------------
 G4int G4PyCoutDestination::ReceiveG4cout(const G4String& coutString)
 {
-  PySys_WriteStdout("%s", coutString.c_str());
+  PySys_FormatStdout("%s", coutString.c_str());
   return 0;
 }
 
 // --------------------------------------------------------------------------
 G4int G4PyCoutDestination::ReceiveG4cerr(const G4String& cerrString)
 {
-  PySys_WriteStderr("%s", cerrString.c_str());
+  PySys_FormatStderr("%s", cerrString.c_str());
   return 0;
 }

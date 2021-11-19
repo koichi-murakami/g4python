@@ -30,7 +30,6 @@
 namespace py = pybind11;
 
 // ==========================================================================
-
 void export_G4Run(py::module& m)
 {
   py::class_<G4Run>(m, "G4Run")

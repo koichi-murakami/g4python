@@ -28,5 +28,5 @@ set_target_properties(${MODULE}
                       ${GEANT4_LIBRARY_DIR}
                       BUILD_WITH_INSTALL_RPATH TRUE)
 #------------------------------------------------------------------------------
-configure_file(run.py run.py COPYONLY)
+configure_file(test.py test.py COPYONLY)
 configure_file(vis.mac vis.mac COPYONLY)

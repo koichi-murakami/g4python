@@ -22,27 +22,24 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4OpenGLStoredX.cc
-//
-//                                         2005 Q
-// ====================================================================
-#ifdef G4VIS_USE_OPENGLX
-
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
+#include "G4OpenGLImmediateX.hh"
 #include "G4OpenGLStoredX.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4OpenGLStoredX()
+// ==========================================================================
+void export_G4OpenGLX(py::module& m)
 {
-  class_<G4OpenGLStoredX, G4OpenGLStoredX*, bases<G4VGraphicsSystem> >
-    ("G4OpenGLStoredX", "OpenGL(Stored X) visualization module")
-    ;
-}
+#ifdef G4VIS_USE_OPENGLX
+  py::class_<G4OpenGLImmediateX, G4VGraphicsSystem>(m, "G4OpenGLImmediateX")
+  .def(py::init<>())
+  .def("AddNickname",    &G4OpenGLImmediateX::AddNickname)
+  ;
 
+  py::class_<G4OpenGLStoredX, G4VGraphicsSystem>(m, "G4OpenGLStoredX")
+  .def(py::init<>())
+  .def("AddNickname",    &G4OpenGLStoredX::AddNickname)
+  ;
 #endif
+}

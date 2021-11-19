@@ -22,54 +22,28 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4EventManager.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4EventManager.hh"
 #include "G4Event.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4EventManager()
+// ==========================================================================
+void export_G4EventManager(py::module& m)
 {
-  class_<G4EventManager, boost::noncopyable>
-    ("G4EventManager", "event manager class")
-    .def("GetEventManager",  &G4EventManager::GetEventManager,
-         return_value_policy<reference_existing_object>())
-    .staticmethod("GetEventManager")
+  py::class_<G4EventManager>(m, "G4EventManager")
+    .def_static("GetEventManager",  &G4EventManager::GetEventManager,
+                                    py::return_value_policy::reference)
     // ---
-    .def("GetConstCurrentEvent", &G4EventManager::GetConstCurrentEvent,
-         return_internal_reference<>())
-    .def("GetNonconstCurrentEvent", 
-	 &G4EventManager::GetNonconstCurrentEvent,
-         return_internal_reference<>())
-    .def("AbortCurrentEvent",    &G4EventManager::AbortCurrentEvent)
-    .def("SetNumberOfAdditionalWaitingStacks", 
-	 &G4EventManager::SetNumberOfAdditionalWaitingStacks)
-    .def("GetStackManager",      &G4EventManager::GetStackManager,
-	 return_value_policy<reference_existing_object>())
-    .def("GetTrackingManager",   &G4EventManager::GetTrackingManager,
-	 return_value_policy<reference_existing_object>())
-    .def("GetVerboseLevel",      &G4EventManager::GetVerboseLevel)
-    .def("SetVerboseLevel",      &G4EventManager::SetVerboseLevel)
-    .def("SetUserInformation",   &G4EventManager::SetUserInformation)
-    .def("GetUserInformation",   &G4EventManager::GetUserInformation,
-         return_value_policy<reference_existing_object>())
-    ;
+    .def("GetConstCurrentEvent",    &G4EventManager::GetConstCurrentEvent,
+                                    py::return_value_policy::reference)
+    .def("AbortCurrentEvent",       &G4EventManager::AbortCurrentEvent)
 
-  // Note that exposed items are limited, 
-  // because this class object is mainly for internal uses.
-  // ProcessOneEvent
-  // SetUserAction
-  // GetUserXXXAction
-  // GetPrimaryTransformer
-  // SetPrimaryTransformer
+    .def("GetVerboseLevel",         &G4EventManager::GetVerboseLevel)
+    .def("SetVerboseLevel",         &G4EventManager::SetVerboseLevel)
+    .def("SetUserInformation",      &G4EventManager::SetUserInformation)
+    .def("GetUserInformation",      &G4EventManager::GetUserInformation,
+                                    py::return_value_policy::reference)
+     ;
 
 }

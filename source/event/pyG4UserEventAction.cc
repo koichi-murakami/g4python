@@ -22,54 +22,37 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4UserEventAction.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4UserEventAction.hh"
 #include "G4Event.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-struct CB_G4UserEventAction : G4UserEventAction, 
-			     wrapper<G4UserEventAction> {
-  // BeginOfEventAction
-  void BeginOfEventAction(const G4Event* anEvent) {
-    if(const override& f= get_override("BeginOfEventAction")) {
-      f(boost::ref(anEvent));
-    } else
-      G4UserEventAction::BeginOfEventAction(anEvent);
+// --------------------------------------------------------------------------
+namespace {
+
+class PyG4UserEventAction : public G4UserEventAction {
+public:
+  using G4UserEventAction::G4UserEventAction;
+
+  void BeginOfEventAction(const G4Event* event) override {
+    PYBIND11_OVERLOAD(void, G4UserEventAction, BeginOfEventAction, event);
   }
 
-  // EndOfEventAction
-  void EndOfEventAction(const G4Event* anEvent) {
-    if(const override& f= get_override("EndOfEventAction")) {
-      f(boost::ref(anEvent));
-    } else {
-      G4UserEventAction::EndOfEventAction(anEvent);
-    }    
+  void EndOfEventAction(const G4Event* event) override {
+    PYBIND11_OVERLOAD(void, G4UserEventAction, EndOfEventAction, event);
   }
 };
 
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4UserEventAction()
-{
-  class_<CB_G4UserEventAction, CB_G4UserEventAction*, boost::noncopyable>
-    ( "G4UserEventAction", "event action class")
-    
-    .def("BeginOfEventAction", &G4UserEventAction::BeginOfEventAction,
-	 &CB_G4UserEventAction::BeginOfEventAction)
-    .def("EndOfEventAction", &G4UserEventAction::EndOfEventAction,
-	 &CB_G4UserEventAction::EndOfEventAction)
-    ;
 }
 
+// ==========================================================================
+void export_G4UserEventAction(py::module& m)
+{
+  py::class_<G4UserEventAction, PyG4UserEventAction>(m, "G4UserEventAction")
+  // ---
+  .def(py::init<>())
+  .def("BeginOfEventAction",   &G4UserEventAction::BeginOfEventAction)
+  .def("EndOfEventAction",     &G4UserEventAction::EndOfEventAction)
+  ;
+}
