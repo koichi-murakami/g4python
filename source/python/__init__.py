@@ -21,7 +21,7 @@ elif os.path.exists(_qt5_prefix_rh+"libQt5Core.so"):
 
 _qt5core_lib = find_library("Qt5Core")
 
-if _qt5core_lib != None:
+if _qt5core_lib != None and not _qt5core_lib.startswith("libQt5Core.so"):
     print("""
 #####################################################################
 !!! Warning !!!
