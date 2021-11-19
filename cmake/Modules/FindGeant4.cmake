@@ -68,7 +68,7 @@ endif()
 
 set(GEANT4_INCLUDE_DIR ${GEANT4_PREFIX}/include/Geant4)
 set(GEANT4_LIBRARY_DIR ${GEANT4_PREFIX}/${_LIBDIR_DEFAULT})
-set(GEANT4_LIBRARIES  G4OpenGL G4gl2ps G4Tree G4FR G4GMocren G4visHepRep
+set(GEANT4_LIBRARIES  G4Tree G4FR G4GMocren G4visHepRep
                       G4RayTracer G4VRML G4vis_management G4modeling
                       G4interfaces G4persistency G4analysis
                       G4error_propagation G4readout G4physicslists
@@ -77,5 +77,4 @@ set(GEANT4_LIBRARIES  G4OpenGL G4gl2ps G4Tree G4FR G4GMocren G4visHepRep
                       G4geometry G4materials G4graphics_reps G4intercoms
                       G4global G4ptl G4clhep G4zlib)
 
-set(GEANT4_LIBRARIES_WITH_OGL G4OpenGL G4gl2ps
-                              ${GEANT4_LIBRARIES})
+set(GEANT4_LIBRARIES_WITH_OGL G4OpenGL G4gl2ps ${GEANT4_LIBRARIES})
