@@ -55,7 +55,7 @@ target_include_directories(${MODULE} PRIVATE
 target_link_directories(${MODULE} PRIVATE ${GEANT4_LIBRARY_DIR})
 
 target_link_libraries(${MODULE} PRIVATE
-  ${GEANT4_LIBRARIES_WITH_VIS} ${Python3_LIBRARIES}
+  ${GEANT4_LIBRARIES} ${Python3_LIBRARIES}
   global_cflags
 )
 
