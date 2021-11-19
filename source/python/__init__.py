@@ -140,35 +140,32 @@ _q_opengl_ix = "G4OpenGLImmediateX" in _visdriver_list
 _q_opengl_sx = "G4OpenGLStoredX" in _visdriver_list
 
 if G4VisManager.GetConcreteInstance() == None:
-  gVisManager = G4VisManager()
-  if _q_opengl_ix:
-    _opengl_ix = G4OpenGLImmediateX()
-  if _q_opengl_sx:
-    _opengl_sx = G4OpenGLStoredX()
-    _opengl_sx.AddNickname("OGL")
+    gVisManager = G4VisManager()
 
-  #_vrml1 = G4VRML1File()
-  #_vrml2 = G4VRML2File()
-  #_dawn = G4DAWNFILE()
-  #_heprep_xml = G4HepRep()
-  #_heprep_file = G4HepRepFile()
-  #_atree = G4ASCIITree()
-  #_raytracer = G4RayTracer()
+    if _q_opengl_ix:
+        _opengl_ix = G4OpenGLImmediateX()
+    if _q_opengl_sx:
+        _opengl_sx = G4OpenGLStoredX()
+        _opengl_sx.AddNickname("OGL")
 
-  if _q_opengl_ix:
+_vrml2     = G4VRML2File()
+_dawn      = G4DAWNFILE()
+_atree     = G4ASCIITree()
+_raytracer = G4RayTracer()
+_gmocren   = G4GMocrenFile()
+
+if _q_opengl_ix:
     gVisManager.RegisterGraphicsSystem(_opengl_ix)
-  if _q_opengl_sx:
+if _q_opengl_sx:
     gVisManager.RegisterGraphicsSystem(_opengl_sx)
 
-  #gVisManager.RegisterGraphicsSystem(_vrml1)
-  #gVisManager.RegisterGraphicsSystem(_vrml2)
-  #gVisManager.RegisterGraphicsSystem(_dawn)
-  #gVisManager.RegisterGraphicsSystem(_heprep_xml)
-  #gVisManager.RegisterGraphicsSystem(_heprep_file)
-  #gVisManager.RegisterGraphicsSystem(_atree)
-  #gVisManager.RegisterGraphicsSystem(_raytracer)
+gVisManager.RegisterGraphicsSystem(_vrml2)
+gVisManager.RegisterGraphicsSystem(_dawn)
+gVisManager.RegisterGraphicsSystem(_atree)
+gVisManager.RegisterGraphicsSystem(_raytracer)
+gVisManager.RegisterGraphicsSystem(_gmocren)
 
-  gVisManager.Initialize()
+gVisManager.Initialize()
 
 # ------------------------------------------------------------------
 # functions

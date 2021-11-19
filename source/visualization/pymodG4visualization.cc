@@ -28,11 +28,13 @@ namespace py = pybind11;
 
 // --------------------------------------------------------------------------
 void export_G4VisManager(py::module&);
+void export_G4VisDrivers(py::module&);
 void export_G4OpenGLX(py::module&);
 
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4visualization, m)
 {
   export_G4VisManager(m);
+  export_G4VisDrivers(m);
   export_G4OpenGLX(m);
 }

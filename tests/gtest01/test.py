@@ -11,35 +11,37 @@ import random
 # ==================================================================
 """
 class MyPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
-  "My Primary Generator Action"
 
-  def __init__(self):
-    G4VUserPrimaryGeneratorAction.__init__(self)
-    self.particleGun= G4ParticleGun(1)
+    def __init__(self):
+        G4VUserPrimaryGeneratorAction.__init__(self)
+        self.particleGun= G4ParticleGun(1)
 
-  def GeneratePrimaries(self, event):
-    #dx= random.gauss(0., 0.1)
-    dx=0.
-    self.particleGun.SetParticleMomentumDirection(G4ThreeVector(dx, 0., 1.))
-    self.particleGun.GeneratePrimaryVertex(event)
+    def GeneratePrimaries(self, event):
+        #dx= random.gauss(0., 0.1)
+        dx=0.
+        self.particleGun.SetParticleMomentumDirection(G4ThreeVector(dx, 0., 1.))
+        self.particleGun.GeneratePrimaryVertex(event)
 """
 
 # ------------------------------------------------------------------
 class MyRunAction(G4UserRunAction):
     def BeginOfRunAction(self, run):
-        print("*** #event to be processed (BRA) = ",
+        print("*** (BRA) #event to be processed = ",
               run.GetNumberOfEventToBeProcessed())
 
     def EndOfRunAction(self, run):
-      print ("*** run end run (ERA) = ", run.GetRunID())
+      print ("*** (ERA) run ID = ", run.GetRunID())
 
 # ------------------------------------------------------------------
 class MyEventAction(G4UserEventAction):
-  def BeginOfEventAction(self, event):
-      print("*** current event (BEA)=", event.GetEventID())
+    def BeginOfEventAction(self, event):
+        pass
+        #print("*** (BEA) current event =", event.GetEventID())
 
-  def EndOfEventAction(self, event):
-      print("*** current event (EEA)=", event.GetEventID())
+    def EndOfEventAction(self, event):
+        ievt = event.GetEventID()
+        if ievt % 100 == 0:
+          print("*** (EEA) events processed =", ievt)
 
 """
 # ------------------------------------------------------------------

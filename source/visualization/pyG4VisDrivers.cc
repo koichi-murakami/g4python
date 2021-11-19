@@ -24,13 +24,34 @@
 // ********************************************************************
 #include <pybind11/pybind11.h>
 #include "G4ASCIITree.hh"
+#include "G4DAWNFILE.hh"
+#include "G4RayTracer.hh"
+#include "G4VRML2File.hh"
+#include "G4GMocrenFile.hh"
 
 namespace py = pybind11;
 
 // ==========================================================================
-void export_G4ASCIITree(py::module& m)
+void export_G4VisDrivers(py::module& m)
 {
-  //py::class_<G4ASCIITree, G4ASCIITree*, bases<G4VGraphicsSystem> >
-  //  ("G4ASCIITree", "ASCII tree visualization module")
-  //  ;
+  py::class_<G4ASCIITree, G4VGraphicsSystem>(m, "G4ASCIITree")
+  .def(py::init<>())
+  ;
+
+  py::class_<G4DAWNFILE, G4VGraphicsSystem>(m, "G4DAWNFILE")
+  .def(py::init<>())
+  ;
+
+  py::class_<G4RayTracer, G4VGraphicsSystem>(m, "G4RayTracer")
+  .def(py::init<>())
+  ;
+
+  py::class_<G4VRML2File, G4VGraphicsSystem>(m, "G4VRML2File")
+  .def(py::init<>())
+  ;
+
+  py::class_<G4GMocrenFile, G4VGraphicsSystem>(m, "G4GMocrenFile")
+  .def(py::init<>())
+  ;
+
 }

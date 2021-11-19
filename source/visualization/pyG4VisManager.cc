@@ -54,31 +54,34 @@ public:
 // ==========================================================================
 void export_G4VisManager(py::module& m)
 {
-  py::class_<PyG4VisManager>(m, "G4VisManager")
+  py::class_<PyG4VisManager>vis_manager(m, "G4VisManager");
+  vis_manager
   .def(py::init<>())
   .def_static("GetConcreteInstance", &PyG4VisManager::_get_concrete_instance,
                                      py::return_value_policy::reference)
-    // ---
-    //.def("SetVerboseLevel", f1_SetVerboseLevel)
-    //.def("SetVerboseLevel", f2_SetVerboseLevel)
-    //.def("SetVerboseLevel", f3_SetVerboseLevel)
-  .def_static("GetVerbosity",      &PyG4VisManager::GetVerbosity)
+  // ---
+  .def_static("GetVerbosity",        &PyG4VisManager::GetVerbosity)
+  .def("SetVerboseLevel",
+       py::overload_cast<G4int>(&PyG4VisManager::SetVerboseLevel))
+  .def("SetVerboseLevel",
+       py::overload_cast<const G4String&>(&PyG4VisManager::SetVerboseLevel))
+  .def("SetVerboseLevel",
+       py::overload_cast<G4VisManager::Verbosity>
+       (&PyG4VisManager::SetVerboseLevel))
+  // ---
   .def("Initialize",               &PyG4VisManager::Initialize)
   .def("RegisterGraphicsSystem",   &PyG4VisManager::RegisterGraphicsSystem)
   ;
 
-    /*
-  // enum LineStyle
-  enum_<G4VisManager::Verbosity>("Verbosity")
-    .value("quiet",           G4VisManager::quiet)
-    .value("startup",         G4VisManager::startup)
-    .value("errors",          G4VisManager::errors)
-    .value("warnings",        G4VisManager::warnings)
-    .value("confirmations",   G4VisManager::confirmations)
-    .value("parameters",      G4VisManager::parameters)
-    .value("all",             G4VisManager::all)
-    ;
-    */
+  py::enum_<G4VisManager::Verbosity>(vis_manager, "Verbosity")
+  .value("quiet",             G4VisManager::quiet)
+  .value("startup",           G4VisManager::startup)
+  .value("errors",            G4VisManager::errors)
+  .value("warnings",          G4VisManager::warnings)
+  .value("confirmations",     G4VisManager::confirmations)
+  .value("parameters",        G4VisManager::parameters)
+  .value("all",               G4VisManager::all)
+  ;
 
   py::class_<G4VGraphicsSystem>(m, "G4VGraphicSystem")
   ;

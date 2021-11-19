@@ -3,8 +3,8 @@
 set(MODULE pyG4visualization)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
-  pyG4VisDrivers.cc
   pyG4OpenGLX.cc
+  pyG4VisDrivers.cc
   pyG4VisManager.cc
   pymodG4visualization.cc
 )
