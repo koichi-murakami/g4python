@@ -49,9 +49,9 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # rpath
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 set(CMAKE_INSTALL_RPATH "${GEANT4_LIBRARY_DIR}")
-
 
 #------------------------------------------------------------------------------
 # parameters for building
