@@ -22,50 +22,39 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4StepPoint.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4VProcess.hh"
 #include "G4StepPoint.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4StepPoint()
+// ==========================================================================
+void export_G4StepPoint(py::module& m)
 {
-  class_<G4StepPoint, G4StepPoint*>("G4StepPoint", "step point class")
-    // ---
-    .def("GetPosition",           &G4StepPoint::GetPosition,
-	 return_value_policy<return_by_value>())
-    .def("GetLocalTime",          &G4StepPoint::GetLocalTime)
-    .def("GetGlobalTime",         &G4StepPoint::GetGlobalTime)
-    .def("GetProperTime",         &G4StepPoint::GetProperTime)
-    .def("GetMomentumDirection",  &G4StepPoint::GetMomentumDirection,
-	      return_value_policy<return_by_value>())
-    .def("GetMomentum",           &G4StepPoint::GetMomentum,
-	      return_value_policy<return_by_value>())
-    .def("GetTotalEnergy",        &G4StepPoint::GetTotalEnergy)
-    .def("GetKineticEnergy",      &G4StepPoint::GetKineticEnergy)
-    .def("GetVelocity",           &G4StepPoint::GetVelocity)
-    .def("GetBeta",               &G4StepPoint::GetBeta)
-    .def("GetGamma",              &G4StepPoint::GetGamma)
-    .def("GetTouchable",          &G4StepPoint::GetTouchable,
-         return_value_policy<reference_existing_object>())
-    .def("GetMaterial",           &G4StepPoint::GetMaterial,
-         return_value_policy<reference_existing_object>())
-    .def("GetPolarization",       &G4StepPoint::GetPolarization,
-	       return_value_policy<return_by_value>())
-    .def("GetStepStatus",         &G4StepPoint::GetStepStatus)
-    .def("GetProcessDefinedStep", &G4StepPoint::GetProcessDefinedStep,
-         return_value_policy<reference_existing_object>())
-    .def("GetMass",               &G4StepPoint::GetMass)
-    .def("GetCharge",             &G4StepPoint::GetCharge)
-    .def("GetWeight",             &G4StepPoint::GetWeight)
-    ;
+  py::class_<G4StepPoint>(m, "G4StepPoint")
+  // ---
+  .def("GetPosition",           &G4StepPoint::GetPosition)
+  .def("GetLocalTime",          &G4StepPoint::GetLocalTime)
+  .def("GetGlobalTime",         &G4StepPoint::GetGlobalTime)
+  .def("GetProperTime",         &G4StepPoint::GetProperTime)
+  .def("GetMomentumDirection",  &G4StepPoint::GetMomentumDirection)
+  .def("GetMomentum",           &G4StepPoint::GetMomentum)
+  .def("GetTotalEnergy",        &G4StepPoint::GetTotalEnergy)
+  .def("GetKineticEnergy",      &G4StepPoint::GetKineticEnergy)
+  .def("GetVelocity",           &G4StepPoint::GetVelocity)
+  .def("GetBeta",               &G4StepPoint::GetBeta)
+  .def("GetGamma",              &G4StepPoint::GetGamma)
+  .def("GetTouchable",          &G4StepPoint::GetTouchable,
+                                py::return_value_policy::reference)
+  .def("GetMaterial",           &G4StepPoint::GetMaterial,
+                                py::return_value_policy::reference)
+  .def("GetPolarization",       &G4StepPoint::GetPolarization)
+  .def("GetStepStatus",         &G4StepPoint::GetStepStatus)
+  .def("GetProcessDefinedStep", &G4StepPoint::GetProcessDefinedStep,
+                                py::return_value_policy::reference)
+  .def("GetMass",               &G4StepPoint::GetMass)
+  .def("GetCharge",             &G4StepPoint::GetCharge)
+  .def("GetMagneticMoment",     &G4StepPoint::GetMagneticMoment)
+  .def("GetWeight",             &G4StepPoint::GetWeight)
+  ;
 }

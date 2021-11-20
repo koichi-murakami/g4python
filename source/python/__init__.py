@@ -39,6 +39,9 @@ Please consider to install Geant4 library without the Qt feature.
       ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5OpenGL.so")
 
 # ==========================================================================
+# force sequential mode
+os.environ['G4FORCE_RUN_MANAGER_TYPE'] = 'Serial'
+
 # import submodules
 from .G4global import *
 from .G4interface import *
@@ -89,9 +92,6 @@ CreateRunManager()
 # gRunManager
 gRunManager = G4RunManager.GetRunManager()
 
-#  gRunManager = G4RunManager.GetRunManager()
-#gRunManagerKernel = G4RunManagerKernel.GetRunManagerKernel()
-
 # gEventManager
 gEventManager = G4EventManager.GetEventManager()
 
@@ -106,7 +106,7 @@ gTrackingManager = gEventManager.GetTrackingManager()
 gExceptionHandler = G4ExceptionHandler() # automatically registered
 
 # gGeometryManager
-#gGeometryManager = G4GeometryManager.GetInstance()
+gGeometryManager = G4GeometryManager.GetInstance()
 
 # gTransportationManager
 #gTransportationManager = G4TransportationManager.GetTransportationManager()
@@ -192,7 +192,7 @@ GetCurrentValues = gGetCurrentValues
 import atexit
 
 def ResetCoutDestination():
-    #gGeometryManager.OpenGeometry()
+    gGeometryManager.OpenGeometry()
     ResetG4PyCoutDestination()
 
 atexit.register(ResetCoutDestination)

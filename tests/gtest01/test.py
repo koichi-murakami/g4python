@@ -101,7 +101,9 @@ def main():
     gRunManager.SetUserInitialization(ecalgeom)
 
     global phys_list
-    phys_list = FTFP_BERT()
+    #phys_list = FTFP_BERT()
+    pl_factory = G4PhysListFactory()
+    phys_list = pl_factory.GetReferencePhysList("FTFP_BERT")
     gRunManager.SetUserInitialization(phys_list)
 
     global app_builder

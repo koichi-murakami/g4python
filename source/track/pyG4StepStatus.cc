@@ -49,4 +49,3 @@ void export_G4StepStatus()
     .value("fUndefined",             fUndefined)
     ;
 }
-

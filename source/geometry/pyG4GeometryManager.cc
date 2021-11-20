@@ -22,47 +22,27 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4GeometryManager.cc
-//
-//                                         2008 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4GeometryManager.hh"
 #include "G4VPhysicalVolume.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4GeometryManager {
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_CloseGeometry, CloseGeometry, 0, 3)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_OpenGeometry, OpenGeometry, 0, 1)
-
-}
-
-using namespace pyG4GeometryManager;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4GeometryManager()
+// ==========================================================================
+void export_G4GeometryManager(py::module& m)
 {
-  class_<G4GeometryManager, boost::noncopyable>
-    ("G4GeometryManager", "geometry manager", no_init)
-    .def("GetInstance",           &G4GeometryManager::GetInstance,
-         return_value_policy<reference_existing_object>())
-    .staticmethod("GetInstance")
-    // ---
-    .def("CloseGeometry",         &G4GeometryManager::CloseGeometry,
-         f_CloseGeometry())
-    .def("OpenGeometry",          &G4GeometryManager::OpenGeometry,
-         f_OpenGeometry())
-    .def("IsGeometryClosed",      &G4GeometryManager::IsGeometryClosed)
-    .def("SetWorldMaximumExtent", &G4GeometryManager::SetWorldMaximumExtent)
-    ;
+  py::class_<G4GeometryManager>(m, "G4GeometryManager")
+  // ---
+  .def_static("GetInstance",    &G4GeometryManager::GetInstance,
+                                py::return_value_policy::reference)
+  // ---
+  .def("CloseGeometry",         &G4GeometryManager::CloseGeometry,
+                                py::arg("pOptimise") = true,
+                                py::arg("verbose") = false,
+                                py::arg("vol") = nullptr )
+  .def("OpenGeometry",          &G4GeometryManager::OpenGeometry,
+                                py::arg("vol") = nullptr )
+  .def("IsGeometryClosed",      &G4GeometryManager::IsGeometryClosed)
+  .def("SetWorldMaximumExtent", &G4GeometryManager::SetWorldMaximumExtent)
+  ;
 }
-

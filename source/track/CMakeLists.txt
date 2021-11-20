@@ -3,8 +3,8 @@
 set(MODULE pyG4track)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
-  #pyG4Step.cc
-  #pyG4StepPoint.cc
+  pyG4Step.cc
+  pyG4StepPoint.cc
   #pyG4StepStatus.cc
   #pyG4Track.cc
   #pyG4TrackStatus.cc

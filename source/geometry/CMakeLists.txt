@@ -12,7 +12,7 @@ pybind11_add_module(${MODULE}
   #pyG4EllipticalTube.cc
   #pyG4Field.cc
   #pyG4FieldManager.cc
-  #pyG4GeometryManager.cc
+  pyG4GeometryManager.cc
   #pyG4Hype.cc
   #pyG4IntersctionSolid.cc
   #pyG4LogicalVolume.cc
@@ -40,7 +40,7 @@ pybind11_add_module(${MODULE}
   #pyG4TwistedTubs.cc
   #pyG4UniformMagField.cc
   #pyG4UnionSolid.cc
-  #pyG4VPhysicalVolume.cc
+  pyG4VPhysicalVolume.cc
   pyG4VSolid.cc
   #pyG4VTouchable.cc
   pymodG4geometry.cc

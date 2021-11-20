@@ -22,37 +22,31 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Step.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Step.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Step()
+// ==========================================================================
+void export_G4Step(py::module& m)
 {
-  class_<G4Step, G4Step*>("G4Step", "step class")
-    // ---
-    .def("GetTrack",                 &G4Step::GetTrack,
-         return_value_policy<reference_existing_object>())
-    .def("GetPreStepPoint",          &G4Step::GetPreStepPoint,
-         return_internal_reference<>())
-    .def("GetPostStepPoint",         &G4Step::GetPostStepPoint,
-         return_internal_reference<>())
-    .def("GetTotalEnergyDeposit",    &G4Step::GetTotalEnergyDeposit)
-    .def("GetStepLength",            &G4Step::GetStepLength)
-    .def("GetDeltaPosition",         &G4Step::GetDeltaPosition)
-    .def("GetDeltaTime",             &G4Step::GetDeltaTime)
-    .def("GetDeltaMomentum",         &G4Step::GetDeltaMomentum)
-    .def("GetDeltaEnergy",           &G4Step::GetDeltaEnergy)
-    ;
+  py::class_<G4Step>(m, "G4Step")
+  // ---
+  .def("GetTrack",                 &G4Step::GetTrack,
+                                   py::return_value_policy::reference)
+  .def("GetPreStepPoint",          &G4Step::GetPreStepPoint,
+                                   py::return_value_policy::reference)
+  .def("GetPostStepPoint",         &G4Step::GetPostStepPoint,
+                                   py::return_value_policy::reference)
+  .def("GetStepLength",            &G4Step::GetStepLength)
+  .def("GetTotalEnergyDeposit",    &G4Step::GetTotalEnergyDeposit)
+  .def("GetNonIonizingEnergyDeposit",
+                                   &G4Step::GetNonIonizingEnergyDeposit)
+  .def("IsFirstStepInVolume",      &G4Step::IsFirstStepInVolume)
+  .def("IsLastStepInVolume",       &G4Step::IsLastStepInVolume)
+  .def("GetDeltaPosition",         &G4Step::GetDeltaPosition)
+  .def("GetDeltaTime",             &G4Step::GetDeltaTime)
+  .def("GetDeltaMomentum",         &G4Step::GetDeltaMomentum)
+  .def("GetDeltaEnergy",           &G4Step::GetDeltaEnergy)
+  ;
 }
-

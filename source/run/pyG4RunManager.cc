@@ -46,12 +46,13 @@ namespace {
 
 void CreateRunManager()
 {
-  G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly,
+  // sequential mode is set explicitly
+  //G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly,
+  //                                      nullptr, true, 1);
+
+  // control with env. var.
+  G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default,
                                         nullptr, true, 1);
-
-  //G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default,
-  //                                         nullptr, true, 1);
-
 }
 
 }

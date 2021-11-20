@@ -38,7 +38,7 @@ PYBIND11_MODULE(G4track, m)
 {
   //export_G4Track(m);
   //export_G4TrackStatus(m);
-  //export_G4Step(m);
-  //export_G4StepPoint(m);
+  export_G4Step(m);
+  export_G4StepPoint(m);
   //export_G4StepStatus(m);
 }

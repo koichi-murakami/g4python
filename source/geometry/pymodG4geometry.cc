@@ -71,10 +71,10 @@ void export_G4ChordFinder(py::module&);
 // ==========================================================================
 PYBIND11_MODULE(G4geometry, m)
 {
-  //export_G4GeometryManager(m);
+  export_G4GeometryManager(m);
   //export_G4VTouchable(m);
   //export_G4TouchableHistory(m);
-  //export_G4VPhysicalVolume(m);
+  export_G4VPhysicalVolume(m);
   //export_G4PVPlacement(m);
   //export_G4PVReplica(m);
   //export_G4LogicalVolume(m);
