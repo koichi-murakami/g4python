@@ -99,7 +99,7 @@ gEventManager = G4EventManager.GetEventManager()
 #gStackManager = gEventManager.GetStackManager()
 
 # gTrackingManager
-#gTrackingManager = gEventManager.GetTrackingManager()
+gTrackingManager = gEventManager.GetTrackingManager()
 
 # gStateManager
 #gStateManager = G4StateManager.GetStateManager()

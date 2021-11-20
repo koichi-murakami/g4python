@@ -44,6 +44,10 @@ void export_G4EventManager(py::module& m)
     .def("SetUserInformation",      &G4EventManager::SetUserInformation)
     .def("GetUserInformation",      &G4EventManager::GetUserInformation,
                                     py::return_value_policy::reference)
-     ;
-
+    // ---
+    .def("GetTrackingManager",      &G4EventManager::GetTrackingManager,
+                                    py::return_value_policy::reference)
+    .def("GetStackManager",         &G4EventManager::GetStackManager,
+                                    py::return_value_policy::reference)
+    ;
 }

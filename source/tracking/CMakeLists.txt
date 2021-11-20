@@ -3,9 +3,9 @@
 set(MODULE pyG4tracking)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
-  #pyG4TrackingManager.cc
-  #pyG4UserSteppingAction.cc
-  #pyG4UserTrackingAction.cc
+  pyG4TrackingManager.cc
+  pyG4UserSteppingAction.cc
+  pyG4UserTrackingAction.cc
   pymodG4tracking.cc
 )
 

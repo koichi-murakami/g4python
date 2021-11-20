@@ -36,44 +36,15 @@ void export_G4VUserPhysicsList(py::module& m)
   .def("SetDefaultCutValue",    &G4VUserPhysicsList::SetDefaultCutValue)
   .def("GetDefaultCutValue",    &G4VUserPhysicsList::GetDefaultCutValue)
   // ---
-  .def("SetVerboseLevel",       &G4VUserPhysicsList::SetVerboseLevel)
-  .def("GetVerboseLevel",       &G4VUserPhysicsList::GetVerboseLevel)
+  .def("GetPhysicsTableDirectory",
+                                &G4VUserPhysicsList::GetPhysicsTableDirectory)
   // ---
   .def("DumpList",              &G4VUserPhysicsList::DumpList)
+  .def("DumpCutValuesTable",    &G4VUserPhysicsList::DumpCutValuesTable,
+                                py::arg("flag") = 1)
   // ---
-  .def("Construct",             &G4VUserPhysicsList::Construct)
-  .def("ConstructParticle",     &G4VUserPhysicsList::ConstructParticle)
-  .def("ConstructProcess",      &G4VUserPhysicsList::ConstructProcess)
-    /*
-    // ---
-      .def("SetCuts",
-	 pure_virtual(&G4VUserPhysicsList::SetCuts))
-    // ---
-    .def("StorePhysicsTable",     &G4VUserPhysicsList::StorePhysicsTable,
-	 f_StorePhysicsTable())
-    .def("IsPhysicsTableRetrieved",
-         &G4VUserPhysicsList::IsPhysicsTableRetrieved)
-    .def("IsStoredInAscii",       &G4VUserPhysicsList::IsStoredInAscii)
-    .def("GetPhysicsTableDirectory",
-         &G4VUserPhysicsList::GetPhysicsTableDirectory,
-         return_value_policy<return_by_value>())
-    .def("SetStoredInAscii",      &G4VUserPhysicsList::SetStoredInAscii)
-    .def("ResetStoredInAscii",    &G4VUserPhysicsList::ResetStoredInAscii)
-    // ---
-    .def("DumpList",              &G4VUserPhysicsList::DumpList)
-
-    .def("DumpCutValuesTable",    &G4VUserPhysicsList::DumpCutValuesTable)
-    .def("DumpCutValuesTableIfRequested",
-         &G4VUserPhysicsList::DumpCutValuesTableIfRequested)
-    .def("SetCutValue",           f1_SetCutValue)
-    .def("SetCutValue",           f2_SetCutValue)
-    .def("SetParticleCuts",       f1_SetParticleCuts, f_SetParticleCuts())
-    .def("SetParticleCuts",       f2_SetParticleCuts, f_SetParticleCuts())
-    // ---
-
-    .def("SetCutsWithDefault",    &G4VUserPhysicsList::SetCutsWithDefault)
-    .def("SetCutsForRegion",      &G4VUserPhysicsList::SetCutsForRegion)
-    .def("GetApplyCuts",          &G4VUserPhysicsList::GetApplyCuts)
-    */
-    ;
+  .def("SetCuts",               &G4VUserPhysicsList::SetCuts)
+  .def("SetCutsWithDefault",    &G4VUserPhysicsList::SetCutsWithDefault)
+  .def("SetCutsForRegion",      &G4VUserPhysicsList::SetCutsForRegion)
+  ;
 }

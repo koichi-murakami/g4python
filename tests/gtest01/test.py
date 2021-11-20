@@ -9,19 +9,16 @@ import random
 # ==================================================================
 # user actions in python
 # ==================================================================
-"""
-class MyPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
 
+class MyPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
     def __init__(self):
         G4VUserPrimaryGeneratorAction.__init__(self)
-        self.particleGun= G4ParticleGun(1)
+        self.pg = G4ParticleGun(1)
 
     def GeneratePrimaries(self, event):
-        #dx= random.gauss(0., 0.1)
-        dx=0.
-        self.particleGun.SetParticleMomentumDirection(G4ThreeVector(dx, 0., 1.))
-        self.particleGun.GeneratePrimaryVertex(event)
-"""
+        dx= random.gauss(0., 0.1)
+        self.pg.SetParticleMomentumDirection(G4ThreeVector(dx, 0., 1.))
+        self.pg.GeneratePrimaryVertex(event)
 
 # ------------------------------------------------------------------
 class MyRunAction(G4UserRunAction):
@@ -42,7 +39,6 @@ class MyEventAction(G4UserEventAction):
         ievt = event.GetEventID()
         if ievt % 100 == 0:
           print("*** (EEA) events processed =", ievt)
-
 """
 # ------------------------------------------------------------------
 class MySteppingAction(G4UserSteppingAction):
@@ -68,6 +64,34 @@ class MyField(G4MagneticField):
     return bfield
 """
 
+# ------------------------------------------------------------------
+class AppBuilder(G4VUserActionInitialization):
+
+  def Build(self):
+    global particle_gun
+    #particle_gun = ParticleGunGenerator()
+    particle_gun = MyPrimaryGeneratorAction()
+    self.SetUserAction(particle_gun)
+
+    # setup particle gun
+    #pg = particle_gun.GetGun()
+    pg = particle_gun.pg
+    pg.SetParticleByName("e-")
+    pg.SetParticleEnergy(200.*MeV)
+    pg.SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.))
+    pg.SetParticlePosition(G4ThreeVector(0.,0.,-45.)*cm)
+
+    global myRA
+    myRA = MyRunAction()
+    self.SetUserAction(myRA)
+
+    global myEA
+    myEA = MyEventAction()
+    self.SetUserAction(myEA)
+
+    #mySA= MySteppingAction()
+    #gRunManager.SetUserAction(mySA)
+
 # ==================================================================
 # main
 # ==================================================================
@@ -80,29 +104,9 @@ def main():
     phys_list = FTFP_BERT()
     gRunManager.SetUserInitialization(phys_list)
 
-    # set user actions...
-    global particle_gun
-    particle_gun = ParticleGun()
-    gRunManager.SetUserAction(particle_gun)
-
-    global myRA
-    myRA = MyRunAction()
-    gRunManager.SetUserAction(myRA)
-
-    global myEA
-    myEA = MyEventAction()
-    gRunManager.SetUserAction(myEA)
-
-    #mySA= MySteppingAction()
-    #gRunManager.SetUserAction(mySA)
-
-    # set particle gun
-    #ApplyUICommand("/control/execute gun.mac")
-    #pg= qPGA.GetParticleGun()
-    #pg= myPGA.particleGun
-    #pg.SetParticleByName("e-")
-    #pg.SetParticleEnergy(200.*MeV)
-    #pg.SetParticlePosition(G4ThreeVector(0.,0.,-14.9)*cm)
+    global app_builder
+    app_builder = AppBuilder()
+    gRunManager.SetUserInitialization(app_builder)
 
     # magnetic field
     #fieldMgr= gTransportationManager.GetFieldManager()

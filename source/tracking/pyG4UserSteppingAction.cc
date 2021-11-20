@@ -22,44 +22,33 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4UserSteppingAction.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4UserSteppingAction.hh"
 #include "G4Step.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-struct CB_G4UserSteppingAction : G4UserSteppingAction,
-				 wrapper<G4UserSteppingAction> {
-  // UserSteppingAction
-  void UserSteppingAction(const G4Step* astep) {
-    if(const override& f= get_override("UserSteppingAction")) {
-      f(boost::ref(astep));
-    } else {
-      G4UserSteppingAction::UserSteppingAction(astep);
-    }
+// --------------------------------------------------------------------------
+namespace {
+
+class PyG4UserSteppingAction : public G4UserSteppingAction {
+public:
+  using G4UserSteppingAction::G4UserSteppingAction;
+
+  void UserSteppingAction(const G4Step* step) override {
+    PYBIND11_OVERLOAD(void, G4UserSteppingAction, UserSteppingAction, step);
   }
 };
 
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4UserSteppingAction()
-{
-  class_<CB_G4UserSteppingAction, CB_G4UserSteppingAction*, boost::noncopyable>
-    ("G4UserSteppingAction", "stepping action class")
-
-    .def("UserSteppingAction", &G4UserSteppingAction::UserSteppingAction,
-         &CB_G4UserSteppingAction::UserSteppingAction)
-    ;
 }
 
+// ==========================================================================
+void export_G4UserSteppingAction(py::module& m)
+{
+  py::class_<G4UserSteppingAction, PyG4UserSteppingAction>
+  (m, "G4UserSteppingAction")
+  // ---
+  .def(py::init<>())
+  .def("UserSteppingAction",   &G4UserSteppingAction::UserSteppingAction)
+  ;
+}

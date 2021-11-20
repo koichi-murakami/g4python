@@ -6,11 +6,11 @@ pybind11_add_module(${MODULE}
   #pyG4ClassificationOfNewTrack.cc
   pyG4Event.cc
   pyG4EventManager.cc
-  #pyG4ParticleGun.cc
+  pyG4ParticleGun.cc
   #pyG4StackManager.cc
   pyG4UserEventAction.cc
   #pyG4UserStackingAction.cc
-  pyParticleGun.cc
+  pyParticleGunGenerator.cc
   pymodG4event.cc
 )
 

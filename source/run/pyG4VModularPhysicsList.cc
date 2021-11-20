@@ -31,15 +31,9 @@ namespace py = pybind11;
 void export_G4VModularPhysicsList(py::module& m)
 {
   py::class_<G4VModularPhysicsList, G4VUserPhysicsList>
-    (m, "G4VModularPhysicsList")
-    //.def("SetCuts",            pure_virtual(&G4VModularPhysicsList::SetCuts))
-    //.def("ConstructParticle",  &G4VModularPhysicsList::ConstructParticle)
-    //.def("ConstructProcess",   &G4VModularPhysicsList::ConstructProcess)
-    // ---
-    //.def("RegisterPhysics",     &G4VModularPhysicsList::RegisterPhysics)
-    //.def("GetPhysics",         f1_GetPhysics,
-    //     return_value_policy<reference_existing_object>())
-    //.def("GetPhysics",         f2_GetPhysics,
-    //     return_value_policy<reference_existing_object>())
-    ;
+  (m, "G4VModularPhysicsList")
+  .def("GetInstanceID",        &G4VModularPhysicsList::GetInstanceID)
+  .def("GetVerboseLevel",      &G4VModularPhysicsList::GetVerboseLevel)
+  .def("SetVerboseLevel",      &G4VModularPhysicsList::SetVerboseLevel)
+  ;
 }

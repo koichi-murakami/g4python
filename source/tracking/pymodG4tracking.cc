@@ -34,7 +34,7 @@ void export_G4UserTrackingAction(py::module&);
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4tracking, m)
 {
-  //export_G4TrackingManager(m);
-  //export_G4UserSteppingAction(m);
-  //export_G4UserTrackingAction(m);
+  export_G4TrackingManager(m);
+  export_G4UserSteppingAction(m);
+  export_G4UserTrackingAction(m);
 }

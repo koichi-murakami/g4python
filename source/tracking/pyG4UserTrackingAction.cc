@@ -22,59 +22,40 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4UserTrackingAction.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4UserTrackingAction.hh"
 #include "G4Track.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-struct CB_G4UserTrackingAction : G4UserTrackingAction,
-                                 wrapper<G4UserTrackingAction> {
+// --------------------------------------------------------------------------
+namespace {
 
-  // PreUserTrackingAction
-  void PreUserTrackingAction(const G4Track* atrack) {
-    if(const override& f= get_override("PreUserTrackingAction")) {
-      f(boost::ref(atrack));
-    } else {
-      G4UserTrackingAction::PreUserTrackingAction(atrack);
-    }
+class PyG4UserTrackingAction : public G4UserTrackingAction {
+public:
+  using G4UserTrackingAction::G4UserTrackingAction;
+
+  void PreUserTrackingAction(const G4Track* track) override {
+    PYBIND11_OVERLOAD(void, G4UserTrackingAction,
+                      PreUserTrackingAction, track);
   }
 
-  // PostUserTrackingAction
-  void PostUserTrackingAction(const G4Track* atrack) {
-    if(const override& f= get_override("PostUserTrackingAction")) {
-      f(boost::ref(atrack));
-    } else {
-      G4UserTrackingAction::PostUserTrackingAction(atrack);
-    }
+  void PostUserTrackingAction(const G4Track* track) override {
+    PYBIND11_OVERLOAD(void, G4UserTrackingAction,
+                      PostUserTrackingAction, track);
   }
-
 };
 
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4UserTrackingAction()
-{
-  class_<CB_G4UserTrackingAction, CB_G4UserTrackingAction*, boost::noncopyable>
-    ("G4UserTrackingAction", "tracking action class")
-    // ---
-    .def("PreUserTrackingAction", 
-	 &G4UserTrackingAction::PreUserTrackingAction,
-         &CB_G4UserTrackingAction::PreUserTrackingAction)
-    .def("PostUserTrackingAction", 
-	 &G4UserTrackingAction::PostUserTrackingAction,
-         &CB_G4UserTrackingAction::PostUserTrackingAction)
-    ;
 }
 
+// ==========================================================================
+void export_G4UserTrackingAction(py::module& m)
+{
+  py::class_<G4UserTrackingAction, PyG4UserTrackingAction>
+  (m, "G4UserTrackingAction")
+  // ---
+  .def(py::init<>())
+  .def("PreUserTrackingAction", &G4UserTrackingAction::PreUserTrackingAction)
+  .def("PostUserTrackingAction",&G4UserTrackingAction::PostUserTrackingAction)
+  ;
+}

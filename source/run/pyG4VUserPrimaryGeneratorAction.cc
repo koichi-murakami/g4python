@@ -51,8 +51,7 @@ public:
 void export_G4VUserPrimaryGeneratorAction(py::module& m)
 {
   py::class_<G4VUserPrimaryGeneratorAction, PyG4VUserPrimaryGeneratorAction>
-  (m, "G4VUserPrimaryGeneratorAction",
-     "base class of user primary generator action")
+  (m, "G4VUserPrimaryGeneratorAction")
   // ---
   .def(py::init<>())
   .def("GeneratePrimaries", &G4VUserPrimaryGeneratorAction::GeneratePrimaries)

@@ -56,7 +56,6 @@ void export_G4ThreeVector(py::module& mod)
   .def(py::init<G4double, G4double>())
   .def(py::init<G4double, G4double, G4double>())
   .def(py::init<const G4ThreeVector&>())
-  // ---
   .def_property("x",   &c::getX, &c::setX)
   .def_property("y",   &c::getY, &c::setY)
   .def_property("z",   &c::getZ, &c::setZ)
