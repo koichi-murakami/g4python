@@ -3,8 +3,8 @@
 set(MODULE pyG4graphics_reps)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
- #pyG4Colour.cc
-  #pyG4VisAttributes.cc
+  pyG4Colour.cc
+  pyG4VisAttributes.cc
   pymodG4graphics_reps.cc
 )
 

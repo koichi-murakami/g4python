@@ -3,9 +3,9 @@
 #  [Geant4] module package
 # ==================================================================
 """
-
-# --------------------------------------------------------------------------
+# ------------------------------------------------------------------
 # check Qt5 shared library (for Anaconda Python)
+# ------------------------------------------------------------------
 import os
 import ctypes
 from ctypes.util import find_library
@@ -38,7 +38,7 @@ Please consider to install Geant4 library without the Qt feature.
       ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5Widgets.so")
       ctypes.cdll.LoadLibrary(_qt5_prefix + "libQt5OpenGL.so")
 
-# --------------------------------------------------------------------------
+# ==========================================================================
 # import submodules
 from .G4global import *
 from .G4interface import *
@@ -70,7 +70,7 @@ def print_version():
 """ % ( G4VERSION_NUMBER, G4Date) )
 
 # ==================================================================
-# initialize
+# initialize module
 # ==================================================================
 print_version()
 
@@ -96,7 +96,7 @@ gRunManager = G4RunManager.GetRunManager()
 gEventManager = G4EventManager.GetEventManager()
 
 # gStackManager
-#gStackManager = gEventManager.GetStackManager()
+gStackManager = gEventManager.GetStackManager()
 
 # gTrackingManager
 gTrackingManager = gEventManager.GetTrackingManager()

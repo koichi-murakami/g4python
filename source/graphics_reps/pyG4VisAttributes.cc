@@ -22,104 +22,90 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4VisAttributes.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
 #include "G4AttDef.hh"
 #include "G4VisAttributes.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4VisAttributes {
-
-// SetColor()
-void(G4VisAttributes::*f1_SetColor)(const G4Color&)=
-  &G4VisAttributes::SetColor;
-
-void(G4VisAttributes::*f2_SetColor)(G4double, G4double, G4double, G4double)=
-  &G4VisAttributes::SetColor;
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_SetColor, SetColor, 3, 4)
-
-// SetColour()
-void(G4VisAttributes::*f1_SetColour)(const G4Colour&)=
-  &G4VisAttributes::SetColour;
-
-void(G4VisAttributes::*f2_SetColour)(G4double, G4double, G4double, G4double)=
-  &G4VisAttributes::SetColour;
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_SetColour, SetColour, 3, 4)
-
-}
-
-using namespace pyG4VisAttributes;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4VisAttributes()
+// ==========================================================================
+void export_G4VisAttributes(py::module& m)
 {
-  scope in_G4VisAttributes=
-    class_<G4VisAttributes, G4VisAttributes*>
-    ("G4VisAttributes", "visualization attributes")
-    // constructors
-    .def(init<G4bool>())
-    .def(init<const G4Colour&>())
-    .def(init<G4bool, const G4Colour&>())
-    // ---
-    .def("GetInvisible",           &G4VisAttributes::GetInvisible,
-	 return_value_policy<reference_existing_object>())
-    .staticmethod("GetInvisible")
-    .def("IsVisible",              &G4VisAttributes::IsVisible)
-    .def("IsDaughtersInvisible",   &G4VisAttributes::IsDaughtersInvisible)
-    // ---
-    .def("GetColour",              &G4VisAttributes::GetColour,
-         return_internal_reference<>())
-    .def("GetColor",               &G4VisAttributes::GetColor,
-         return_internal_reference<>())
-    // ---
-    .def("GetLineStyle",           &G4VisAttributes::GetLineStyle)
-    .def("GetLineWidth",           &G4VisAttributes::GetLineWidth)
-    .def("IsForceDrawingStyle",    &G4VisAttributes::IsForceDrawingStyle)
-    .def("GetForcedDrawingStyle",  &G4VisAttributes::GetForcedDrawingStyle)
-    .def("IsForceAuxEdgeVisible",  &G4VisAttributes::IsForceAuxEdgeVisible)
-    .def("SetVisibility",          &G4VisAttributes::SetVisibility)
-    .def("SetDaughtersInvisible",  &G4VisAttributes::SetDaughtersInvisible)
-    .def("SetColor",               f1_SetColor)
-    .def("SetColour",              f1_SetColour)
-    .def("SetColor",               f2_SetColor,      f_SetColor())
-    .def("SetColour",              f2_SetColour,     f_SetColour())
-    .def("SetLineStyle",           &G4VisAttributes::SetLineStyle)
-    .def("SetLineWidth",           &G4VisAttributes::SetLineWidth)
-    .def("SetForceWireframe",      &G4VisAttributes::SetForceWireframe)
-    .def("SetForceSolid",          &G4VisAttributes::SetForceSolid)
-    .def("SetForceAuxEdgeVisible", &G4VisAttributes::SetForceAuxEdgeVisible)
-    .def("SetAttValues",           &G4VisAttributes::SetAttValues)
-    .def("SetAttDefs",             &G4VisAttributes::SetAttDefs)
-    // operators
-    .def(self_ns::str(self))
-    .def(self == self)
-    .def(self != self)
-    ;
+  py::class_<G4VisAttributes>vis_attributes(m, "G4VisAttributes");
+  vis_attributes
+  // ---
+  .def(py::init<>())
+  .def(py::init<G4bool>())
+  .def(py::init<const G4Colour&>())
+  .def(py::init<G4bool, const G4Colour&>())
+  // ---
+  .def_static("GetInvisible",    &G4VisAttributes::GetInvisible,
+                                 py::return_value_policy::copy)
+  // ---
+  .def("SetVisibility",          &G4VisAttributes::SetVisibility,
+                                 py::arg("flag") = true )
+  .def("SetDaughtersInvisible",  &G4VisAttributes::SetDaughtersInvisible,
+                                 py::arg("flag") = true )
+  .def("SetColor",
+       py::overload_cast<const G4Colour&>(&G4VisAttributes::SetColor))
+  .def("SetColor",
+       py::overload_cast<G4double, G4double, G4double, G4double>
+       (&G4VisAttributes::SetColor),
+       py::arg("red"), py::arg("green"), py::arg("blue"),
+       py::arg("alpha") = 1.)
+  .def("SetLineStyle",           &G4VisAttributes::SetLineStyle)
+  .def("SetLineWidth",           &G4VisAttributes::SetLineWidth)
+  .def("SetForceWireframe",      &G4VisAttributes::SetForceWireframe,
+                                 py::arg("flag") = true )
+  .def("SetForceSolid",          &G4VisAttributes::SetForceSolid,
+                                 py::arg("flag") = true )
+  .def("SetForceCloud",          &G4VisAttributes::SetForceCloud,
+                                 py::arg("flag") = true )
+  .def("SetForceNumberOfCloudPoints",
+                            &G4VisAttributes::SetForceNumberOfCloudPoints)
+  .def("SetForceAuxEdgeVisible", &G4VisAttributes::SetForceAuxEdgeVisible,
+                                 py::arg("flag") = true )
+  .def("SetForceLineSegmentsPerCircle",
+                            &G4VisAttributes::SetForceLineSegmentsPerCircle)
+  .def("SetStartTime",           &G4VisAttributes::SetStartTime)
+  .def("SetEndTime",             &G4VisAttributes::SetEndTime)
+  .def("SetAttValues",           &G4VisAttributes::SetAttValues)
+  .def("SetAttDefs",             &G4VisAttributes::SetAttDefs)
+  // ---
+  .def("IsVisible",              &G4VisAttributes::IsVisible)
+  .def("IsDaughtersInvisible",   &G4VisAttributes::IsDaughtersInvisible)
+  .def("GetColor",               &G4VisAttributes::GetColor)
+  .def("GetLineStyle",           &G4VisAttributes::GetLineStyle)
+  .def("GetLineWidth",           &G4VisAttributes::GetLineWidth)
+  .def("IsForceDrawingStyle",    &G4VisAttributes::IsForceDrawingStyle)
+  .def("GetForcedDrawingStyle",  &G4VisAttributes::GetForcedDrawingStyle)
+  .def("GetForcedNumberOfCloudPoints",
+                              &G4VisAttributes::GetForcedNumberOfCloudPoints)
+  .def("IsForceAuxEdgeVisible",  &G4VisAttributes::IsForceAuxEdgeVisible)
+  .def("IsForcedAuxEdgeVisible", &G4VisAttributes::IsForcedAuxEdgeVisible)
+  .def("IsForceLineSegmentsPerCircle",
+                              &G4VisAttributes::IsForceLineSegmentsPerCircle)
+  .def("GetForcedLineSegmentsPerCircle",
+                              &G4VisAttributes::GetForcedLineSegmentsPerCircle)
+  .def("GetStartTime",           &G4VisAttributes::GetStartTime)
+  .def("GetEndTime",             &G4VisAttributes::GetEndTime)
 
-  // enum LineStyle
-  enum_<G4VisAttributes::LineStyle>("LineStyle")
-    .value("unbroken",   G4VisAttributes::unbroken)
-    .value("dashed",     G4VisAttributes::dashed)
-    .value("dotted",     G4VisAttributes::dotted)
-    ;
+  // ---
+  // operators
+  .def(py::self == py::self)
+  .def(py::self != py::self)
+  ;
 
-  // enum ForcedDrawingStyle
-  enum_<G4VisAttributes::ForcedDrawingStyle>("ForcedDrawingStyle")
-    .value("wireframe",  G4VisAttributes::wireframe)
-    .value("solid",      G4VisAttributes::solid)
-    ;
+  py::enum_<G4VisAttributes::LineStyle>(vis_attributes, "LineStyle")
+  .value("unbroken",   G4VisAttributes::unbroken)
+  .value("dashed",     G4VisAttributes::dashed)
+  .value("dotted",     G4VisAttributes::dotted)
+  ;
 
+  py::enum_<G4VisAttributes::ForcedDrawingStyle>
+  (vis_attributes, "ForcedDrawingStyle")
+  .value("wireframe",  G4VisAttributes::wireframe)
+  .value("solid",      G4VisAttributes::solid)
+  ;
 }

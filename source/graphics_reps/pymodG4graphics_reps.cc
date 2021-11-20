@@ -33,6 +33,6 @@ void export_G4Colour(py::module&);
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4graphics_reps, m)
 {
-  //export_G4VisAttributes(m);
-  //export_G4Colour(m);
+  export_G4VisAttributes(m);
+  export_G4Colour(m);
 }

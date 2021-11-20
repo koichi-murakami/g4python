@@ -22,70 +22,49 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4UserStackingAction.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4UserStackingAction.hh"
 #include "G4Track.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4UserStackingAction {
+// --------------------------------------------------------------------------
+namespace {
 
-struct CB_G4UserStackingAction : G4UserStackingAction,
-				 wrapper<G4UserStackingAction> {
+class PyG4UserStackingAction : public G4UserStackingAction {
+public:
+  using G4UserStackingAction::G4UserStackingAction;
 
-  // ClassifyNewTrack
-  G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track* aTrack) {
-    if(const override& f= get_override("ClassifyNewTrack")) {
-      return f(boost::ref(aTrack));
-    } else
-      return G4UserStackingAction::ClassifyNewTrack(aTrack);
+  G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track* track) override {
+
+    PYBIND11_OVERLOAD(G4ClassificationOfNewTrack, G4UserStackingAction,
+                      ClassifyNewTrack, track);
   }
 
-  // NewState
-  void NewStage() {
-    if(const override& f= get_override("NewStage")) {
-      f();
-    } else
-      G4UserStackingAction::NewStage();
+  void NewStage() override {
+
+    PYBIND11_OVERLOAD(void, G4UserStackingAction, NewStage,);
+
   }
 
-  // PrepareNewEvent
-  void PrepareNewEvent() {
-    if(const override& f= get_override("PrepareNewEvent")) {
-      f();
-    } else
-      G4UserStackingAction::PrepareNewEvent();
+  void PrepareNewEvent() override {
+
+    PYBIND11_OVERLOAD(void, G4UserStackingAction, PrepareNewEvent,);
+
   }
 
 };
 
 }
 
-using namespace pyG4UserStackingAction;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4UserStackingAction()
+// ==========================================================================
+void export_G4UserStackingAction(py::module& m)
 {
-  class_<CB_G4UserStackingAction, CB_G4UserStackingAction*, boost::noncopyable>
-    ("G4UserStackingAction", "stacking action class")
-    // ---
-    .def("ClassifyNewTrack",  &G4UserStackingAction::ClassifyNewTrack,
-	 &CB_G4UserStackingAction::ClassifyNewTrack)
-    .def("NewStage",          &G4UserStackingAction::NewStage,
-	 &CB_G4UserStackingAction::NewStage)
-    .def("PrepareNewEvent",   &G4UserStackingAction::PrepareNewEvent,
-	 &CB_G4UserStackingAction::PrepareNewEvent)
-    ;
+  py::class_<G4UserStackingAction, PyG4UserStackingAction>
+  (m, "G4UserStackingAction")
+  // ---
+  .def("ClassifyNewTrack",    &G4UserStackingAction::ClassifyNewTrack)
+  .def("NewStage",            &G4UserStackingAction::NewStage)
+  .def("PrepareNewEvent",     &G4UserStackingAction::PrepareNewEvent)
+  ;
 }
-
