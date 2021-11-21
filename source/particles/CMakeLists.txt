@@ -5,13 +5,12 @@ set(MODULE pyG4particles)
 add_library(${MODULE} SHARED)
 
 target_sources(${MODULE} PRIVATE
-  #pyG4DecayTable.cc
-  #pyG4DynamicParticle.cc
-  #pyG4ParticleDefinition.cc
-  #pyG4ParticleList.cc
+  pyG4DynamicParticle.cc
+  pyG4ParticleDefinition.cc
+  pyG4IonTable.cc
   pyG4ParticleTable.cc
-  #pyG4PrimaryParticle.cc
-  #pyG4PrimaryVertex.cc
+  pyG4PrimaryParticle.cc
+  pyG4PrimaryVertex.cc
   pymodG4particles.cc
 )
 

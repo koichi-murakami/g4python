@@ -22,56 +22,30 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4PrimaryVertex.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4PrimaryVertex.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4PrimaryVertex {
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_GetPrimary, GetPrimary, 0, 1)
-
-}
-
-using namespace pyG4PrimaryVertex;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4PrimaryVertex()
+// ==========================================================================
+void export_G4PrimaryVertex(py::module& m)
 {
-  class_<G4PrimaryVertex, G4PrimaryVertex*>
-    ("G4PrimaryVertex", "primary vertex")
-    .def(init<>())
-    .def(init<G4double, G4double, G4double, G4double>())
-    .def(init<G4ThreeVector, G4double>())
-    // ---
-    .add_property("X0", &G4PrimaryVertex::GetX0)
-    .add_property("Y0", &G4PrimaryVertex::GetY0)
-    .add_property("Z0", &G4PrimaryVertex::GetZ0)
-    .add_property("T0", &G4PrimaryVertex::GetT0)
-    // ---
-    .def("GetPosition", &G4PrimaryVertex::GetPosition,
-         return_value_policy<return_by_value>())
-    .def("GetX0",       &G4PrimaryVertex::GetX0)
-    .def("GetY0",       &G4PrimaryVertex::GetY0)
-    .def("GetZ0",       &G4PrimaryVertex::GetZ0)
-    .def("GetT0",       &G4PrimaryVertex::GetT0)
-    .def("GetNumberOfParticle", &G4PrimaryVertex::GetNumberOfParticle)
-    .def("GetPrimary",  &G4PrimaryVertex::GetPrimary,
-      	 return_internal_reference<>(), f_GetPrimary())
-    .def("SetPrimary",  &G4PrimaryVertex::SetPrimary)
-    .def("GetWeight",   &G4PrimaryVertex::GetWeight)
-    .def("SetWeight",   &G4PrimaryVertex::SetWeight)
-    .def("Print", &G4PrimaryVertex::Print)
-    ;
+  py::class_<G4PrimaryVertex>(m, "G4PrimaryVertex")
+  //.def(py::init<>())
+  //.def(py::init<G4double,G4double,G4double,G4double>())
+  //.def(py::init<G4ThreeVector,G4double>())
+  // ---
+  .def("GetPosition",       &G4PrimaryVertex::GetPosition,
+                            py::return_value_policy::reference)
+  .def("GetX0",             &G4PrimaryVertex::GetX0)
+  .def("GetY0",             &G4PrimaryVertex::GetY0)
+  .def("GetZ0",             &G4PrimaryVertex::GetZ0)
+  .def("GetT0",             &G4PrimaryVertex::GetT0)
+  .def("GetNumberOfParticle", &G4PrimaryVertex::GetNumberOfParticle)
+  .def("GetPrimary",        &G4PrimaryVertex::GetPrimary,
+                            py::return_value_policy::reference)
+  .def("GetWeight",         &G4PrimaryVertex::GetWeight)
+  // ---
+  .def("Print",             &G4PrimaryVertex::Print)
+  ;
 }

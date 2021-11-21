@@ -22,30 +22,22 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4StepStatus.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4StepStatus.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4StepStatus()
+// ==========================================================================
+void export_G4StepStatus(py::module& m)
 {
-  enum_<G4StepStatus>("G4StepStatus")
-    .value("fWorldBoundary",         fWorldBoundary)
-    .value("fGeomBoundary",          fGeomBoundary)
-    .value("fAtRestDoItProc",        fAtRestDoItProc)
-    .value("fAlongStepDoItProc",     fAlongStepDoItProc)
-    .value("fPostStepDoItProc",      fPostStepDoItProc)
-    .value("fUserDefinedLimit",      fUserDefinedLimit)
-    .value("fExclusivelyForcedProc", fExclusivelyForcedProc)
-    .value("fUndefined",             fUndefined)
-    ;
+  py::enum_<G4StepStatus>(m, "G4StepStatus")
+  .value("fWorldBoundary",         fWorldBoundary)
+  .value("fGeomBoundary",          fGeomBoundary)
+  .value("fAtRestDoItProc",        fAtRestDoItProc)
+  .value("fAlongStepDoItProc",     fAlongStepDoItProc)
+  .value("fPostStepDoItProc",      fPostStepDoItProc)
+  .value("fUserDefinedLimit",      fUserDefinedLimit)
+  .value("fExclusivelyForcedProc", fExclusivelyForcedProc)
+  .value("fUndefined",             fUndefined)
+  ;
 }

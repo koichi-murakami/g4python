@@ -22,28 +22,20 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4TrackStatus.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4TrackStatus.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4TrackStatus()
+// ==========================================================================
+void export_G4TrackStatus(py::module& m)
 {
-  enum_<G4TrackStatus>("G4TrackStatus")
-    .value("fAlive",                   fAlive)
-    .value("fStopButAlive",            fStopButAlive)
-    .value("fStopAndKill",             fStopAndKill)
-    .value("fKillTrackAndSecondaries", fKillTrackAndSecondaries)
-    .value("fSuspend",                 fSuspend)
-    .value("fPostponeToNextEvent",     fPostponeToNextEvent)
-    ;
+  py::enum_<G4TrackStatus>(m, "G4TrackStatus")
+  .value("fAlive",                   fAlive)
+  .value("fStopButAlive",            fStopButAlive)
+  .value("fStopAndKill",             fStopAndKill)
+  .value("fKillTrackAndSecondaries", fKillTrackAndSecondaries)
+  .value("fSuspend",                 fSuspend)
+  .value("fPostponeToNextEvent",     fPostponeToNextEvent)
+  ;
 }

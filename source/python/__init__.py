@@ -113,7 +113,7 @@ gGeometryManager = G4GeometryManager.GetInstance()
 
 # gParticleTable
 gParticleTable = G4ParticleTable.GetParticleTable()
-#gParticleIterator = PyG4ParticleList()
+gIonTable = gParticleTable.GetIonTable()
 
 # gProcessTable
 #gProcessTable = G4ProcessTable.GetProcessTable()

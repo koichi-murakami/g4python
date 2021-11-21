@@ -22,55 +22,48 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4DynamicParticle.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "G4Version.hh"
+#include <pybind11/pybind11.h>
 #include "G4DynamicParticle.hh"
 #include "G4PrimaryParticle.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4DynamicParticle()
+// ==========================================================================
+void export_G4DynamicParticle(py::module& m)
 {
-  class_<G4DynamicParticle, G4DynamicParticle*>
-    ("G4DynamicParticle", "dynamic particle")
-    // ---
-    .def("GetMomentumDirection", &G4DynamicParticle::GetMomentumDirection,
-         return_value_policy<return_by_value>())
-    .def("GetMomentum",          &G4DynamicParticle::GetMomentum,
-         return_value_policy<return_by_value>())
-    //.def("Get4Momentum",       &G4DynamicParticle::Get4Momentum,
-    //return_value_policy<return_by_value>())
-    .def("GetTotalMomentum",     &G4DynamicParticle::GetTotalMomentum)
-    .def("GetTotalEnergy",       &G4DynamicParticle::GetTotalEnergy)
-    .def("GetKineticEnergy",     &G4DynamicParticle::GetKineticEnergy)
-    .def("GetProperTime",        &G4DynamicParticle::GetProperTime)
-    .def("GetPolarization",      &G4DynamicParticle::GetPolarization,
-         return_value_policy<return_by_value>())
-    .def("GetMass",              &G4DynamicParticle::GetMass)
-    .def("GetCharge",            &G4DynamicParticle::GetCharge)
-    //.def("GetElectronOccupancy", &G4DynamicParticle::GetElectronOccupancy,
-    //return_internal_reference<>())
-    .def("GetTotalOccupancy",    &G4DynamicParticle::GetTotalOccupancy)
-    .def("GetOccupancy",         &G4DynamicParticle::GetOccupancy)
-    .def("GetDefinition",        &G4DynamicParticle::GetDefinition,
-         return_internal_reference<>())
-    .def("GetPreAssignedDecayProperTime", 
-         &G4DynamicParticle::GetPreAssignedDecayProperTime)
-    .def("DumpInfo",             &G4DynamicParticle::DumpInfo)
-    .def("SetVerboseLevel",      &G4DynamicParticle::SetVerboseLevel)
-    .def("GetVerboseLevel",      &G4DynamicParticle::GetVerboseLevel)
-    .def("GetPrimaryParticle",   &G4DynamicParticle::GetPrimaryParticle,
-         return_internal_reference<>())
-    .def("GetPDGcode",           &G4DynamicParticle::GetPDGcode)
-    ;
-}
+  py::class_<G4DynamicParticle>(m, "G4DynamicParticle")
+  // ---
+  .def("GetMomentumDirection", &G4DynamicParticle::GetMomentumDirection)
+  .def("GetMomentum",          &G4DynamicParticle::GetMomentum)
+  .def("Get4Momentum",         &G4DynamicParticle::Get4Momentum)
+  .def("GetTotalMomentum",     &G4DynamicParticle::GetTotalMomentum)
+  .def("GetTotalEnergy",       &G4DynamicParticle::GetTotalEnergy)
+  .def("GetKineticEnergy",     &G4DynamicParticle::GetKineticEnergy)
+  .def("GetLogKineticEnergy",  &G4DynamicParticle::GetLogKineticEnergy)
+  .def("GetBeta",              &G4DynamicParticle::GetBeta)
+  .def("GetProperTime",        &G4DynamicParticle::GetProperTime)
+  .def("GetPolarization",      &G4DynamicParticle::GetPolarization)
+  .def("GetMass",              &G4DynamicParticle::GetMass)
+  .def("GetCharge",            &G4DynamicParticle::GetCharge)
+  .def("GetSpin",              &G4DynamicParticle::GetSpin)
+  .def("GetMagneticMoment",    &G4DynamicParticle::GetMagneticMoment)
+  .def("GetElectronOccupancy", &G4DynamicParticle::GetElectronOccupancy,
+                               py::return_value_policy::reference)
+  .def("GetTotalOccupancy",    &G4DynamicParticle::GetTotalOccupancy)
+  .def("GetOccupancy",         &G4DynamicParticle::GetOccupancy)
+  .def("GetParticleDefinition",   &G4DynamicParticle::GetParticleDefinition,
+                                  py::return_value_policy::reference)
+  .def("GetDefinition",        &G4DynamicParticle::GetDefinition,
+                               py::return_value_policy::reference)
+  .def("GetPreAssignedDecayProperTime",
+                          &G4DynamicParticle::GetPreAssignedDecayProperTime)
+  .def("DumpInfo",             &G4DynamicParticle::DumpInfo,
+                               py::arg("mode") = 0)
+  .def("SetVerboseLevel",      &G4DynamicParticle::SetVerboseLevel)
+  .def("GetVerboseLevel",      &G4DynamicParticle::GetVerboseLevel)
 
+  .def("GetPrimaryParticle",   &G4DynamicParticle::GetPrimaryParticle,
+                               py::return_value_policy::reference)
+  .def("GetPDGcode",           &G4DynamicParticle::GetPDGcode)
+  ;
+}

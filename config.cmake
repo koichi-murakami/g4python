@@ -6,8 +6,8 @@
 #==============================================================================
 # Installation prefixes
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX $ENV{HOME}/opt/geant4/pymodules CACHE
-      PATH "Install prefix" FORCE)
+  set(CMAKE_INSTALL_PREFIX $ENV{HOME}/opt/geant4/geant4py-11.0.0/site-packages
+  CACHE PATH "Install prefix" FORCE)
 endif()
 
 # Geant4 installation path

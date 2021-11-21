@@ -39,19 +39,20 @@ class MyEventAction(G4UserEventAction):
         ievt = event.GetEventID()
         if ievt % 100 == 0:
           print("*** (EEA) events processed =", ievt)
-"""
+
 # ------------------------------------------------------------------
 class MySteppingAction(G4UserSteppingAction):
-  "My Stepping Action"
+    def UserSteppingAction(self, step):
+        #print("*** (SA) dE/dx in current step=",
+        #       step.GetTotalEnergyDeposit()/MeV, "MeV")
+        track = step.GetTrack()
+        pass
+        #touchable= track.GetTouchable()
+        #pv= touchable.GetVolume()
+        #print pv.GetCopyNo()
+        #print touchable.GetReplicaNumber(0)
 
-  def UserSteppingAction(self, step):
-    #print "*** dE/dx in current step=", step.GetTotalEnergyDeposit()
-    track= step.GetTrack()
-    touchable= track.GetTouchable()
-    pv= touchable.GetVolume()
-    #print pv.GetCopyNo()
-    #print touchable.GetReplicaNumber(0)
-
+"""
 # ------------------------------------------------------------------
 class MyField(G4MagneticField):
   "My Magnetic Field"
@@ -89,7 +90,8 @@ class AppBuilder(G4VUserActionInitialization):
     myEA = MyEventAction()
     self.SetUserAction(myEA)
 
-    #mySA= MySteppingAction()
+    global mySA
+    mySA= MySteppingAction()
     #gRunManager.SetUserAction(mySA)
 
 # ==================================================================

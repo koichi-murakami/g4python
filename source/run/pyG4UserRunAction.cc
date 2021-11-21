@@ -50,9 +50,9 @@ public:
 void export_G4UserRunAction(py::module& m)
 {
   py::class_<G4UserRunAction, PyG4UserRunAction>(m, "G4UserRunAction")
-    // ---
-    .def(py::init<>())
-    .def("BeginOfRunAction", &G4UserRunAction::BeginOfRunAction)
-    .def("EndOfRunAction",   &G4UserRunAction::EndOfRunAction)
-    ;
+  // ---
+  .def(py::init<>())
+  .def("BeginOfRunAction", &G4UserRunAction::BeginOfRunAction)
+  .def("EndOfRunAction",   &G4UserRunAction::EndOfRunAction)
+  ;
 }
