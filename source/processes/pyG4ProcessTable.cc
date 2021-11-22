@@ -22,163 +22,137 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4ProcessTable.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
-class G4UImessenger;
+#include <pybind11/pybind11.h>
 #include "G4ProcessTable.hh"
 
-using namespace boost::python;
+class G4UImessenger;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4ProcessTable {
+namespace py = pybind11;
 
-// FindProcess
-G4VProcess*(G4ProcessTable::*f1_FindProcess)
-  (const G4String&, const G4String&) const = &G4ProcessTable::FindProcess;
+// --------------------------------------------------------------------------
+namespace {
 
-G4VProcess*(G4ProcessTable::*f2_FindProcess)
-  (const G4String&, const G4ParticleDefinition*) const
-  = &G4ProcessTable::FindProcess;
+py::list make_process_list(const G4ProcessVector* g4pvec)
+{
+  py::list pylist;
 
-G4VProcess*(G4ProcessTable::*f3_FindProcess)
-  (const G4String&, const G4ProcessManager*) const
-  = &G4ProcessTable::FindProcess;
+  auto nproc= g4pvec-> size();
+  for( int i = 0; i < nproc; i++ ) {
+    pylist.append((*g4pvec)[i]);
+  }
 
+  return pylist;
+}
+
+// --------------------------------------------------------------------------
 // FindProcesses
-// raw vector pointer -> Python list conversion
-list f1_FindProcesses(G4ProcessTable* procTable)
+py::list f1_FindProcesses(G4ProcessTable* procTable)
 {
-  list procList;
-  G4ProcessVector* procVec= procTable-> FindProcesses();
-  G4int nproc= procVec-> size();
-  for(G4int i=0; i< nproc; i++) {
-    procList.append(&(*procVec)[i]);
+  auto proc_vec = procTable-> FindProcesses();
+  return make_process_list(proc_vec);
+}
+
+// --------------------------------------------------------------------------
+py::list f2_FindProcesses(G4ProcessTable* procTable,
+		                      const G4ProcessManager* procManager)
+{
+  auto proc_vec = procTable-> FindProcesses(procManager);
+  return make_process_list(proc_vec);
+}
+
+// --------------------------------------------------------------------------
+py::list f3_FindProcesses(G4ProcessTable* procTable,
+                          const G4String& pname)
+{
+  auto proc_vec = procTable-> FindProcesses(pname);
+  return make_process_list(proc_vec);
+}
+
+// --------------------------------------------------------------------------
+py::list f4_FindProcesses(G4ProcessTable* procTable,
+	 	                      G4ProcessType ptype)
+{
+  auto proc_vec = procTable-> FindProcesses(ptype);
+  return make_process_list(proc_vec);
+}
+
+// --------------------------------------------------------------------------
+py::list GetProcNameList(G4ProcessTable* procTable)
+{
+  py::list pylist;
+
+  auto pname_list = procTable-> GetNameList();
+
+  auto nproc= pname_list-> size();
+  for( int i = 0; i < nproc; i++ ) {
+    pylist.append((*pname_list)[i]);
   }
-  return procList;
+
+  return pylist;
 }
 
-list f2_FindProcesses(G4ProcessTable* procTable,
-		      const G4ProcessManager* procManager)
+}
+
+// ==========================================================================
+void export_G4ProcessTable(py::module& m)
 {
-  list procList;
-  G4ProcessVector* procVec= procTable-> FindProcesses(procManager);
-  G4int nproc= procVec-> size();
-  for(G4int i=0; i< nproc; i++) {
-    procList.append(&(*procVec)[i]);
-  }
-  return procList;
-}
+  py::class_<G4ProcessTable>(m, "G4ProcessTable")
+  // ---
+  .def_static("GetProcessTable",  &G4ProcessTable::GetProcessTable,
+                                  py::return_value_policy::reference)
+  // ---
+  .def("Length",      &G4ProcessTable::Length)
+  // ---
+  .def("FindProcess", py::overload_cast<const G4String&, const G4String&>
+                      (&G4ProcessTable::FindProcess, py::const_),
+                      py::return_value_policy::reference)
+  .def("FindProcess", py::overload_cast<const G4String&,
+                                        const G4ParticleDefinition*>
+                      (&G4ProcessTable::FindProcess, py::const_),
+                      py::return_value_policy::reference)
+  .def("FindProcess", py::overload_cast<const G4String&,
+                                        const G4ProcessManager*>
+                      (&G4ProcessTable::FindProcess, py::const_),
+                      py::return_value_policy::reference)
+  .def("FindProcess", py::overload_cast<G4ProcessType,
+                                        const G4ParticleDefinition*>
+                      (&G4ProcessTable::FindProcess, py::const_),
+                      py::return_value_policy::reference)
+  .def("FindProcess", py::overload_cast<G4int, const G4ParticleDefinition*>
+                      (&G4ProcessTable::FindProcess, py::const_),
+                      py::return_value_policy::reference)
 
-list f3_FindProcesses(G4ProcessTable* procTable,
-		      const G4String& pname)
-{
-  list procList;
-  G4ProcessVector* procVec= procTable-> FindProcesses(pname);
-  G4int nproc= procVec-> size();
-  for(G4int i=0; i< nproc; i++) {
-    procList.append(&(*procVec)[i]);
-  }
-  return procList;
-}
-
-list f4_FindProcesses(G4ProcessTable* procTable,
-		      G4ProcessType ptype)
-{
-  list procList;
-  G4ProcessVector* procVec= procTable-> FindProcesses(ptype);
-  G4int nproc= procVec-> size();
-  for(G4int i=0; i< nproc; i++) {
-    procList.append(&(*procVec)[i]);
-  }
-  return procList;
-}
-
-// SetProcessActivation
-void(G4ProcessTable::*f1_SetProcessActivation)
-  (const G4String&, G4bool)= &G4ProcessTable::SetProcessActivation;
-
-void(G4ProcessTable::*f2_SetProcessActivation)
-  (const G4String&, const G4String&, G4bool)
-  = &G4ProcessTable::SetProcessActivation;
-
-void(G4ProcessTable::*f3_SetProcessActivation)
-  (const G4String&, G4ParticleDefinition*, G4bool)
-  = &G4ProcessTable::SetProcessActivation;
-
-void(G4ProcessTable::*f4_SetProcessActivation)
-  (const G4String&, G4ProcessManager*, G4bool)
-  = &G4ProcessTable::SetProcessActivation;
-
-void(G4ProcessTable::*f5_SetProcessActivation)
-  (G4ProcessType, G4bool)= &G4ProcessTable::SetProcessActivation;
-
-void(G4ProcessTable::*f6_SetProcessActivation)
-  (G4ProcessType, const G4String&, G4bool)
-  = &G4ProcessTable::SetProcessActivation;
-
-void(G4ProcessTable::*f7_SetProcessActivation)
-  (G4ProcessType, G4ParticleDefinition*, G4bool)
-  = &G4ProcessTable::SetProcessActivation;
-
-void(G4ProcessTable::*f8_SetProcessActivation)
-  (G4ProcessType, G4ProcessManager*, G4bool)
-  = &G4ProcessTable::SetProcessActivation;
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_DumpInfo, DumpInfo, 1, 2)
-
-}
-
-using namespace pyG4ProcessTable;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4ProcessTable()
-{
-  class_<G4ProcessTable, G4ProcessTable*, boost::noncopyable>
-    ("G4ProcessTable", "process table")
-    // ---
-    .def("GetProcessTable",  &G4ProcessTable::GetProcessTable,
-         return_value_policy<reference_existing_object>())
-    .staticmethod("GetProcessTable")
-    .def("Length",               &G4ProcessTable::Length)
-    //.def("Insert",             &G4ProcessTable::Insert)  // protected
-    //.def("Remove",             &G4ProcessTable::Remove)  // protected
-    // ---
-    .def("FindProcess",          f1_FindProcess,
-         return_value_policy<reference_existing_object>())
-    .def("FindProcess",          f2_FindProcess,
-         return_value_policy<reference_existing_object>())
-    .def("FindProcess",          f3_FindProcess,
-         return_value_policy<reference_existing_object>())
-    .def("FindProcess",          f3_FindProcess,
-         return_value_policy<reference_existing_object>())
-    // ---
-    .def("FindProcesses",        f1_FindProcesses)
-    .def("FindProcesses",        f2_FindProcesses)
-    .def("FindProcesses",        f3_FindProcesses)
-    .def("FindProcesses",        f4_FindProcesses)
-    // ---
-    .def("SetProcessActivation", f1_SetProcessActivation)
-    .def("SetProcessActivation", f2_SetProcessActivation)
-    .def("SetProcessActivation", f3_SetProcessActivation)
-    .def("SetProcessActivation", f4_SetProcessActivation)
-    .def("SetProcessActivation", f5_SetProcessActivation)
-    .def("SetProcessActivation", f6_SetProcessActivation)
-    .def("SetProcessActivation", f7_SetProcessActivation)
-    .def("SetProcessActivation", f8_SetProcessActivation)
-    // ---
-    .def("GetNameList",          &G4ProcessTable::GetNameList,
-         return_internal_reference<>())
-    .def("DumpInfo",             &G4ProcessTable::DumpInfo, f_DumpInfo())
-    .def("SetVerboseLevel",      &G4ProcessTable::SetVerboseLevel)
-    .def("GetVerboseLevel",      &G4ProcessTable::GetVerboseLevel)
-    ;
+  .def("FindProcesses",        &::f1_FindProcesses)
+  .def("FindProcesses",        &::f2_FindProcesses)
+  .def("FindProcesses",        &::f3_FindProcesses)
+  .def("FindProcesses",        &::f4_FindProcesses)
+  // ---
+  .def("SetProcessActivation", py::overload_cast<const G4String&, G4bool>
+                               (&G4ProcessTable::SetProcessActivation))
+  .def("SetProcessActivation", py::overload_cast<const G4String&,
+                                                 const G4String&, G4bool>
+                               (&G4ProcessTable::SetProcessActivation))
+  .def("SetProcessActivation", py::overload_cast<const G4String&,
+                                                 const G4ParticleDefinition*,
+                                                 G4bool>
+                               (&G4ProcessTable::SetProcessActivation))
+  .def("SetProcessActivation", py::overload_cast<const G4String&,
+                                                 G4ProcessManager*, G4bool>
+                               (&G4ProcessTable::SetProcessActivation))
+  .def("SetProcessActivation", py::overload_cast<G4ProcessType, G4bool>
+                               (&G4ProcessTable::SetProcessActivation))
+  .def("SetProcessActivation", py::overload_cast<G4ProcessType,
+                                                 const G4String&, G4bool>
+                               (&G4ProcessTable::SetProcessActivation))
+  .def("SetProcessActivation", py::overload_cast<G4ProcessType,
+                                                 G4ProcessManager*, G4bool>
+                               (&G4ProcessTable::SetProcessActivation))
+  // ---
+  .def("GetNameList",          &::GetProcNameList)
+  .def("DumpInfo",             &G4ProcessTable::DumpInfo,
+                               py::arg("process"),
+                               py::arg("particle") = nullptr)
+  .def("SetVerboseLevel",      &G4ProcessTable::SetVerboseLevel)
+  .def("GetVerboseLevel",      &G4ProcessTable::GetVerboseLevel)
+  ;
 }

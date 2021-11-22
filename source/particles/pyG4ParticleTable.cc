@@ -28,6 +28,30 @@
 
 namespace py = pybind11;
 
+// --------------------------------------------------------------------------
+namespace {
+
+// GetParticleList (returning python list)
+py::list GetParticleList(G4ParticleTable* particleTable)
+{
+  py::list particleList;
+
+  auto theParticleIterator = particleTable-> GetIterator();
+
+  theParticleIterator-> reset();
+
+  while( (*theParticleIterator)() ){
+    auto particle= theParticleIterator-> value();
+    particleList.append(particle);
+  }
+
+  return particleList;
+}
+
+}
+
+namespace py = pybind11;
+
 // ==========================================================================
 void export_G4ParticleTable(py::module& m)
 {
@@ -71,5 +95,6 @@ void export_G4ParticleTable(py::module& m)
                                    py::return_value_policy::reference)
   .def("SetVerboseLevel",          &G4ParticleTable::SetVerboseLevel)
   .def("GetVerboseLevel",          &G4ParticleTable::GetVerboseLevel)
+  .def("GetParticleList",          &::GetParticleList)
   ;
 }

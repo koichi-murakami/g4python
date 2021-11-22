@@ -25,5 +25,5 @@ set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "gtest01")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
 
 #------------------------------------------------------------------------------
-configure_file(test.py test.py COPYONLY)
+configure_file(tests.py tests.py COPYONLY)
 configure_file(vis.mac vis.mac COPYONLY)

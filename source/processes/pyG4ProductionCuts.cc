@@ -22,33 +22,27 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4ProcVector.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "pyG4indexing.hh"
-#include "G4VProcess.hh"
+#include <pybind11/pybind11.h>
+#include "G4ProductionCuts.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-namespace pyG4ProcVector {
-
-typedef std::vector<G4VProcess*> G4ProcVector;
-
-}
-
-using namespace pyG4ProcVector;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4ProcVector()
+// ==========================================================================
+void export_G4ProductionCuts(py::module& m)
 {
-  class_<G4ProcVector> ("G4ProcVector", "process vector")
-    .def(vector_indexing_suite<G4ProcVector>())
-    ;
+  py::class_<G4ProductionCuts>(m, "G4ProductionCuts")
+  // ---
+  .def("SetProductionCut", py::overload_cast<G4double,G4int>
+                          (&G4ProductionCuts::SetProductionCut),
+       py::arg("cut"), py::arg("index") = -1)
+  .def("SetProductionCut", py::overload_cast<G4double,G4ParticleDefinition*>
+                          (&G4ProductionCuts::SetProductionCut))
+  .def("SetProductionCut", py::overload_cast<G4double,const G4String&>
+                          (&G4ProductionCuts::SetProductionCut))
+  .def("GetProductionCut", py::overload_cast<G4int>
+                          (&G4ProductionCuts::GetProductionCut, py::const_))
+  .def("GetProductionCut", py::overload_cast<const G4String&>
+                          (&G4ProductionCuts::GetProductionCut, py::const_))
+  .def("IsModified",       &G4ProductionCuts::IsModified)
+  ;
 }
-

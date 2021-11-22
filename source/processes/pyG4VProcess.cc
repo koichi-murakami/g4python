@@ -32,19 +32,10 @@ void export_G4VProcess(py::module& m)
 {
   py::class_<G4VProcess>(m, "G4VProcess")
   // ---
-  //.def("SetPILfactor",         &G4VProcess::SetPILfactor)
-  //.def("GetPILfactor",         &G4VProcess::GetPILfactor)
-  //.def("IsApplicable",         &G4VProcess::IsApplicable)
-  //.def("BuildPhysicsTable",    &G4VProcess::BuildPhysicsTable)
-  //.def("PreparePhysicsTable",  &G4VProcess::PreparePhysicsTable)
-  //.def("StorePhysicsTable",    &G4VProcess::StorePhysicsTable)
-  //.def("RetrievePhysicsTable", &G4VProcess::RetrievePhysicsTable)
-  //.def("GetPhysicsTableFileName", &G4VProcess::GetPhysicsTableFileName,
-  //f_GetPhysicsTableFileName()
-  //[return_value_policy<return_by_value>()])
-  //.def("GetProcessName",       &G4VProcess::GetProcessName,
-  //return_value_policy<return_by_value>())
-  //.def("GetProcessType",       &G4VProcess::GetProcessType)
+  .def("GetProcessName",       &G4VProcess::GetProcessName)
+  .def("GetProcessType",       &G4VProcess::GetProcessType)
+  .def("GetProcessSubType",    &G4VProcess::GetProcessSubType)
+  // ---
   .def("DumpInfo",             &G4VProcess::DumpInfo)
   .def("SetVerboseLevel",      &G4VProcess::SetVerboseLevel)
   .def("GetVerboseLevel",      &G4VProcess::GetVerboseLevel)

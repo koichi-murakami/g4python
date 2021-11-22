@@ -22,33 +22,24 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4ProcessTyoe.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4ProcessType.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4ProcessType()
+// ==========================================================================
+void export_G4ProcessType(py::module& m)
 {
- enum_<G4ProcessType>("G4ProcessType")
-   .value("fNotDefined",         fNotDefined)
-   .value("fTransportation",     fTransportation)
-   .value("fElectromagnetic",    fElectromagnetic)
-   .value("fOptical",            fOptical)
-   .value("fHadronic",           fHadronic)
-   .value("fPhotolepton_hadron", fPhotolepton_hadron)
-   .value("fDecay",              fDecay)
-   .value("fGeneral",            fGeneral)
-   .value("fParameterisation",   fParameterisation)
-   .value("fUserDefined",        fUserDefined)
-   ;
+ py::enum_<G4ProcessType>(m, "G4ProcessType")
+ .value("fNotDefined",         fNotDefined)
+ .value("fTransportation",     fTransportation)
+ .value("fElectromagnetic",    fElectromagnetic)
+ .value("fOptical",            fOptical)
+ .value("fHadronic",           fHadronic)
+ .value("fPhotolepton_hadron", fPhotolepton_hadron)
+ .value("fDecay",              fDecay)
+ .value("fGeneral",            fGeneral)
+ .value("fParameterisation",   fParameterisation)
+ .value("fUserDefined",        fUserDefined)
+ ;
 }
-

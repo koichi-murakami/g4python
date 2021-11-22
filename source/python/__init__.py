@@ -46,15 +46,15 @@ os.environ['G4FORCE_RUN_MANAGER_TYPE'] = 'Serial'
 from .G4global import *
 from .G4interface import *
 from .G4intercoms import *
-from .G4geometry import *
 from .G4run import *
 from .G4event import *
 from .G4tracking import *
 from .G4track import *
+from .G4processes import *
 from .G4particles import *
+from .G4geometry import *
 from .G4materials import *
 from .G4digits_hits import *
-from .G4processes import *
 from .G4physicslists import *
 from .G4visualization import *
 from .G4gdml import *
@@ -116,13 +116,13 @@ gParticleTable = G4ParticleTable.GetParticleTable()
 gIonTable = gParticleTable.GetIonTable()
 
 # gProcessTable
-#gProcessTable = G4ProcessTable.GetProcessTable()
+gProcessTable = G4ProcessTable.GetProcessTable()
 
 # gProductionCutsTable
-#gProductionCutsTable = G4ProductionCutsTable.GetProductionCutsTable()
+gProductionCutsTable = G4ProductionCutsTable.GetProductionCutsTable()
 
 # gEmCalculator
-#gEmCalculator = G4EmCalculator()
+gEmCalculator = G4EmCalculator()
 
 # gMaterial/ElementTable
 #gMaterialTable = G4Material.GetMaterialTable()

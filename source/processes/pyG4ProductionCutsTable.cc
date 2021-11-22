@@ -22,46 +22,51 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4ProductionCutsTable.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "G4Version.hh"
+#include <pybind11/pybind11.h>
 #include "G4ProductionCutsTable.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4Material.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4ProductionCutsTable()
+// ==========================================================================
+void export_G4ProductionCutsTable(py::module& m)
 {
-  class_<G4ProductionCutsTable, boost::noncopyable>
-    ("G4ProductionCutsTable", "production cuts table", no_init)    
-    .def("GetProductionCutsTable", 
-         &G4ProductionCutsTable::GetProductionCutsTable,
-         return_value_policy<reference_existing_object>())
-    .staticmethod("GetProductionCutsTable")
+  py::class_<G4ProductionCutsTable>(m, "G4ProductionCutsTable")
+  .def_static("GetProductionCutsTable",
+                             &G4ProductionCutsTable::GetProductionCutsTable,
+                             py::return_value_policy::reference)
+  // ---
+  .def("UpdateCoupleTable",  &G4ProductionCutsTable::UpdateCoupleTable)
+  .def("SetEnergyRange",     &G4ProductionCutsTable::SetEnergyRange)
+  .def("GetLowEdgeEnergy",   &G4ProductionCutsTable::GetLowEdgeEnergy)
+  .def("GetHighEdgeEnergy",  &G4ProductionCutsTable::GetHighEdgeEnergy)
 
-    // internally used methods are limmitted to be exposed...
-
+  .def("GetMaxEnergyCut",    &G4ProductionCutsTable::GetMaxEnergyCut)
+  .def("SetMaxEnergyCut",    &G4ProductionCutsTable::SetMaxEnergyCut)
+  .def("DumpCouples",        &G4ProductionCutsTable::DumpCouples)
+  .def("GetTableSize",       &G4ProductionCutsTable::GetTableSize)
+  // ---
+  .def("GetMaterialCutsCouple",
+        py::overload_cast<G4int>
+        (&G4ProductionCutsTable::GetMaterialCutsCouple, py::const_),
+        py::return_value_policy::reference)
+  .def("GetMaterialCutsCouple",
+        py::overload_cast<const G4Material*, const G4ProductionCuts*>
+        (&G4ProductionCutsTable::GetMaterialCutsCouple, py::const_),
+        py::return_value_policy::reference)
+  // ---
+  .def("IsModified",         &G4ProductionCutsTable::IsModified)
+  .def("GetDefaultProductionCuts",
+                             &G4ProductionCutsTable::GetDefaultProductionCuts,
+                             py::return_value_policy::reference)
+  .def("ConvertRangeToEnergy",  &G4ProductionCutsTable::ConvertRangeToEnergy)
+  .def("ResetConverters",    &G4ProductionCutsTable::ResetConverters)
+  // ---
+  .def("StoreCutsTable",     &G4ProductionCutsTable::StoreCutsTable,
+                             py::arg("dir"), py::arg("ascii") = false)
     // ---
-    .def("GetLowEdgeEnergy",   &G4ProductionCutsTable::GetLowEdgeEnergy)
-    .def("GetHighEdgeEnergy",  &G4ProductionCutsTable::GetHighEdgeEnergy)
-    .def("SetEnergyRange",     &G4ProductionCutsTable::SetEnergyRange)
-    .def("DumpCouples",        &G4ProductionCutsTable::DumpCouples)
-    .def("IsModified",         &G4ProductionCutsTable::IsModified)
-    // ---
-#if G4VERSION_NUMBER >= 830
-    .def("ConvertRangeToEnergy", &G4ProductionCutsTable::ConvertRangeToEnergy)
-#endif
-    // ---
-    .def("SetVerboseLevel",    &G4ProductionCutsTable::SetVerboseLevel)
-    .def("GetVerboseLevel",    &G4ProductionCutsTable::GetVerboseLevel)
-    ;
+  .def("SetVerboseLevel",    &G4ProductionCutsTable::SetVerboseLevel)
+  .def("GetVerboseLevel",    &G4ProductionCutsTable::GetVerboseLevel)
+  ;
 }
-
