@@ -5,14 +5,13 @@ set(MODULE pyG4processes)
 add_library(${MODULE} SHARED)
 
 target_sources(${MODULE} PRIVATE
-  #pyG4CrossSectionHandler.cc
   pyG4EmCalculator.cc
+  pyG4MaterialCutsCouple.cc
   pyG4ProcessManager.cc
   pyG4ProcessTable.cc
   pyG4ProcessType.cc
   pyG4ProductionCuts.cc
   pyG4ProductionCutsTable.cc
-  #pyG4VCrossSectionHandler.cc
   pyG4VProcess.cc
   pymodG4processes.cc
 )

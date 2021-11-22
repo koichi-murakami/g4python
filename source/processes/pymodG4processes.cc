@@ -32,10 +32,9 @@ void export_G4ProcessTable(py::module&);
 void export_G4VProcess(py::module&);
 void export_G4ProcessType(py::module&);
 void export_G4EmCalculator(py::module&);
+void export_G4MaterialCutsCouple(py::module&);
 void export_G4ProductionCuts(py::module&);
 void export_G4ProductionCutsTable(py::module&);
-void export_G4VCrossSectionHandler(py::module&);
-void export_G4CrossSectionHandler(py::module&);
 
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4processes, m)
@@ -45,8 +44,7 @@ PYBIND11_MODULE(G4processes, m)
   export_G4VProcess(m);
   export_G4ProcessType(m);
   export_G4EmCalculator(m);
+  export_G4MaterialCutsCouple(m);
   export_G4ProductionCuts(m);
   export_G4ProductionCutsTable(m);
-  //export_G4VCrossSectionHandler(m);
-  //export_G4CrossSectionHandler(m);
 }

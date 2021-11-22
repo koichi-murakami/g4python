@@ -22,25 +22,22 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4CrossSectionHandler.cc
-//
-//                                         2008 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "G4CrossSectionHandler.hh"
+#include <pybind11/pybind11.h>
+#include "G4MaterialCutsCouple.hh"
+#include "G4Material.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4CrossSectionHandler()
+// ==========================================================================
+void export_G4MaterialCutsCouple(py::module& m)
 {
-  class_<G4CrossSectionHandler, bases<G4VCrossSectionHandler>,
-    boost::noncopyable>
-    ("G4CrossSectionHandler", "cross section handler")
-    .def(init<>())
-    ;
+  py::class_<G4MaterialCutsCouple>(m, "G4MaterialCutsCouple")
+  // ---
+  .def("GetMaterial",        &G4MaterialCutsCouple::GetMaterial,
+                             py::return_value_policy::reference)
+  .def("GetProductionCuts",  &G4MaterialCutsCouple::GetProductionCuts,
+                             py::return_value_policy::reference)
+  .def("GetIndex",           &G4MaterialCutsCouple::GetIndex)
+  .def("IsUsed",             &G4MaterialCutsCouple::IsUsed)
+  ;
 }
