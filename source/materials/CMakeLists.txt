@@ -3,11 +3,9 @@
 set(MODULE pyG4materials)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
-  #pyG4AtomicShells.cc
-  #pyG4Element.cc
-  #pyG4ElementTable.cc
-  #pyG4ElementVector.cc
-  #pyG4Isotope.cc
+  pyG4AtomicShells.cc
+  pyG4Element.cc
+  pyG4Isotope.cc
   pyG4Material.cc
   pyG4NistManager.cc
   pymodG4materials.cc

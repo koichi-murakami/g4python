@@ -32,6 +32,7 @@ namespace py = pybind11;
 // --------------------------------------------------------------------------
 namespace {
 
+// --------------------------------------------------------------------------
 // G4cout/cerr are set to Python stdout
 void SetG4PyCoutDestination()
 {
@@ -41,6 +42,7 @@ void SetG4PyCoutDestination()
   G4cerrbuf.SetDestination(pycout);
 }
 
+// --------------------------------------------------------------------------
 void ResetG4PyCoutDestination()
 {
   auto UImgr= G4UImanager::GetUIpointer();

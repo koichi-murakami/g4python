@@ -22,44 +22,42 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pygeomdefs.cc
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "geomdefs.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-void export_geomdefs(py::module&);
-void export_G4StateManager(py::module&);
-void export_G4ApplicationState(py::module&);
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-void export_G4RotationMatrix(py::module&);
-void export_G4Transform3D(py::module&);
-void export_G4UnitsTable(py::module&);
-void export_Randomize(py::module&);
-void export_RandomEngines(py::module&);
-void export_G4RandomDirection(py::module&);
-void export_G4UserLimits(py::module&);
-void export_G4Timer(py::module&);
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
-
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+// ====================================================================
+// module definition
+// ====================================================================
+void export_geomdefs()
 {
-  export_globals(m);
-  export_G4ApplicationState(m);
-  export_G4String(m);
-  export_G4StateManager(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Timer(m);
-  export_G4UnitsTable(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+ enum_<EAxis>("EAxis")
+   .value("kXAxis",     kXAxis)
+   .value("kYAxis",     kYAxis)
+   .value("kZAxis",     kZAxis)
+   .value("kRho",       kRho)
+   .value("kRadial3D",  kRadial3D)
+   .value("kPhi",       kPhi)
+   .value("kUndefined", kUndefined)
+   ;
+
+ enum_<EInside>("EInside")
+   .value("kOutside",   kOutside)
+   .value("kSurface",   kSurface)
+   .value("kInside",    kInside)
+   ;
+
+ enum_<EVolume>("EVolume")
+   .value("kNormal",        kNormal)
+   .value("kReplica",       kReplica)
+   .value("kParameterised", kParameterised)
+   ;
 }
+

@@ -23,43 +23,28 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include "G4ApplicationState.hh"
+#include "G4StateManager.hh"
 
 namespace py = pybind11;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-void export_geomdefs(py::module&);
-void export_G4StateManager(py::module&);
-void export_G4ApplicationState(py::module&);
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-void export_G4RotationMatrix(py::module&);
-void export_G4Transform3D(py::module&);
-void export_G4UnitsTable(py::module&);
-void export_Randomize(py::module&);
-void export_RandomEngines(py::module&);
-void export_G4RandomDirection(py::module&);
-void export_G4UserLimits(py::module&);
-void export_G4Timer(py::module&);
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
-
 // ==========================================================================
-PYBIND11_MODULE(G4global, m)
+void export_G4ApplicationState(py::module& m)
 {
-  export_globals(m);
-  export_G4ApplicationState(m);
-  export_G4String(m);
-  export_G4StateManager(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Timer(m);
-  export_G4UnitsTable(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  py::enum_<G4ApplicationState>(m, "G4ApplicationState")
+  .value("G4State_PreInit",       G4State_PreInit)
+  .value("G4State_Init",          G4State_Init)
+  .value("G4State_Idle",          G4State_Idle)
+  .value("G4State_GeomClosed",    G4State_GeomClosed)
+  .value("G4State_EventProc",     G4State_EventProc)
+  .value("G4State_Quit",          G4State_Quit)
+  .value("G4State_Abort",         G4State_Abort)
+  // ---
+  .def("__str__",   [](const G4ApplicationState&v)
+                    { auto stmgr = G4StateManager::GetStateManager();
+                      return stmgr-> GetStateString(v).data();})
+  .def("__repr__",  [](const G4ApplicationState&v)
+                    { auto stmgr = G4StateManager::GetStateManager();
+                      return stmgr->GetStateString(v).data();})
+  ;
 }

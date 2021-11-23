@@ -22,34 +22,20 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4AtomicShells.cc
-//
-//                                         2008 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4AtomicShells.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4AtomicShells()
+// ==========================================================================
+void export_G4AtomicShells(py::module& m)
 {
-  class_<G4AtomicShells, boost::noncopyable>
-    ("G4AtomicShells", "Atomic subshell binding energy table", no_init)
-
-    .def("GetNumberOfShells",    &G4AtomicShells::GetNumberOfShells)
-    .staticmethod("GetNumberOfShells")
-
-    .def("GetNumberOfElectrons", &G4AtomicShells::GetNumberOfElectrons)
-    .staticmethod("GetNumberOfElectrons")
-
-    .def("GetBindingEnergy", &G4AtomicShells::GetBindingEnergy)
-    .staticmethod("GetBindingEnergy")
-
-    .def("GetTotalBindingEnergy", &G4AtomicShells::GetTotalBindingEnergy)
-    ;
+  py::class_<G4AtomicShells>(m, "G4AtomicShells")
+  .def_static("GetNumberOfShells",    &G4AtomicShells::GetNumberOfShells)
+  .def_static("GetNumberOfElectrons", &G4AtomicShells::GetNumberOfElectrons)
+  .def_static("GetNumberOfFreeElectrons",
+                                  &G4AtomicShells::GetNumberOfFreeElectrons)
+  .def_static("GetBindingEnergy",      &G4AtomicShells::GetBindingEnergy)
+  .def_static("GetTotalBindingEnergy", &G4AtomicShells::GetTotalBindingEnergy)
+  ;
 }

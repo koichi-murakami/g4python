@@ -22,44 +22,55 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
+//
+// ====================================================================
+//   pyG4Transform3D.cc
+//
+//                                         2005 Q
+// ====================================================================
+#include <boost/python.hpp>
+#include "G4Transform3D.hh"
+#include "G4ThreeVector.hh"
+#include "G4RotationMatrix.hh"
 
-namespace py = pybind11;
+using namespace boost::python;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-void export_geomdefs(py::module&);
-void export_G4StateManager(py::module&);
-void export_G4ApplicationState(py::module&);
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-void export_G4RotationMatrix(py::module&);
-void export_G4Transform3D(py::module&);
-void export_G4UnitsTable(py::module&);
-void export_Randomize(py::module&);
-void export_RandomEngines(py::module&);
-void export_G4RandomDirection(py::module&);
-void export_G4UserLimits(py::module&);
-void export_G4Timer(py::module&);
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
+typedef G4Transform3D XXX; // ...
 
-// ==========================================================================
-PYBIND11_MODULE(G4global, m)
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4Transform3D()
 {
-  export_globals(m);
-  export_G4ApplicationState(m);
-  export_G4String(m);
-  export_G4StateManager(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Timer(m);
-  export_G4UnitsTable(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  class_<G4Transform3D>("G4Transform3D", "geometrical 3D transformation")
+    // constructors
+    .def(init<const G4RotationMatrix&, const G4ThreeVector&>())
+    .def(init<const XXX&>())
+
+    // property
+    .add_property("xx", &XXX::xx)
+    .add_property("xy", &XXX::xy)
+    .add_property("xz", &XXX::xz)
+    .add_property("yx", &XXX::yx)
+    .add_property("yy", &XXX::yy)
+    .add_property("yz", &XXX::yz)
+    .add_property("zx", &XXX::zx)
+    .add_property("zy", &XXX::zy)
+    .add_property("zz", &XXX::zz)
+    .add_property("dx", &XXX::dx)
+    .add_property("dy", &XXX::dy)
+    .add_property("dz", &XXX::dz)
+    .def_readonly("Identity", &XXX::Identity)
+
+    // methods
+    .def("inverse",        &XXX::inverse)
+    .def("getRotation" ,   &XXX::getRotation)
+    .def("getTranslation", &XXX::getTranslation)
+
+    // operators
+    .def(self == self)
+    .def(self != self)
+    .def(self *  self)
+    ;
 }
+

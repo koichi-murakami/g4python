@@ -24,24 +24,32 @@
 // ********************************************************************
 //
 // ====================================================================
-//   pyG4ElementVector.cc
+//   pyG4RandomDirection.cc
 //
 //                                         2005 Q
 // ====================================================================
 #include <boost/python.hpp>
-#include "pyG4indexing.hh"
-#include "G4ElementVector.hh"
+#include "G4RandomDirection.hh"
 
 using namespace boost::python;
 
 // ====================================================================
-// module definition
+// thin wrappers
 // ====================================================================
-void export_G4ElementVector()
-{
-  class_<G4ElementVector> ("G4ElementVector", "element vector")
-    .def(vector_indexing_suite<G4ElementVector>())
-    .def(self_ns::str(self))
-    ;
+namespace pyG4RandomDirection {
+
+G4ThreeVector(*G4RandomDirection_1)() = G4RandomDirection;
+G4ThreeVector(*G4RandomDirection_2)(double) = G4RandomDirection;
+
 }
 
+using namespace pyG4RandomDirection;
+
+// ====================================================================
+// module definition
+// ====================================================================
+void export_G4RandomDirection()
+{
+  def("G4RandomDirection",  G4RandomDirection_1);
+  def("G4RandomDirection",  G4RandomDirection_2);
+}

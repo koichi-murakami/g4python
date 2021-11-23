@@ -25,8 +25,6 @@
 #include <pybind11/pybind11.h>
 #include "G4ProcessTable.hh"
 
-class G4UImessenger;
-
 namespace py = pybind11;
 
 // --------------------------------------------------------------------------

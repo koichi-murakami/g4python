@@ -24,6 +24,7 @@
 // ********************************************************************
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
 #include "G4Material.hh"
 
 namespace py = pybind11;
@@ -103,6 +104,7 @@ void Print(G4Material* mat)
 
 }
 
+PYBIND11_MAKE_OPAQUE(std::vector<G4Material*>);
 
 // ==========================================================================
 void export_G4Material(py::module& m)
@@ -180,7 +182,7 @@ void export_G4Material(py::module& m)
   ;
 
   // ---
-  py::class_<G4MaterialTable>(m, "G4MaterialTable");
+  py::bind_vector<std::vector<G4Material*>>(m, "G4MaterialTable");
 
   // ---
   py::enum_<G4State>(m, "G4State")

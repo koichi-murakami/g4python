@@ -22,87 +22,93 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Element.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "G4Version.hh"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
 #include "G4Element.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4Element {
+// --------------------------------------------------------------------------
+namespace {
 
-// raw pointer -> Python list conversion
-list f_GetRelativeAbundanceVector(const G4Element* element)
+// --------------------------------------------------------------------------
+// GetRelativeAbundanceVector
+py::list f_GetRelativeAbundanceVector(const G4Element* element)
 {
-  list aList;
-  const G4double* aVec= element-> GetRelativeAbundanceVector();
-  G4int niso= element-> GetNumberOfIsotopes();
-  for(G4int i=0; i<niso; i++) {
-    aList.append(aVec[i]);
+  py::list pylist;
+
+  auto vec= element-> GetRelativeAbundanceVector();
+
+  auto niso= element-> GetNumberOfIsotopes();
+
+  for( auto i = 0; i < niso; i++ ) {
+    pylist.append(vec[i]);
   }
-  return aList;
+
+  return pylist;
 }
 
-// copy constructor is private, so ...
-void Print(G4Element& ele)
+// --------------------------------------------------------------------------
+void Print(G4Element* ele)
 {
-  std::cout << ele;  // problem with G4cout. (delayed message)
+  std::cout << ele << G4endl;
 }
 
 }
 
-using namespace pyG4Element;
+PYBIND11_MAKE_OPAQUE(std::vector<G4Element*>);
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Element()
+// ==========================================================================
+void export_G4Element(py::module& m)
 {
-  class_<G4Element, G4Element*, boost::noncopyable>
-    ("G4Element", "element class", no_init)
-    // constructors
-    .def(init<const G4String&, const G4String&, G4double, G4double>())
-    .def(init<const G4String&, const G4String&, G4int>())
-    // ---
-    .def("AddIsotope",          &G4Element::AddIsotope)
-    .def("GetName",             &G4Element::GetName,
-         return_value_policy<reference_existing_object>())
-    .def("GetSymbol",           &G4Element::GetSymbol,
-         return_value_policy<reference_existing_object>())
-    .def("SetName",             &G4Element::SetName)
-    .def("GetZ",                &G4Element::GetZ)
-    .def("GetN",                &G4Element::GetN)
-    .def("GetA",                &G4Element::GetA)
-    .def("GetNbOfAtomicShells", &G4Element::GetNbOfAtomicShells)
-    .def("GetAtomicShell",      &G4Element::GetAtomicShell)
-    .def("GetNumberOfIsotopes", &G4Element::GetNumberOfIsotopes)
-    .def("GetIsotopeVector",    &G4Element::GetIsotopeVector,
-	 return_internal_reference<>())
-    .def("GetRelativeAbundanceVector", f_GetRelativeAbundanceVector)
-    .def("GetIsotope",          &G4Element::GetIsotope,
-	 return_value_policy<reference_existing_object>())
-    .def("GetElementTable",     &G4Element::GetElementTable,
-	 return_value_policy<reference_existing_object>())
-    .staticmethod("GetElementTable")
-    .def("GetNumberOfElements", &G4Element::GetNumberOfElements)
-    .staticmethod("GetNumberOfElements")
-    .def("GetIndex",            &G4Element::GetIndex)
-    .def("GetElement",          &G4Element::GetElement,
-         return_value_policy<reference_existing_object>())
-    .staticmethod("GetElement")
-    .def("GetfCoulomb",         &G4Element::GetfCoulomb)
-    .def("GetfRadTsai",         &G4Element::GetfRadTsai)
-    .def("GetIonisation",       &G4Element::GetIonisation,
-	 return_internal_reference<>())
-    // ---
-    .def("Print", Print)
-    ;
+  py::class_<G4Element>(m, "G4Element")
+  // ---
+  .def(py::init<const G4String&, const G4String&, G4double, G4double>())
+  .def(py::init<const G4String&, const G4String&, G4int>())
+  // ---
+  .def("AddIsotope",          &G4Element::AddIsotope)
+  // ---
+  .def("GetName",             &G4Element::GetName)
+  .def("GetSymbol",           &G4Element::GetSymbol)
+  .def("GetZ",                &G4Element::GetZ)
+  .def("GetZasInt",           &G4Element::GetZasInt)
+  .def("GetN",                &G4Element::GetN)
+  .def("GetAtomicMassAmu",    &G4Element::GetAtomicMassAmu)
+  .def("GetA",                &G4Element::GetA)
+  // ---
+  .def("GetNaturalAbundanceFlag", &G4Element::GetNaturalAbundanceFlag)
+  .def("SetNaturalAbundanceFlag", &G4Element::SetNaturalAbundanceFlag)
+  // ---
+  .def("GetNbOfAtomicShells", &G4Element::GetNbOfAtomicShells)
+  .def("GetAtomicShell",      &G4Element::GetAtomicShell)
+  .def("GetNbOfShellElectrons", &G4Element::GetNbOfShellElectrons)
+  // ---
+  .def("GetNumberOfIsotopes", &G4Element::GetNumberOfIsotopes)
+  .def("GetIsotopeVector",    &G4Element::GetIsotopeVector,
+                              py::return_value_policy::reference)
+  .def("GetRelativeAbundanceVector", &::f_GetRelativeAbundanceVector)
+  .def("GetIsotope",          &G4Element::GetIsotope,
+                              py::return_value_policy::reference)
+  // ---
+  .def_static("GetElementTable", &G4Element::GetElementTable,
+                                 py::return_value_policy::reference)
+  .def("GetNumberOfElements", &G4Element::GetNumberOfElements)
+  .def("GetIndex",            &G4Element::GetIndex)
+  // ---
+  .def_static("GetElement",   &G4Element::GetElement,
+                              py::arg("name"), py::arg("warning") = true,
+                              py::return_value_policy::reference)
+  .def("GetfCoulomb",         &G4Element::GetfCoulomb)
+  .def("GetfRadTsai",         &G4Element::GetfRadTsai)
+   // ---
+  .def("SetName",             &G4Element::SetName)
+  .def("Print",               &::Print)
+  .def("__str__",   [](const G4Element&v) {return v.GetName().data();})
+  .def("__repr__",  [](const G4Element&v) {return v.GetName().data();})
+  ;
+
+  // ---
+  py::bind_vector<std::vector<G4Element*>>(m, "G4ElementTable");
+
 }

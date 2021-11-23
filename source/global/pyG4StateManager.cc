@@ -23,43 +23,27 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include "G4StateManager.hh"
 
 namespace py = pybind11;
 
-// --------------------------------------------------------------------------
-void export_globals(py::module&);
-void export_geomdefs(py::module&);
-void export_G4StateManager(py::module&);
-void export_G4ApplicationState(py::module&);
-void export_G4String(py::module&);
-void export_G4TwoVector(py::module&);
-void export_G4ThreeVector(py::module&);
-void export_G4RotationMatrix(py::module&);
-void export_G4Transform3D(py::module&);
-void export_G4UnitsTable(py::module&);
-void export_Randomize(py::module&);
-void export_RandomEngines(py::module&);
-void export_G4RandomDirection(py::module&);
-void export_G4UserLimits(py::module&);
-void export_G4Timer(py::module&);
-void export_G4Version(py::module&);
-void export_G4Exception(py::module&);
-void export_G4ExceptionHandler(py::module&);
-void export_G4ExceptionSeverity(py::module&);
-
 // ==========================================================================
-PYBIND11_MODULE(G4global, m)
+void export_G4StateManager(py::module& m)
 {
-  export_globals(m);
-  export_G4ApplicationState(m);
-  export_G4String(m);
-  export_G4StateManager(m);
-  export_G4TwoVector(m);
-  export_G4ThreeVector(m);
-  export_G4Version(m);
-  export_G4Timer(m);
-  export_G4UnitsTable(m);
-  export_G4Exception(m);
-  export_G4ExceptionHandler(m);
-  export_G4ExceptionSeverity(m);
+  py::class_<G4StateManager>(m, "G4StateManager")
+  // ---
+  .def_static("GetStateManager",  &G4StateManager::GetStateManager,
+                                  py::return_value_policy::reference)
+  // ---
+  .def("GetCurrentState",         &G4StateManager::GetCurrentState,
+                                  py::return_value_policy::reference)
+  .def("GetPreviousState",        &G4StateManager::GetPreviousState,
+                                  py::return_value_policy::reference)
+  .def("GetStateString",          &G4StateManager::GetStateString)
+  // ---
+  .def("SetSuppressAbortion",     &G4StateManager::SetSuppressAbortion)
+  .def("GetSuppressAbortion",     &G4StateManager::GetSuppressAbortion)
+  .def("GetMessage",              &G4StateManager::GetMessage)
+  .def("SetVerboseLevel",         &G4StateManager::SetVerboseLevel)
+  ;
 }

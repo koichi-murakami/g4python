@@ -102,7 +102,7 @@ gStackManager = gEventManager.GetStackManager()
 gTrackingManager = gEventManager.GetTrackingManager()
 
 # gStateManager
-#gStateManager = G4StateManager.GetStateManager()
+gStateManager = G4StateManager.GetStateManager()
 gExceptionHandler = G4ExceptionHandler() # automatically registered
 
 # gGeometryManager
@@ -125,8 +125,9 @@ gProductionCutsTable = G4ProductionCutsTable.GetProductionCutsTable()
 gEmCalculator = G4EmCalculator()
 
 # gMaterial/ElementTable
-#gMaterialTable = G4Material.GetMaterialTable()
-#gElementTable = G4Element.GetElementTable()
+gMaterialTable = G4Material.GetMaterialTable()
+gElementTable = G4Element.GetElementTable()
+gIsotopeTable = G4Isotope.GetIsotopeTable()
 
 # gNistManager
 gNistManager = G4NistManager.Instance()
@@ -202,43 +203,33 @@ def _one_event(self):
 
 G4RunManager.OneEvent = _one_event
 
-
-""""
 # ------------------------------------------------------------------
 # list material information
 # ------------------------------------------------------------------
 def _list_material(self):
-  "list materials."
-  n_materials = len(gMaterialTable)
-  print(" +------------------------------------------------------------------")
-  print(" |       Table of G4Material-s (%d materails defined)" % (n_materials))
-  for i in range(0, n_materials) :
-    material = gMaterialTable[i]
-    print(" |--------------------------------------------------------"\
-          "----------")
-    print(" | %s: %s" % (material.GetName(),
-                         G4BestUnit(material.GetDensity(),"Volumic Mass")))
+    n_materials = len(gMaterialTable)
+    print("Table of G4Material-s (%d materails defined)" % (n_materials))
+    for i in range(0, n_materials) :
+        material = gMaterialTable[i]
+        print("* %s: %s" % (material.GetName(),
+        G4BestUnit(material.GetDensity(),"Volumic Mass")))
 
-    elementVec = material.GetElementVector()
-    fractionVec = material.GetFractionVector()
+    elementVec   = material.GetElementVector()
+    fractionVec  = material.GetFractionVector()
     abundanceVec = material.GetVecNbOfAtomsPerVolume()
-    totNAtoms = material.GetTotNbOfAtomsPerVolume()
+    totNAtoms    = material.GetTotNbOfAtomsPerVolume()
 
     n_elements = len(elementVec)
     for j in range(0, n_elements):
-      print(" | + (%1d) %s(%s): A=%4.1f, N=%5.1f, " \
-            "Frac.=(%4.1f%%m,%4.1f%%a)" % \
-            (j+1, elementVec[j].GetName(), elementVec[j].GetSymbol(),
+        print(" + (%1d) %s(%s): A=%4.1f, N=%5.1f, " \
+              "Frac.=(%4.1f%%m,%4.1f%%a)" % \
+              (j+1, elementVec[j].GetName(), elementVec[j].GetSymbol(),
              elementVec[j].GetZ(),
              elementVec[j].GetN(),
              fractionVec[j]/hepunit.perCent,
              abundanceVec[j]/totNAtoms/hepunit.perCent))
 
-  print(" +------------------------------------------------------------------")
-
 G4MaterialTable.ListMaterial = _list_material
-
-"""
 
 # ------------------------------------------------------------------
 # signal handler

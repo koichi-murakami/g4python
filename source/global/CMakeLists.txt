@@ -4,19 +4,19 @@ set(MODULE pyG4global)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
   G4PyCoutDestination.cc
-#  pyG4ApplicationState.cc
+  pyG4ApplicationState.cc
   pyG4Exception.cc
   pyG4ExceptionHandler.cc
   pyG4ExceptionSeverity.cc
 #  pyG4RandomDirection.cc
 #  pyG4RotationMatrix.cc
-#  pyG4StateManager.cc
+  pyG4StateManager.cc
   pyG4String.cc
   pyG4ThreeVector.cc
-#  pyG4Timer.cc
+  pyG4Timer.cc
 #  pyG4Transform3D.cc
   pyG4TwoVector.cc
-#  pyG4UnitsTable.cc
+  pyG4UnitsTable.cc
 #  pyG4UserLimits.cc
   pyG4Version.cc
 #  pyRandomEngines.cc

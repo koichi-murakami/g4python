@@ -22,73 +22,54 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Isotope.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "G4Version.hh"
-#include "pyG4indexing.hh"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
 #include "G4Isotope.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4Isotope {
+// --------------------------------------------------------------------------
+namespace {
 
-BOOST_PYTHON_FUNCTION_OVERLOADS(f_GetIsotope, G4Isotope::GetIsotope, 1, 2)
-
-// copy constructor is private, so ...
-void Print(G4Isotope& iso)
+void Print(G4Isotope* iso)
 {
-  G4cout << iso;
+  G4cout << iso << G4endl;
 }
 
 }
 
-using namespace pyG4Isotope;
+PYBIND11_MAKE_OPAQUE(std::vector<G4Isotope*>);
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Isotope()
+// ==========================================================================
+void export_G4Isotope(py::module& m)
 {
-  class_<G4Isotope, G4Isotope*, boost::noncopyable>
-    ("G4Isotope", "isotope class", no_init)
-    // constructors
-    .def(init<const G4String&, G4int, G4int>())
-    .def(init<const G4String&, G4int, G4int, G4double>())
-    // ---
-    .def("GetName",             &G4Isotope::GetName,
-         return_value_policy<reference_existing_object>())
-    .def("SetName",             &G4Isotope::SetName)
-    .def("GetZ",                &G4Isotope::GetZ)
-    .def("GetN",                &G4Isotope::GetN)
-    .def("GetA",                &G4Isotope::GetA)
-    .def("GetIsotope",          &G4Isotope::GetIsotope,
-         f_GetIsotope()
-         [return_value_policy<reference_existing_object>()])
-    .staticmethod("GetIsotope")
-    .def("GetIsotopeTable",     &G4Isotope::GetIsotopeTable,
-         return_value_policy<reference_existing_object>())
-    .staticmethod("GetIsotopeTable")
-    .def("GetNumberOfIsotopes", &G4Isotope::GetNumberOfIsotopes)
-    .staticmethod("GetNumberOfIsotopes")
+  py::class_<G4Isotope>(m, "G4Isotope")
+  // constructors
+  .def(py::init<const G4String&, G4int, G4int>())
+  .def(py::init<const G4String&, G4int, G4int, G4double>())
+  .def(py::init<const G4String&, G4int, G4int, G4int>())
+  // ---
+  .def("GetName",             &G4Isotope::GetName)
+  .def("GetZ",                &G4Isotope::GetZ)
+  .def("GetN",                &G4Isotope::GetN)
+  .def("GetA",                &G4Isotope::GetA)
+  .def("Getm",                &G4Isotope::Getm)
+  // ---
+  .def_static("GetIsotope",   &G4Isotope::GetIsotope,
+                              py::arg("name"), py::arg("warning") = false,
+                              py::return_value_policy::reference)
+  .def("GetIsotopeTable",     &G4Isotope::GetIsotopeTable,
+                              py::return_value_policy::reference)
+  // ---
+  .def_static("GetNumberOfIsotopes", &G4Isotope::GetNumberOfIsotopes)
+  .def("GetIndex",            &G4Isotope::GetIndex)
+  // ---
+  .def("SetName",             &G4Isotope::SetName)
+  .def("Print",               &::Print)
+  ;
 
-    .def("GetIndex",            &G4Isotope::GetIndex)
-    // ---
-    .def("Print", Print)
-    .def(self == self)
-    .def(self != self)
-    ;
+  // ---
+  py::bind_vector<std::vector<G4Isotope*>>(m, "G4IsotopeTable");
 
-  // G4IsotopeTable
-  class_<G4IsotopeTable> ("G4IsotopeTable", "isotope table")
-    .def(vector_indexing_suite<G4IsotopeTable>())
-    .def(self_ns::str(self))
-    ;
 }

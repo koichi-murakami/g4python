@@ -22,27 +22,22 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4ElementTable.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "pyG4indexing.hh"
-#include "G4Element.hh"
-#include "G4ElementTable.hh"
+#include <pybind11/pybind11.h>
+#include "G4Timer.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4ElementTable()
+// ==========================================================================
+void export_G4Timer(py::module& m)
 {
-  class_<G4ElementTable> ("G4ElementTable", "element table")
-    .def(vector_indexing_suite<G4ElementTable>())
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4Timer>(m, "G4Timer")
+  .def(py::init<>())
+  // ---
+  .def("Start",            &G4Timer::Start)
+  .def("Stop",             &G4Timer::Stop)
+  .def("IsValid",          &G4Timer::IsValid)
+  .def("GetRealElapsed",   &G4Timer::GetRealElapsed)
+  .def("GetSystemElapsed", &G4Timer::GetSystemElapsed)
+  .def("GetUserElapsed",   &G4Timer::GetUserElapsed)
+  ;
 }
-
