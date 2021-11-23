@@ -61,6 +61,7 @@ from .G4gdml import *
 from .G4graphics_reps import *
 from .hepunit import *
 from .colortable import *
+from .g4viscp import *
 
 def print_version():
     print("""=============================================================
@@ -165,6 +166,10 @@ gVisManager.RegisterGraphicsSystem(_gmocren)
 
 gVisManager.Initialize()
 
+# set random engine to MTwister
+rnd_engine_mt = MTwistEngine()
+HepRandom.setTheEngine(rnd_engine_mt)
+
 # ------------------------------------------------------------------
 # functions
 # ------------------------------------------------------------------
@@ -179,7 +184,6 @@ ApplyUICommand = gApplyUICommand
 
 gGetCurrentValues = gUImanager.GetCurrentValues
 GetCurrentValues = gGetCurrentValues
-
 
 # ==================================================================
 # extentions
@@ -235,18 +239,15 @@ G4MaterialTable.ListMaterial = _list_material
 # signal handler
 # ------------------------------------------------------------------
 import signal
-import threading
-""""
+
 def _run_abort(signum, frame):
-  state = gStateManager.GetCurrentState()
+    state = gStateManager.GetCurrentState()
 
-  if(state == G4ApplicationState.G4State_GeomClosed or
-     state == G4ApplicationState.G4State_EventProc):
-    print("aborting Run ...")
-    gRunManager.AbortRun(True)
-  else:
-    raise KeyboardInterrupt
+    if( state == G4ApplicationState.G4State_GeomClosed or
+        state == G4ApplicationState.G4State_EventProc ):
+       print("aborting Run ...")
+       gRunManager.AbortRun(True)
+    else:
+      raise KeyboardInterrupt
 
-if (threading.activeCount() == 1):
-  signal.signal(signal.SIGINT, _run_abort)
-"""
+signal.signal(signal.SIGINT, _run_abort)

@@ -8,20 +8,20 @@ pybind11_add_module(${MODULE}
   pyG4Exception.cc
   pyG4ExceptionHandler.cc
   pyG4ExceptionSeverity.cc
-#  pyG4RandomDirection.cc
-#  pyG4RotationMatrix.cc
+  pyG4RandomDirection.cc
+  pyG4RotationMatrix.cc
   pyG4StateManager.cc
   pyG4String.cc
   pyG4ThreeVector.cc
   pyG4Timer.cc
-#  pyG4Transform3D.cc
+  pyG4Transform3D.cc
   pyG4TwoVector.cc
   pyG4UnitsTable.cc
-#  pyG4UserLimits.cc
+  pyG4UserLimits.cc
   pyG4Version.cc
-#  pyRandomEngines.cc
-#  pyRandomize.cc
-#  pygeomdefs.cc
+  pyRandomize.cc
+  pyRandomEngines.cc
+  pygeomdefs.cc
   pyglobals.cc
   pymodG4global.cc
 )

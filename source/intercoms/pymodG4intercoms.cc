@@ -35,8 +35,8 @@ void export_G4UIparameter(py::module&);
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4intercoms, m)
 {
-  export_G4UImanager(m);
+  export_G4UIcommand(m);
   export_G4UIcommandTree(m);
-  //export_G4UIcommand();
-  //export_G4UIparameter();
+  export_G4UIparameter(m);
+  export_G4UImanager(m);
 }

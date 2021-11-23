@@ -22,42 +22,33 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pygeomdefs.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "geomdefs.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_geomdefs()
+// ==========================================================================
+void export_geomdefs(py::module& m)
 {
- enum_<EAxis>("EAxis")
-   .value("kXAxis",     kXAxis)
-   .value("kYAxis",     kYAxis)
-   .value("kZAxis",     kZAxis)
-   .value("kRho",       kRho)
-   .value("kRadial3D",  kRadial3D)
-   .value("kPhi",       kPhi)
-   .value("kUndefined", kUndefined)
-   ;
+ py::enum_<EAxis>(m, "EAxis")
+ .value("kXAxis",     kXAxis)
+ .value("kYAxis",     kYAxis)
+ .value("kZAxis",     kZAxis)
+ .value("kRho",       kRho)
+ .value("kRadial3D",  kRadial3D)
+ .value("kPhi",       kPhi)
+ .value("kUndefined", kUndefined)
+ ;
 
- enum_<EInside>("EInside")
-   .value("kOutside",   kOutside)
-   .value("kSurface",   kSurface)
-   .value("kInside",    kInside)
-   ;
+ py::enum_<EInside>(m, "EInside")
+ .value("kOutside",   kOutside)
+ .value("kSurface",   kSurface)
+ .value("kInside",    kInside)
+ ;
 
- enum_<EVolume>("EVolume")
-   .value("kNormal",        kNormal)
-   .value("kReplica",       kReplica)
-   .value("kParameterised", kParameterised)
-   ;
+ py::enum_<EVolume>(m, "EVolume")
+ .value("kNormal",        kNormal)
+ .value("kReplica",       kReplica)
+ .value("kParameterised", kParameterised)
+ ;
 }
-

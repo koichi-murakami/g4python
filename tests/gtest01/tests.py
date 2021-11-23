@@ -5,7 +5,6 @@
 # ==================================================================
 from geant4 import *
 import gtest01
-import random
 
 # ==================================================================
 # user actions in python
@@ -17,7 +16,7 @@ class MyPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
         self.pg = G4ParticleGun(1)
 
     def GeneratePrimaries(self, event):
-        dx= random.gauss(0., 0.1)
+        dx= G4RandGauss.shoot(0., 0.1)
         self.pg.SetParticleMomentumDirection(G4ThreeVector(dx, 0., 1.))
         self.pg.GeneratePrimaryVertex(event)
 
@@ -123,7 +122,7 @@ def main():
     gRunManager.Initialize()
 
     # visualization
-    gControlExecute("vis.mac")
+    #gControlExecute("vis.mac")
 
     # beamOn
     gRunManager.BeamOn(100)

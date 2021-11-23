@@ -23,32 +23,48 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include "G4UnitsTable.hh"
+#include "CLHEP/Random/RandomEngine.h"
+#include "CLHEP/Random/JamesRandom.h"
+#include "CLHEP/Random/RanecuEngine.h"
+#include "CLHEP/Random/Ranlux64Engine.h"
+#include "CLHEP/Random/RanluxEngine.h"
+#include "CLHEP/Random/MTwistEngine.h"
 
 namespace py = pybind11;
+using namespace CLHEP;
 
 // ==========================================================================
-void export_G4UnitsTable(py::module& m)
+void export_RandomEngines(py::module& m)
 {
-  // --------------------------------------------------------------------------
-  py::class_<G4UnitDefinition>(m, "G4UnitDefinition")
-  // ---
-  .def_static("PrintUnitsTable",   &G4UnitDefinition::PrintUnitsTable)
-  .def_static("IsUnitDefined",     &G4UnitDefinition::IsUnitDefined)
-  .def_static("GetValueOf",        &G4UnitDefinition::GetValueOf)
-  .def_static("GetCategory",       &G4UnitDefinition::GetCategory)
+  py::class_<HepRandomEngine>(m, "HepRandomEngine");
+
+  py::class_<HepJamesRandom>(m, "HepJamesRandom")
+  .def(py::init<>())
   ;
 
-  // --------------------------------------------------------------------------
-  py::class_<G4BestUnit>(m, "G4BestUnit")
-  .def(py::init<G4double, const G4String&>())
-  .def(py::init<const G4ThreeVector&, const G4String&>())
-  // ---
-  .def("GetCategory",        &G4BestUnit::GetCategory)
-  .def("GetIndexOfCategory", &G4BestUnit::GetIndexOfCategory)
-  // ---
-  .def("__str__",   [](const G4BestUnit&v) {return G4String(v).data();})
-  .def("__repr__",  [](const G4BestUnit&v) {return G4String(v).data();})
+  py::class_<RanecuEngine>(m,"RanecuEngine")
+  .def(py::init<>())
   ;
+
+  py::class_<RanluxEngine>(m, "RanluxEngine")
+  .def(py::init<>())
+  ;
+
+  py::class_<Ranlux64Engine>(m, "Ranlux64Engine")
+  .def(py::init<>())
+  ;
+
+  py::class_<MTwistEngine, HepRandomEngine>(m, "MTwistEngine")
+  .def(py::init<>())
+  .def(py::init<long>())
+  // ---
+  .def("flat",           &MTwistEngine::flat)
+  .def("double",         &MTwistEngine::operator double)
+  .def("setSeed",        &MTwistEngine::setSeed)
+  .def("showStatus",     &MTwistEngine::showStatus)
+  // ---
+  .def("name",          &MTwistEngine::name)
+  .def("engineName",    &MTwistEngine::engineName)
+  ;
+
 }

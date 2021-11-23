@@ -23,17 +23,25 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
+//#include <iostream>
 #include "G4TwoVector.hh"
 
 namespace py = pybind11;
+using c = G4TwoVector;
 using namespace CLHEP;
 
 // --------------------------------------------------------------------------
 namespace {
 
-//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_isNear, isNear, 1, 2)
-//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_isParallel, isParallel, 1, 2)
-//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_isOrthogonal, isOrthogonal, 1, 2)
+std::string vec_to_string(const G4TwoVector& vec)
+{
+  std::string message = "(";
+  message += std::to_string(vec.x()) + ", ";
+  message += std::to_string(vec.y()) + ")";
+
+  return message;
+}
 
 }
 
@@ -41,62 +49,66 @@ namespace {
 void export_G4TwoVector(py::module& m)
 {
   py::class_<G4TwoVector>(m, "G4TwoVector")
+  // ---
+  .def(py::init<>())
   .def(py::init<G4double>())
-  .def("x", &G4TwoVector::x)
-  .def("setX", &G4TwoVector::setX)
+  .def(py::init<G4double, G4double>())
+  .def(py::init<const G4TwoVector&>())
+  // ---
+  .def_property("x",   &c::x, &c::setX)
+  .def_property("y",   &c::y, &c::setY)
+  .def("setX",         &c::setX)
+  .def("setY",         &c::setY)
+  .def("getX",         &c::x)
+  .def("getY",         &c::y)
+  .def("set",          &c::set)
+  // ---
+  .def("phi",          &c::phi)
+  .def("mag2",         &c::mag2)
+  .def("mag",          &c::mag)
+  .def("r",            &c::r)
+  .def("setPhi",       &c::setPhi)
+  .def("setMag",       &c::setMag)
+  .def("setR",         &c::setR)
+  .def("setPolar",     &c::setPolar)
+  // ---
+  .def_static("getTolerance",  &c::getTolerance)
+  .def_static("setTolerance",  &c::setTolerance)
+  // ---
+  .def("howNear",       &c::howNear)
+  .def("isNear",        &c::isNear,
+                        py::arg("p"), py::arg("epsilon") = 2.2E-14)
+  .def("howParallel",   &c::howParallel)
+  .def("isParallel",    &c::isParallel,
+                        py::arg("p"), py::arg("epsilon") = 2.2E-14)
+  .def("howOrthogonal", &c::howOrthogonal)
+  .def("isOrthogonal",  &c::isOrthogonal,
+                        py::arg("p"), py::arg("epsilon") = 2.2E-14)
+  .def("unit",          &c::unit)
+  .def("orthogonal",    &c::orthogonal)
+  .def("dot",           &c::dot)
+  .def("angle",         &c::angle)
+  .def("rotate",        &c::rotate)
+
+  // operators
+  .def(py::self == py::self)
+  .def(py::self != py::self)
+  .def(py::self += py::self)
+  .def(py::self -= py::self)
+  .def(py::self -  py::self)
+  .def(py::self +  py::self)
+  .def(py::self *  py::self)
+  .def(py::self *  double())
+  .def(py::self /  double())
+  .def(double() * py::self)
+  .def(py::self *= double())
+  .def(py::self >  py::self)
+  .def(py::self <  py::self)
+  .def(py::self >= py::self)
+  .def(py::self <= py::self)
+
+  // ---
+  .def("__str__",   [](const c&v) {return ::vec_to_string(v);})
+  .def("__repr__",  [](const c&v) {return ::vec_to_string(v);})
   ;
 }
-
-/*
-  class_<G4TwoVector>("G4TwoVector", "general 2-vector")
-    // constructors
-    .def(init<G4double>())
-    .def(init<G4double, G4double>())
-    .def(init<const XXX&>())
-
-    // property
-    .add_property("x", &XXX::x, &XXX::setX)
-    .add_property("y", &XXX::y, &XXX::setY)
-
-    // methods
-    .def("set",      &XXX::set)
-    .def("phi",      &XXX::phi)
-    .def("mag",      &XXX::mag)
-    .def("mag2",     &XXX::mag2)
-    .def("r",        &XXX::r)
-    .def("setPhi",   &XXX::setPhi)
-    .def("setMag",   &XXX::setMag)
-    .def("setR",     &XXX::setR)
-    .def("setPolar", &XXX::setPolar)
-    .def("howNear",  &XXX::howNear)
-    .def("isNear",   &XXX::isNear,            f_isNear())
-    .def("howParallel",   &XXX::howParallel)
-    .def("isParallel",    &XXX::isParallel,   f_isParallel())
-    .def("howOrthogonal", &XXX::howOrthogonal)
-    .def("isOrthogonal",  &XXX::isOrthogonal, f_isOrthogonal())
-    .def("unit",       &XXX::unit)
-    .def("orthogonal", &XXX::orthogonal)
-    .def("dot",        &XXX::dot)
-    .def("angle",      &XXX::angle)
-    .def("rotate",     &XXX::rotate)
-
-    // operators
-    .def(self_ns::str(self))
-    .def(self == self)
-    .def(self != self)
-    .def(self += self)
-    .def(self -= self)
-    .def(self -  self)
-    .def(self + self)
-    .def(self * self)
-    .def(self * G4double())
-    .def(self / G4double())
-    .def(G4double() * self)
-    .def(self *= G4double())
-    .def(self >  self)
-    .def(self <  self)
-    .def(self >= self)
-    .def(self <= self)
-    ;
-}
-*/

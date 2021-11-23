@@ -23,32 +23,42 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include "G4UnitsTable.hh"
+#include "G4UserLimits.hh"
+#include "G4Track.hh"
 
 namespace py = pybind11;
 
 // ==========================================================================
-void export_G4UnitsTable(py::module& m)
+void export_G4UserLimits(py::module& m)
 {
-  // --------------------------------------------------------------------------
-  py::class_<G4UnitDefinition>(m, "G4UnitDefinition")
+  py::class_<G4UserLimits>(m, "G4UserLimits")
   // ---
-  .def_static("PrintUnitsTable",   &G4UnitDefinition::PrintUnitsTable)
-  .def_static("IsUnitDefined",     &G4UnitDefinition::IsUnitDefined)
-  .def_static("GetValueOf",        &G4UnitDefinition::GetValueOf)
-  .def_static("GetCategory",       &G4UnitDefinition::GetCategory)
-  ;
-
-  // --------------------------------------------------------------------------
-  py::class_<G4BestUnit>(m, "G4BestUnit")
-  .def(py::init<G4double, const G4String&>())
-  .def(py::init<const G4ThreeVector&, const G4String&>())
+  .def(py::init<G4double>())
+  .def(py::init<G4double, G4double>())
+  .def(py::init<G4double, G4double, G4double>())
+  .def(py::init<G4double, G4double, G4double, G4double>())
+  .def(py::init<G4double, G4double, G4double, G4double, G4double>())
   // ---
-  .def("GetCategory",        &G4BestUnit::GetCategory)
-  .def("GetIndexOfCategory", &G4BestUnit::GetIndexOfCategory)
+  .def(py::init<const G4String&>())
+  .def(py::init<const G4String&, G4double>())
+  .def(py::init<const G4String&, G4double, G4double>())
+  .def(py::init<const G4String&, G4double, G4double, G4double>())
+  .def(py::init<const G4String&, G4double, G4double, G4double, G4double>())
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                 G4double, G4double>())
   // ---
-  .def("__str__",   [](const G4BestUnit&v) {return G4String(v).data();})
-  .def("__repr__",  [](const G4BestUnit&v) {return G4String(v).data();})
+  .def("GetUserMaxTrackLength", &G4UserLimits::GetUserMaxTrackLength)
+  .def("GetUserMaxTime",        &G4UserLimits::GetUserMaxTime)
+  .def("GetUserMinEkine",       &G4UserLimits::GetUserMinEkine)
+  .def("GetUserMinRange",       &G4UserLimits::GetUserMinRange)
+  // ---
+  .def("SetMaxAllowedStep",     &G4UserLimits::SetMaxAllowedStep)
+  .def("SetUserMaxTrackLength", &G4UserLimits::SetUserMaxTrackLength)
+  .def("SetUserMaxTime",        &G4UserLimits::SetUserMaxTime)
+  .def("SetUserMinEkine",       &G4UserLimits::SetUserMinEkine)
+  .def("SetUserMinRange",       &G4UserLimits::SetUserMinRange)
+  // ---
+  .def("GetType",               &G4UserLimits::GetType)
+  .def("SetType",               &G4UserLimits::SetType)
   ;
 }

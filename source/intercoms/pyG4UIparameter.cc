@@ -22,36 +22,27 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4UIparameter.cc
-//
-//                                         2006 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4UIparameter.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4UIparameter()
+// ==========================================================================
+void export_G4UIparameter(py::module& m)
 {
-  class_<G4UIparameter, G4UIparameter*>
-    ("G4UIparameter", "UI parameter")
-    // constructors
-    .def(init<char>())
-    .def(init<const char*, char, G4bool>())
-    // ---
-    .def("List",                   &G4UIparameter::List)
-    .def("GetDefaultValue",        &G4UIparameter::GetDefaultValue)
-    .def("GetParameterType",       &G4UIparameter::GetParameterType)
-    .def("GetParameterRange",      &G4UIparameter::GetParameterRange)
-    .def("GetParameterName",       &G4UIparameter::GetParameterName)
-    .def("GetParameterCandidates", &G4UIparameter::GetParameterCandidates)
-    .def("IsOmittable",            &G4UIparameter::IsOmittable)
-    .def("GetCurrentAsDefault",    &G4UIparameter::GetCurrentAsDefault)
-    .def("GetParameterGuidance",   &G4UIparameter::GetParameterGuidance)
-    ;
+  py::class_<G4UIparameter>(m, "G4UIparameter")
+  .def(py::init<>())
+  .def(py::init<char>())
+  .def(py::init<const char*, char, G4bool>())
+  // ---
+  .def("List",                   &G4UIparameter::List)
+  .def("GetDefaultValue",        &G4UIparameter::GetDefaultValue)
+  .def("GetParameterType",       &G4UIparameter::GetParameterType)
+  .def("GetParameterRange",      &G4UIparameter::GetParameterRange)
+  .def("GetParameterName",       &G4UIparameter::GetParameterName)
+  .def("GetParameterCandidates", &G4UIparameter::GetParameterCandidates)
+  .def("IsOmittable",            &G4UIparameter::IsOmittable)
+  .def("GetCurrentAsDefault",    &G4UIparameter::GetCurrentAsDefault)
+  .def("GetParameterGuidance",   &G4UIparameter::GetParameterGuidance)
+  ;
 }

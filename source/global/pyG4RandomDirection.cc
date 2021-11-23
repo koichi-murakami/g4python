@@ -22,34 +22,15 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4RandomDirection.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4RandomDirection.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4RandomDirection {
-
-G4ThreeVector(*G4RandomDirection_1)() = G4RandomDirection;
-G4ThreeVector(*G4RandomDirection_2)(double) = G4RandomDirection;
-
-}
-
-using namespace pyG4RandomDirection;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4RandomDirection()
+// ==========================================================================
+void export_G4RandomDirection(py::module& m)
 {
-  def("G4RandomDirection",  G4RandomDirection_1);
-  def("G4RandomDirection",  G4RandomDirection_2);
+  m.def("G4RandomDirection", py::overload_cast<>(&G4RandomDirection));
+  m.def("G4RandomDirection",
+                py::overload_cast<G4double>(&G4RandomDirection));
 }

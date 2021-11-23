@@ -23,64 +23,81 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
-#include <pybind11/operators.h>
-#include "G4RotationMatrix.hh"
-#include "G4ThreeVector.hh"
+#include "Randomize.hh"
 
 namespace py = pybind11;
-using c = G4RotationMatrix;
+using namespace CLHEP;
 
 // --------------------------------------------------------------------------
 namespace {
 
 // --------------------------------------------------------------------------
-std::string to_string(const G4RotationMatrix& rot)
+// getTheSeeds
+py::list f_getTheSeeds()
 {
-  std::stringstream ss;
-  ss << rot;
-  return ss.str();
+  py::list seed_list;
+
+  auto seeds = HepRandom::getTheSeeds();
+
+  int idx = 0;
+  while(1) {
+    if( seeds[idx] == 0. ) break;
+    seed_list.append(seeds[idx]);
+    idx++;
+  }
+
+  return seed_list;
 }
 
 // --------------------------------------------------------------------------
-void print(G4RotationMatrix* rot)
+// G4UniformRand
+double f_G4UniformRand()
 {
-  G4cout << *rot << G4endl;
+  return G4UniformRand();
 }
 
 }
 
 // ==========================================================================
-void export_G4RotationMatrix(py::module& m)
+void export_Randomize(py::module& m)
 {
-  py::class_<G4RotationMatrix>(m, "G4RotationMatrix")
+  py::class_<HepRandom>(m, "HepRandom")
   // ---
   .def(py::init<>())
-  .def(py::init<const c&>())
+  .def(py::init<long>())
+  .def(py::init<HepRandomEngine&>())
+  .def(py::init<HepRandomEngine*>())
+  .def_static("getTheGenerator",  &HepRandom::getTheGenerator,
+                                  py::return_value_policy::reference)
   // ---
-  .def("rotateX",  &c::rotateX)
-  .def("rotateY",  &c::rotateY)
-  .def("rotateZ",  &c::rotateZ)
-  .def("rotate",   py::overload_cast<double, const G4ThreeVector&>
-                   (&c::rotate),
-                   py::return_value_policy::take_ownership)
-  .def("inverse",  &c::inverse)
-  .def("invert",   &c::invert,
-                   py::return_value_policy::take_ownership)
-  .def("print",    &::print)
-
-  // operators
-  .def(py::self == py::self)
-  .def(py::self != py::self)
-  .def(py::self >  py::self)
-  .def(py::self <  py::self)
-  .def(py::self >= py::self)
-  .def(py::self <= py::self)
-  .def(py::self *  py::self)
-  .def(py::self *  G4ThreeVector())
-  .def(py::self *= py::self)
-
+  .def("flat", py::overload_cast<>(&HepRandom::flat))
+  .def("flat", py::overload_cast<HepRandomEngine*>(&HepRandom::flat))
+  .def("name",                    &HepRandom::name)
+  .def("engine",                  &HepRandom::engine,
+                                  py::return_value_policy::reference)
   // ---
-  .def("__str__",   [](const c&v) {return ::to_string(v);})
-  .def("__repr__",  [](const c&v) {return ::to_string(v);})
+  .def_static("setTheSeed",       &HepRandom::setTheSeed,
+                                  py::arg("seed"), py::arg("lxr") = 3)
+  .def_static("getTheSeeds",      &::f_getTheSeeds)
+  .def_static("setTheEngine",     &HepRandom::setTheEngine)
+  .def_static("getTheEngine",     &HepRandom::getTheEngine,
+                                  py::return_value_policy::reference)
+
+  .def_static("saveEngineStatus", &HepRandom::saveEngineStatus,
+                                  py::arg("filename")="Config.conf")
+  .def_static("restoreEngineStatus",  &HepRandom::restoreEngineStatus,
+                                      py::arg("filename")="Config.conf")
+  .def_static("showEngineStatus", &HepRandom::showEngineStatus)
+  .def_static("createInstance",   &HepRandom::createInstance)
   ;
+
+  // ---
+  py::class_<G4RandGauss>(m, "G4RandGauss")
+  // ---
+  .def_static("shoot", py::overload_cast<>(&G4RandGauss::shoot))
+  .def_static("shoot", py::overload_cast<double, double>(&G4RandGauss::shoot))
+  ;
+
+  // ---
+  m.def("G4UniformRand", &::f_G4UniformRand);
 }

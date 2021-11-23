@@ -24,7 +24,6 @@
 // ********************************************************************
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
-#include <iostream>
 #include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
 
@@ -32,6 +31,7 @@ namespace py = pybind11;
 using c = G4ThreeVector;
 using namespace CLHEP;
 
+// --------------------------------------------------------------------------
 namespace {
 
 std::string vec_to_string(const G4ThreeVector& vec)
@@ -52,10 +52,12 @@ void export_G4ThreeVector(py::module& mod)
   double tolerance = c::getTolerance();
 
   py::class_<G4ThreeVector>(mod, "G4ThreeVector")
+  // ---
   .def(py::init<G4double>())
   .def(py::init<G4double, G4double>())
   .def(py::init<G4double, G4double, G4double>())
   .def(py::init<const G4ThreeVector&>())
+  // ---
   .def_property("x",   &c::getX, &c::setX)
   .def_property("y",   &c::getY, &c::setY)
   .def_property("z",   &c::getZ, &c::setZ)
@@ -63,8 +65,8 @@ void export_G4ThreeVector(py::module& mod)
   .def("setY",         &c::setY)
   .def("setZ",         &c::setZ)
   .def("getX",         &c::getX)
-  .def("getX",         &c::getY)
-  .def("getX",         &c::getZ)
+  .def("getY",         &c::getY)
+  .def("getZ",         &c::getZ)
   // ---
   .def("set",          &c::set)
   .def("phi",          &c::phi)

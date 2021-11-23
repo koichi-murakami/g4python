@@ -3,10 +3,10 @@
 set(MODULE pyG4intercoms)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
-#pyG4UIcommand.cc
+  pyG4UIcommand.cc
   pyG4UIcommandTree.cc
   pyG4UImanager.cc
-  #pyG4UIparameter.cc
+  pyG4UIparameter.cc
   pymodG4intercoms.cc
 )
 

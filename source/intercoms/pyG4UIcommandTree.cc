@@ -53,7 +53,7 @@ void export_G4UIcommandTree(py::module& m)
          (&G4UIcommandTree::GetTree),
          py::return_value_policy::reference)
     .def("GetCommand",         &G4UIcommandTree::GetCommand,
-         py::return_value_policy::reference)
+                               py::return_value_policy::reference)
     .def("GetTitle",           &G4UIcommandTree::GetTitle)
     ;
 }
