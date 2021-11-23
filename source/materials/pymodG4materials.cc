@@ -28,7 +28,6 @@ namespace py = pybind11;
 
 // --------------------------------------------------------------------------
 void export_G4Material(py::module&);
-void export_G4MaterialTable(py::module&);
 void export_G4Element(py::module&);
 void export_G4ElementTable();
 //void export_G4ElementVector(py::module&);
@@ -39,14 +38,11 @@ void export_G4AtomicShells(py::module&);
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4materials, m)
 {
-  /*
   export_G4Material(m);
-  export_G4MaterialTable(m);
-  export_G4Element(m);
-  export_G4ElementTable(m);
+  //export_G4Element(m);
+  //export_G4ElementTable(m);
   //export_G4ElementVector();
-  export_G4Isotope(m);
+  //export_G4Isotope(m);
   export_G4NistManager(m);
-  export_G4AtomicShells(m);
-  */
+  //export_G4AtomicShells(m);
 }

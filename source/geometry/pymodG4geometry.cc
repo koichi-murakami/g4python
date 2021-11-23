@@ -104,7 +104,7 @@ PYBIND11_MODULE(G4geometry, m)
   //export_G4UnionSolid(m);
   //export_G4IntersectionSolid(m);
   //export_G4SubtractionSolid(m);
-  //export_G4TransportationManager(m);
+  export_G4TransportationManager(m);
   //export_G4Navigator(m);
   //export_G4FieldManager(m);
   //export_G4Field(m);

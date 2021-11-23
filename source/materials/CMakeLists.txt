@@ -8,9 +8,8 @@ pybind11_add_module(${MODULE}
   #pyG4ElementTable.cc
   #pyG4ElementVector.cc
   #pyG4Isotope.cc
-  #pyG4Material.cc
-  #pyG4MaterialTable.cc
-  #pyG4NistManager.cc
+  pyG4Material.cc
+  pyG4NistManager.cc
   pymodG4materials.cc
 )
 

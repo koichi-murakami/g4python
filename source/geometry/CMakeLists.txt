@@ -30,7 +30,7 @@ pybind11_add_module(${MODULE}
   #pyG4Tet.cc
   #pyG4Torus.cc
   #pyG4TouchableHistory.cc
-  #pyG4TransportationManager.cc
+  pyG4TransportationManager.cc
   #pyG4Trap.cc
   #pyG4Trd.cc
   #pyG4Tubs.cc

@@ -22,128 +22,145 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4NistManager.cc
-//
-//                                         2005 Q
-// ===================================================================
-#include <boost/python.hpp>
-#include "G4Version.hh"
-#if G4VERSION_NUMBER >= 710
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "G4NistManager.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4NistManager {
-
-// FindOrBuildElement
-G4Element*(G4NistManager::*f1_FindOrBuildElement)(G4int, G4bool)
-  = &G4NistManager::FindOrBuildElement;
-
-G4Element*(G4NistManager::*f2_FindOrBuildElement)(const G4String&, G4bool)
-  = &G4NistManager::FindOrBuildElement;
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_FindOrBuildElement,
-				       FindOrBuildElement, 1, 2)
-
-// PrintElement
-void(G4NistManager::*f1_PrintElement)(const G4String&) const
-  = &G4NistManager::PrintElement;
-void(G4NistManager::*f2_PrintElement)(G4int) const
-  = &G4NistManager::PrintElement;
-
-// FindOrBuildMaterial
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_FindOrBuildMaterial,
-				       FindOrBuildMaterial, 1, 2)
-
-// ConstructNewMaterial
-G4Material*(G4NistManager::*f1_ConstructNewMaterial)
-  (const G4String&, const std::vector<G4String>&,
-   const std::vector<G4int>&, G4double, G4bool,
-   G4State, G4double, G4double)
-  = &G4NistManager::ConstructNewMaterial;
-
-G4Material*(G4NistManager::*f2_ConstructNewMaterial)
-  (const G4String&, const std::vector<G4String>&,
-   const std::vector<G4double>&, G4double, G4bool,
-   G4State, G4double, G4double)
-  = &G4NistManager::ConstructNewMaterial;
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_ConstructNewMaterial,
-				       ConstructNewMaterial, 4, 8)
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_ConstructNewGasMaterial,
-				       ConstructNewGasMaterial, 4, 5)
-
-}
-
-using namespace pyG4NistManager;
-
-#endif
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4NistManager()
+// ==========================================================================
+void export_G4NistManager(py::module& m)
 {
-#if G4VERSION_NUMBER >= 710
+  py::class_<G4NistManager>(m, "G4NistManager")
+  // ---
+  .def_static("Instance",    &G4NistManager::Instance,
+                             py::return_value_policy::reference)
+  // ---
+  .def("GetElement",         &G4NistManager::GetElement,
+                             py::return_value_policy::reference)
+  .def("FindElement",        &G4NistManager::FindElement,
+                             py::return_value_policy::reference)
+  .def("FindOrBuildElement",
+       py::overload_cast<G4int, G4bool>(&G4NistManager::FindOrBuildElement),
+       py::arg("Z"), py::arg("isotopes") = true,
+       py::return_value_policy::reference)
+  .def("FindOrBuildElement",
+       py::overload_cast<const G4String&, G4bool>
+       (&G4NistManager::FindOrBuildElement),
+       py::arg("symbol"), py::arg("isotopes") = true,
+       py::return_value_policy::reference)
+  .def("GetNumberOfElements", &G4NistManager::GetNumberOfElements)
+  .def("GetZ",                &G4NistManager::GetZ)
+  .def("GetAtomicMassAmu",
+        py::overload_cast<const G4String&>
+        (&G4NistManager::GetAtomicMassAmu, py::const_))
+  .def("GetAtomicMassAmu",
+        py::overload_cast<G4int>
+        (&G4NistManager::GetAtomicMassAmu, py::const_))
+  // ---
+  .def("GetIsotopeMass",        &G4NistManager::GetIsotopeMass)
+  .def("GetAtomicMass",         &G4NistManager::GetAtomicMass)
+  .def("GetTotalElectronBindingEnergy",
+                                &G4NistManager::GetTotalElectronBindingEnergy)
+  .def("GetNistFirstIsotopeN",  &G4NistManager::GetNistFirstIsotopeN)
+  .def("GetNumberOfNistIsotopes", &G4NistManager::GetNumberOfNistIsotopes)
+  .def("GetIsotopeAbundance",   &G4NistManager::GetIsotopeAbundance)
+  // ---
+  .def("PrintElement", py::overload_cast<G4int>
+                       (&G4NistManager::PrintElement, py::const_))
+  .def("PrintElement", py::overload_cast<const G4String&>
+                       (&G4NistManager::PrintElement, py::const_))
+  .def("PrintG4Element",          &G4NistManager::PrintG4Element)
+  .def("GetNistElementNames",     &G4NistManager::GetNistElementNames)
+  .def("GetMeanIonisationEnergy", &G4NistManager::GetMeanIonisationEnergy)
+  .def("GetNominalDensity",       &G4NistManager::GetNominalDensity)
+  // ---
+  .def("GetMaterial",             &G4NistManager::GetMaterial,
+                                  py::return_value_policy::reference)
+  .def("FindMaterial",            &G4NistManager::FindMaterial,
+                                  py::return_value_policy::reference)
+  .def("FindOrBuildMaterial",     &G4NistManager::FindOrBuildMaterial,
+                                  py::arg("name"),
+                                  py::arg("isotopes") = true,
+                                  py::arg("warning")=false,
+                                  py::return_value_policy::reference)
+  .def("FindSimpleMaterial",      &G4NistManager::FindSimpleMaterial,
+                                  py::return_value_policy::reference)
+  .def("FindOrBuildSimpleMaterial",
+       py::overload_cast<G4int, G4bool>
+       (&G4NistManager::FindOrBuildSimpleMaterial),
+       py::arg("Z"), py::arg("warning") = false,
+       py::return_value_policy::reference)
+  .def("BuildMaterialWithNewDensity",
+       &G4NistManager::BuildMaterialWithNewDensity,
+       py::arg("name"), py::arg("basename"), py::arg("density") = 0.0,
+       py::arg("temp") = NTP_Temperature,
+       py::arg("pres") = CLHEP::STP_Pressure)
+  // ---
+  .def("ConstructNewMaterial",
+       py::overload_cast<const G4String&,
+                         const std::vector<G4String>&,
+                         const std::vector<G4int>&,
+                         G4double, G4bool, G4State, G4double, G4double>
+       (&G4NistManager::ConstructNewMaterial),
+       py::arg("name"), py::arg("elm"), py::arg("nAtoms"), py::arg("dens"),
+       py::arg("isotops") = true, py::arg("state") = kStateSolid,
+       py::arg("tmp") = NTP_Temperature,
+       py::arg("pressure") = CLHEP::STP_Pressure,
+       py::return_value_policy::reference)
+  .def("ConstructNewMaterial",
+       py::overload_cast<const G4String&,
+                         const std::vector<G4String>&,
+                         const std::vector<G4double>&,
+                         G4double, G4bool, G4State, G4double, G4double>
+       (&G4NistManager::ConstructNewMaterial),
+       py::arg("name"), py::arg("elm"), py::arg("weight"), py::arg("dens"),
+       py::arg("isotops") = true, py::arg("state") = kStateSolid,
+       py::arg("tmp") = NTP_Temperature,
+       py::arg("pressure") = CLHEP::STP_Pressure,
+       py::return_value_policy::reference)
+  // ---
+  .def("ConstructNewGasMaterial",
+        &G4NistManager::ConstructNewGasMaterial,
+        py::arg("name"), py::arg("nameNist"), py::arg("temp"),
+        py::arg("pres"), py::arg("isotopes") = true,
+        py::return_value_policy::reference)
 
-  class_<G4NistManager, boost::noncopyable>
-    ("G4NistManager", "manager class for NIST materials", no_init)
-    // ---
-    .def("Instance", &G4NistManager::Instance,
-         return_value_policy<reference_existing_object>())
-    .staticmethod("Instance")
-    // ---
-    .def("SetVerbose",          &G4NistManager::SetVerbose)
-    .def("GetVerbose",          &G4NistManager::GetVerbose)
-    // ---
-#if G4VERSION_NUMBER < 910
-    .def("RegisterElement",     &G4NistManager::RegisterElement)
-    .def("DeRegisterElement",   &G4NistManager::DeRegisterElement)
-#endif
-    .def("GetElement",          &G4NistManager::GetElement,
-	 return_internal_reference<>())
-    .def("FindOrBuildElement",  f1_FindOrBuildElement,
-	 f_FindOrBuildElement()
-         [return_value_policy<reference_existing_object>()])
-    .def("FindOrBuildElement",  f2_FindOrBuildElement,
-	 f_FindOrBuildElement()
-         [return_value_policy<reference_existing_object>()])
-    .def("GetNumberOfElements", &G4NistManager::GetNumberOfElements)
-    .def("GetZ",                &G4NistManager::GetZ)
-    .def("GetIsotopeMass",      &G4NistManager::GetIsotopeMass)
-    .def("PrintElement",        f1_PrintElement)
-    .def("PrintElement",        f2_PrintElement)
-    .def("PrintG4Element",      &G4NistManager::PrintG4Element)
-    // ---
-#if G4VERSION_NUMBER < 910
-    .def("RegisterMaterial",    &G4NistManager::RegisterMaterial)
-    .def("DeRegisterMaterial",  &G4NistManager::DeRegisterMaterial)
-#endif
-    .def("GetMaterial",         &G4NistManager::GetMaterial,
-         return_value_policy<reference_existing_object>())
-    .def("FindOrBuildMaterial", &G4NistManager::FindOrBuildMaterial,
-	 f_FindOrBuildMaterial()
-         [return_value_policy<reference_existing_object>()])
-    .def("ConstructNewMaterial", f1_ConstructNewMaterial,
-	 f_ConstructNewMaterial()
-         [return_value_policy<reference_existing_object>()])
-    .def("ConstructNewMaterial", f2_ConstructNewMaterial,
-	 f_ConstructNewMaterial()
-         [return_value_policy<reference_existing_object>()])
-#if G4VERSION_NUMBER >= 910
-    .def("ConstructNewGasMaterial", &G4NistManager::ConstructNewGasMaterial,
-	 f_ConstructNewGasMaterial()
-         [return_value_policy<reference_existing_object>()])
-#endif
-    .def("GetNumberOfMaterials", &G4NistManager::GetNumberOfMaterials)
-    .def("ListMaterials",        &G4NistManager::ListMaterials)
-    .def("PrintG4Material",      &G4NistManager::PrintG4Material)
-    ;
-#endif
+  .def("ConstructNewIdealGasMaterial",
+       py::overload_cast<const G4String&,
+                         const std::vector<G4String>&,
+                         const std::vector<G4int>&,
+                         G4bool, G4double, G4double>
+       (&G4NistManager::ConstructNewIdealGasMaterial),
+       py::arg("name"), py::arg("elm"), py::arg("nAtoms"),
+       py::arg("isotops") = true,
+       py::arg("tmp") = NTP_Temperature,
+       py::arg("pressure") = CLHEP::STP_Pressure,
+       py::return_value_policy::reference)
+  // ---
+  .def("SetDensityEffectCalculatorFlag",
+       py::overload_cast<const G4String&, G4bool>
+       (&G4NistManager::SetDensityEffectCalculatorFlag))
+  .def("SetDensityEffectCalculatorFlag",
+       py::overload_cast<G4Material*, G4bool>
+       (&G4NistManager::SetDensityEffectCalculatorFlag))
+  // ---
+  .def("GetNumberOfMaterials",    &G4NistManager::GetNumberOfMaterials)
+  .def("SetVerbose",              &G4NistManager::SetVerbose)
+  .def("GetVerbose",              &G4NistManager::GetVerbose)
+  .def("PrintG4Material",         &G4NistManager::PrintG4Material)
+  .def("ListG4Material",          &G4NistManager::ListMaterials)
+  .def("GetNistMaterialNames",    &G4NistManager::GetNistMaterialNames)
+  // ---
+  .def("GetZ13", py::overload_cast<G4double>
+                 (&G4NistManager::GetZ13, py::const_))
+  .def("GetZ13", py::overload_cast<G4int>
+                 (&G4NistManager::GetZ13, py::const_))
+  .def("GetA27",                  &G4NistManager::GetA27)
+  .def("GetLOGZ",                 &G4NistManager::GetA27)
+  .def("GetLOGAMU",               &G4NistManager::GetA27)
+  // ---
+  //.def("GetICRU90StoppingData",   &G4NistManager::GetICRU90StoppingData,
+  //     py::return_value_policy::reference)
+  ;
 }

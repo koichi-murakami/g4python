@@ -109,7 +109,7 @@ gExceptionHandler = G4ExceptionHandler() # automatically registered
 gGeometryManager = G4GeometryManager.GetInstance()
 
 # gTransportationManager
-#gTransportationManager = G4TransportationManager.GetTransportationManager()
+gTransportationManager = G4TransportationManager.GetTransportationManager()
 
 # gParticleTable
 gParticleTable = G4ParticleTable.GetParticleTable()
@@ -129,10 +129,7 @@ gEmCalculator = G4EmCalculator()
 #gElementTable = G4Element.GetElementTable()
 
 # gNistManager
-#_material_class_list = dir(G4materials)
-#_qfind = _material_class_list.count("G4NistManager") > 0
-#if _qfind:
-#  gNistManager = G4NistManager.Instance()
+gNistManager = G4NistManager.Instance()
 
 # gVisManager
 _visdriver_list = dir(G4visualization)

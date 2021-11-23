@@ -22,46 +22,32 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4TransportationManager.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4TransportationManager.hh"
-#include "G4PropagatorInField.hh"
 #include "G4FieldManager.hh"
+#include "G4VPhysicalVolume.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4TransportationManager()
+// ==========================================================================
+void export_G4TransportationManager(py::module& m)
 {
-  class_<G4TransportationManager, boost::noncopyable>
-    ("G4TransportationManager", "manager class for transportation", no_init)
-    // ---
-    .def("GetTransportationManager", 
-	 &G4TransportationManager::GetTransportationManager,
-	 return_value_policy<reference_existing_object>())
-    .staticmethod("GetTransportationManager")
-    .def("GetNavigatorForTracking", 
-	 &G4TransportationManager::GetNavigatorForTracking,
-	 return_internal_reference<>())
-    .def("GetPropagatorInField", 
-	 &G4TransportationManager::GetPropagatorInField,
-	 return_internal_reference<>())
-    .def("GetFieldManager", 
-	 &G4TransportationManager::GetFieldManager,
-	 return_internal_reference<>())
-    .def("SetNavigatorForTracking", 
-	 &G4TransportationManager::SetNavigatorForTracking)
-    .def("SetPropagatorInField", 
-	 &G4TransportationManager::SetPropagatorInField)
-    .def("SetFieldManager", 
-	 &G4TransportationManager::SetFieldManager)
-    ;
+  py::class_<G4TransportationManager>(m, "G4TransportationManager")
+  // ---
+  .def_static("GetTransportationManager",
+                            &G4TransportationManager::GetTransportationManager,
+                            py::return_value_policy::reference)
+  .def_static("GetInstanceIfExist",
+                            &G4TransportationManager::GetInstanceIfExist,
+                            py::return_value_policy::reference)
+  // ---
+  .def("GetFieldManager",   &G4TransportationManager::GetFieldManager,
+                            py::return_value_policy::reference)
+  .def("GetNoActiveNavigators", &G4TransportationManager::GetNoActiveNavigators)
+  .def("GetNoWorlds",       &G4TransportationManager::GetNoWorlds)
+  .def("GetParallelWorld",  &G4TransportationManager::GetParallelWorld,
+                            py::return_value_policy::reference)
+  .def("IsWorldExisting",   &G4TransportationManager::IsWorldExisting,
+                            py::return_value_policy::reference)
+  ;
 }
-
