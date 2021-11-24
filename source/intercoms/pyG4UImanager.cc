@@ -102,12 +102,10 @@ void export_G4UImanager(py::module& m)
  // ---
  .def("GetCurrentValues",     &G4UImanager::GetCurrentValues)
  .def("ExecuteMacroFile",     &G4UImanager::ExecuteMacroFile)
- .def("ApplyCommand",
-       static_cast<int (G4UImanager::*)(const char*)>
-       (&G4UImanager::ApplyCommand))
- .def("ApplyCommand",
-       static_cast<int (G4UImanager::*)(const G4String&)>
-      (&G4UImanager::ApplyCommand))
+ .def("ApplyCommand", py::overload_cast<const char*>
+                             (&G4UImanager::ApplyCommand))
+ .def("ApplyCommand", py::overload_cast<const G4String&>
+                             (&G4UImanager::ApplyCommand))
  .def("CreateHTML",           &G4UImanager::CreateHTML,
       py::arg("dir") = "/")
  .def("SetMacroSearchPath",   &G4UImanager::SetMacroSearchPath)
@@ -126,7 +124,7 @@ void export_G4UImanager(py::module& m)
   ;
 
   // ---
-  m.def("ApplyUICommand",  &::ApplyUICommand);
+  m.def("ApplyUICommand",        &::ApplyUICommand);
 
   // ---
   py::enum_<G4UIcommandStatus>(m, "G4UIcommandStatus")

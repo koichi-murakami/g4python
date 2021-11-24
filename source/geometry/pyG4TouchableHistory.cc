@@ -22,24 +22,37 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4VTouchable.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4TouchableHistory.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4VSolid.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4TouchableHistory()
+// ==========================================================================
+void export_G4TouchableHistory(py::module& m)
 {
-  class_<G4TouchableHistory, G4TouchableHistory*, bases<G4VTouchable> >
-    ("G4TouchableHistory", "touchable history class")
-    ;
-}
+  py::class_<G4VTouchable>(m, "G4VTouchable");
 
+  py::class_<G4TouchableHistory, G4VTouchable>(m, "G4TouchableHistory")
+  // ---
+  .def("GetVolume",           &G4TouchableHistory::GetVolume,
+                              py::arg("depth") = 0,
+                              py::return_value_policy::reference)
+  .def("GetSolid",            &G4TouchableHistory::GetSolid,
+                              py::arg("depth") = 0,
+                              py::return_value_policy::reference)
+  .def("GetTranslation",      &G4TouchableHistory::GetTranslation,
+                              py::arg("depth") = 0,
+                              py::return_value_policy::reference)
+  .def("GetRotation",         &G4TouchableHistory::GetRotation,
+                              py::arg("depth") = 0,
+                              py::return_value_policy::reference)
+  .def("GetReplicaNumber",    &G4TouchableHistory::GetReplicaNumber,
+                              py::arg("depth") = 0,
+                              py::return_value_policy::reference)
+  .def("GetHistoryDepth",     &G4TouchableHistory::GetHistoryDepth)
+  .def("MoveUpHistory",       &G4TouchableHistory::MoveUpHistory,
+                              py::arg("level") = 1)
+  ;
+}

@@ -42,6 +42,14 @@ public:
       Construct,
     );
   }
+
+  void ConstructSDandField() override {
+    PYBIND11_OVERLOAD(
+      void,
+      G4VUserDetectorConstruction,
+      ConstructSDandField,
+    );
+  }
 };
 
 }
@@ -55,5 +63,7 @@ void export_G4VUserDetectorConstruction(py::module& m)
   .def(py::init<>())
   .def("Construct",  &G4VUserDetectorConstruction::Construct,
        py::return_value_policy::reference)
+  .def("ConstructSDandField",
+                     &G4VUserDetectorConstruction::ConstructSDandField)
   ;
 }

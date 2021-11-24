@@ -22,14 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4LogicalVolume.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "G4Version.hh"
+#include <pybind11/pybind11.h>
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
 #include "G4VSolid.hh"
@@ -38,115 +31,84 @@
 #include "G4UserLimits.hh"
 #include "G4SmartVoxelHeader.hh"
 #include "G4MaterialCutsCouple.hh"
-#include "G4FastSimulationManager.hh"
 #include "G4VisAttributes.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4LogicalVolume {
-
-void(G4LogicalVolume::*f1_SetVisAttributes)(const G4VisAttributes*)
-  = &G4LogicalVolume::SetVisAttributes;
-
-void(G4LogicalVolume::*f2_SetVisAttributes)(const G4VisAttributes&)
-  = &G4LogicalVolume::SetVisAttributes;
-
-G4VSolid*(G4LogicalVolume::*f1_GetSolid)() const = &G4LogicalVolume::GetSolid;
-
-void(G4LogicalVolume::*f1_SetSolid)(G4VSolid*)
-  = &G4LogicalVolume::SetSolid;
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_GetMass, GetMass, 0, 3)
-
-}
-
-using namespace pyG4LogicalVolume;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4LogicalVolume()
+// ==========================================================================
+void export_G4LogicalVolume(py::module& m)
 {
-  class_<G4LogicalVolume, G4LogicalVolume*, boost::noncopyable>
-    ("G4LogicalVolume", "logical volume class", no_init)
-    // constructors
-    .def(init<G4VSolid*, G4Material*, const G4String& >())
-    .def(init<G4VSolid*, G4Material*, const G4String&,
-         G4FieldManager* >())
-    .def(init<G4VSolid*, G4Material*, const G4String&,
-         G4FieldManager*, G4VSensitiveDetector* >())
-    .def(init<G4VSolid*, G4Material*, const G4String&,
-         G4FieldManager*, G4VSensitiveDetector*,
-         G4UserLimits* >())
-    .def(init<G4VSolid*, G4Material*, const G4String&,
-         G4FieldManager*, G4VSensitiveDetector*,
-         G4UserLimits*, G4bool >())
-    // ---
-    .def("GetName",         &G4LogicalVolume::GetName,
-         return_value_policy<reference_existing_object>())
-    .def("SetName",         &G4LogicalVolume::SetName)
-    // ---
-    .def("GetNoDaughters",  &G4LogicalVolume::GetNoDaughters)
-    .def("GetDaughter",     &G4LogicalVolume::GetDaughter,
-	       return_internal_reference<>())
-    .def("AddDaughter",     &G4LogicalVolume::AddDaughter)
-    .def("IsDaughter",      &G4LogicalVolume::IsDaughter)
-    .def("IsAncestor",      &G4LogicalVolume::IsAncestor)
-    .def("RemoveDaughter",  &G4LogicalVolume::RemoveDaughter)
-    .def("ClearDaughters",  &G4LogicalVolume::ClearDaughters)
-    .def("TotalVolumeEntities", &G4LogicalVolume::TotalVolumeEntities)
-    // ----
-    .def("GetSolid",        f1_GetSolid,
-         return_internal_reference<>())
-    .def("SetSolid",        f1_SetSolid)
-    .def("GetMaterial",     &G4LogicalVolume::GetMaterial,
-	       return_internal_reference<>())
-    .def("SetMaterial",     &G4LogicalVolume::SetMaterial)
-    .def("UpdateMaterial",  &G4LogicalVolume::UpdateMaterial)
-    // ---
-    .def("GetMass",         &G4LogicalVolume::GetMass, f_GetMass())
-    .def("GetFieldManager", &G4LogicalVolume::GetFieldManager,
-	       return_internal_reference<>())
-    .def("SetFieldManager", &G4LogicalVolume::SetFieldManager)
-    .def("GetSensitiveDetector", &G4LogicalVolume::GetSensitiveDetector,
-	       return_internal_reference<>())
-    .def("SetSensitiveDetector", &G4LogicalVolume::SetSensitiveDetector)
-    .def("GetUserLimits",   &G4LogicalVolume::GetUserLimits,
-	       return_internal_reference<>())
-    .def("SetUserLimits",   &G4LogicalVolume::SetUserLimits)
-    // ---
-    .def("GetVoxelHeader",  &G4LogicalVolume::GetVoxelHeader,
-	       return_internal_reference<>())
-    .def("SetVoxelHeader",  &G4LogicalVolume::SetVoxelHeader)
-    .def("GetSmartless",    &G4LogicalVolume::GetSmartless)
-    .def("SetSmartless",    &G4LogicalVolume::SetSmartless)
-    .def("IsToOptimise",    &G4LogicalVolume::IsToOptimise)
-    .def("SetOptimisation", &G4LogicalVolume::SetOptimisation)
-    // ---
-    .def("IsRootRegion",    &G4LogicalVolume::IsRootRegion)
-    .def("SetRegionRootFlag", &G4LogicalVolume::SetRegionRootFlag)
-    .def("IsRegion",        &G4LogicalVolume::IsRegion)
-    .def("SetRegion",       &G4LogicalVolume::SetRegion)
-    .def("GetRegion",       &G4LogicalVolume::GetRegion,
-	       return_internal_reference<>())
-    .def("PropagateRegion", &G4LogicalVolume::PropagateRegion)
-    .def("GetMaterialCutsCouple", &G4LogicalVolume::GetMaterialCutsCouple,
-	       return_internal_reference<>())
-    .def("SetMaterialCutsCouple", &G4LogicalVolume::SetMaterialCutsCouple)
-    // ---
-    .def("GetVisAttributes", &G4LogicalVolume::GetVisAttributes,
-	       return_internal_reference<>())
-    .def("SetVisAttributes", f1_SetVisAttributes)
-    .def("SetVisAttributes", f2_SetVisAttributes)
-    // ---
-    .def("GetFastSimulationManager",
-	      &G4LogicalVolume::GetFastSimulationManager,
-	      return_internal_reference<>())
-    // ---
-    .def("SetBiasWeight",  &G4LogicalVolume::SetBiasWeight)
-    .def("GetBiasWeight",  &G4LogicalVolume::GetBiasWeight)
-    ;
+  py::class_<G4LogicalVolume>(m, "G4LogicalVolume")
+  // ---
+  .def(py::init<G4VSolid*, G4Material*, const G4String& >())
+  .def(py::init<G4VSolid*, G4Material*, const G4String&, G4FieldManager* >())
+  .def(py::init<G4VSolid*, G4Material*, const G4String&, G4FieldManager*,
+                G4VSensitiveDetector* >())
+  .def(py::init<G4VSolid*, G4Material*, const G4String&, G4FieldManager*,
+                G4VSensitiveDetector*, G4UserLimits* >())
+  .def(py::init<G4VSolid*, G4Material*, const G4String&, G4FieldManager*,
+                G4VSensitiveDetector*, G4UserLimits*, G4bool >())
+  // ---
+  .def("GetName",         &G4LogicalVolume::GetName)
+  .def("SetName",         &G4LogicalVolume::SetName)
+  // ---
+  .def("GetNoDaughters",  &G4LogicalVolume::GetNoDaughters)
+  .def("GetDaughter",     &G4LogicalVolume::GetDaughter,
+                          py::return_value_policy::reference)
+  .def("AddDaughter",     &G4LogicalVolume::AddDaughter)
+  .def("IsDaughter",      &G4LogicalVolume::IsDaughter)
+  .def("IsAncestor",      &G4LogicalVolume::IsAncestor)
+  .def("RemoveDaughter",  &G4LogicalVolume::RemoveDaughter)
+  .def("ClearDaughters",  &G4LogicalVolume::ClearDaughters)
+  .def("TotalVolumeEntities", &G4LogicalVolume::TotalVolumeEntities)
+  // ----
+  .def("GetSolid", static_cast<G4VSolid* (G4LogicalVolume::*)() const>
+                         (&G4LogicalVolume::GetSolid),
+                          py::return_value_policy::reference)
+  .def("SetSolid", static_cast<void (G4LogicalVolume::*)(G4VSolid*)>
+                         (&G4LogicalVolume::SetSolid))
+  .def("GetMaterial",     &G4LogicalVolume::GetMaterial,
+                          py::return_value_policy::reference)
+  .def("SetMaterial",     &G4LogicalVolume::SetMaterial)
+  .def("UpdateMaterial",  &G4LogicalVolume::UpdateMaterial)
+  .def("GetMass",         &G4LogicalVolume::GetMass,
+                          py::arg("forced") = false,
+                          py::arg("propagate") = true,
+                          py::arg("material") = nullptr)
+  // ---
+  .def("GetFieldManager", &G4LogicalVolume::GetFieldManager,
+                          py::return_value_policy::reference)
+  .def("SetFieldManager", &G4LogicalVolume::SetFieldManager)
+  .def("GetSensitiveDetector", &G4LogicalVolume::GetSensitiveDetector,
+                               py::return_value_policy::reference)
+  .def("SetSensitiveDetector", &G4LogicalVolume::SetSensitiveDetector)
+  .def("GetUserLimits",   &G4LogicalVolume::GetUserLimits,
+                          py::return_value_policy::reference)
+  .def("SetUserLimits",   &G4LogicalVolume::SetUserLimits)
+  // ---
+	.def("GetSmartless",    &G4LogicalVolume::GetSmartless)
+	.def("SetSmartless",    &G4LogicalVolume::SetSmartless)
+	.def("IsToOptimise",    &G4LogicalVolume::IsToOptimise)
+	.def("SetOptimisation", &G4LogicalVolume::SetOptimisation)
+	// ---
+	.def("IsRootRegion",    &G4LogicalVolume::IsRootRegion)
+	.def("SetRegionRootFlag", &G4LogicalVolume::SetRegionRootFlag)
+	.def("IsRegion",        &G4LogicalVolume::IsRegion)
+	.def("SetRegion",       &G4LogicalVolume::SetRegion)
+	.def("GetRegion",       &G4LogicalVolume::GetRegion,
+	                        py::return_value_policy::reference)
+	.def("PropagateRegion", &G4LogicalVolume::PropagateRegion)
+	.def("GetMaterialCutsCouple", &G4LogicalVolume::GetMaterialCutsCouple,
+   	                            py::return_value_policy::reference)
+	.def("SetMaterialCutsCouple", &G4LogicalVolume::SetMaterialCutsCouple)
+	// ---
+	.def("GetVisAttributes", &G4LogicalVolume::GetVisAttributes,
+	                         py::return_value_policy::reference)
+	.def("SetVisAttributes",
+        static_cast<void (G4LogicalVolume::*)(const G4VisAttributes*)>
+        (&G4LogicalVolume::SetVisAttributes))
+	// ---
+  .def("SetBiasWeight",  &G4LogicalVolume::SetBiasWeight)
+  .def("GetBiasWeight",  &G4LogicalVolume::GetBiasWeight)
+  ;
 }

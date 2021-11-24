@@ -22,81 +22,64 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4MagneticField.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4MagneticField.hh"
 #include "G4ThreeVector.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
+// --------------------------------------------------------------------------
+namespace {
 
-class PyG4MagneticField : public G4MagneticField {
+// --------------------------------------------------------------------------
+class G4UserMagneticField : public G4MagneticField {
 public:
-  PyG4MagneticField() { }
-  ~PyG4MagneticField() { }
+  using G4MagneticField::G4MagneticField;
 
-  virtual G4ThreeVector GetFieldValue(const G4ThreeVector& pos,
-				      const G4double time) const = 0;
+  virtual G4ThreeVector FieldValue(const G4ThreeVector& pos,
+		 		                           G4double time) const = 0;
 
-  virtual void GetFieldValue(const G4double Point[4],
-			     G4double* Bfield) const {
+  void GetFieldValue(const G4double Point[4],
+			               G4double* Bfield) const  override {
+    auto bfield = FieldValue(G4ThreeVector(Point[0], Point[1],Point[2]),
+                              Point[3]);
 
-    const G4ThreeVector& bfield=
-      GetFieldValue(G4ThreeVector(Point[0], Point[1], Point[2]), Point[3]);
-
-    Bfield[0]= bfield.x();
-    Bfield[1]= bfield.y();
-    Bfield[2]= bfield.z();
+    Bfield[0] = bfield.x();
+    Bfield[1] = bfield.y();
+    Bfield[2] = bfield.z();
   }
-
 };
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4MagneticField {
+// --------------------------------------------------------------------------
+class PyG4UserMagneticField : public G4UserMagneticField {
+public:
+  using G4UserMagneticField::G4UserMagneticField;
 
-struct CB_PyG4MagneticField :
-    PyG4MagneticField, wrapper<PyG4MagneticField> {
-
-  G4ThreeVector GetFieldValue(const G4ThreeVector& pos,
-			      const G4double time) const {
-    return get_override("GetFieldValue")(pos, time);
+  G4ThreeVector FieldValue(const G4ThreeVector& pos,
+		 		                   G4double time) const override {
+    PYBIND11_OVERLOAD_PURE(
+      G4ThreeVector,
+      G4UserMagneticField,
+      FieldValue,
+      pos, time
+    );
   }
-
 };
-
-G4ThreeVector(PyG4MagneticField::*f1_GetFieldValue)
-  (const G4ThreeVector&, const G4double) const
-  = &PyG4MagneticField::GetFieldValue;
 
 }
 
-using namespace pyG4MagneticField;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4MagneticField()
+// ==========================================================================
+void export_G4MagneticField(py::module& m)
 {
-  class_<G4MagneticField, boost::noncopyable >
-    ("__G4MagneticField", "dummy class of magnetic field", no_init)
-    ;
+  py::class_<G4MagneticField, G4Field>(m, "G4MagneticField");
 
-  class_<CB_PyG4MagneticField, boost::noncopyable,
-    bases<G4Field, G4MagneticField> >
-    ("G4MagneticField", "base class of magnetic field")
-    // ---
-    .def("DoesFieldChangeEnergy", &G4MagneticField::DoesFieldChangeEnergy)
-    .def("GetFieldValue", pure_virtual(f1_GetFieldValue))
-    ;
+  py::class_<G4UserMagneticField, PyG4UserMagneticField, G4MagneticField>
+  (m, "G4UserMagneticField")
+  // ---
+  .def(py::init<>())
+  // ---
+  .def("DoesFieldChangeEnergy", &G4UserMagneticField::DoesFieldChangeEnergy)
+  .def("GetFieldValue",         &G4UserMagneticField::FieldValue)
+  ;
+
 }
-

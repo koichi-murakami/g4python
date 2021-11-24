@@ -22,44 +22,20 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4ChordFinder.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4ChordFinder.hh"
 #include "G4MagneticField.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4ChordFinder {
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_SetVerbose, SetVerbose, 0, 1)
-
-}
-
-using namespace pyG4ChordFinder;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4ChordFinder()
+// ==========================================================================
+void export_G4ChordFinder(py::module& m)
 {
-  class_<G4ChordFinder, G4ChordFinder*, boost::noncopyable>
-    ("G4ChordFinder", "chord finder class", no_init)
-    // constructor
-    .def(init<G4MagneticField*>())
-    .def(init<G4MagneticField*, G4double>())
-    .def(init<G4MagneticField*, G4double, G4MagIntegratorStepper*>())
-    // ---
-    .def("GetDeltaChord",   &G4ChordFinder::GetDeltaChord)
-    .def("SetDeltaChord",   &G4ChordFinder::SetDeltaChord)
-    // ---
-    .def("SetVerbose",      &G4ChordFinder::SetVerbose, f_SetVerbose())
-    ;
+  py::class_<G4ChordFinder>(m, "G4ChordFinder")
+  // ---
+  .def("GetDeltaChord",   &G4ChordFinder::GetDeltaChord)
+  .def("SetDeltaChord",   &G4ChordFinder::SetDeltaChord)
+  .def("SetVerbose",      &G4ChordFinder::SetVerbose,
+                          py::arg("val") = 1)
+  ;
 }

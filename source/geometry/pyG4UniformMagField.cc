@@ -22,30 +22,22 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4UniformMagField.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4UniformMagField.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4UniformMagField()
+// ==========================================================================
+void export_G4UniformMagField(py::module& m)
 {
-  class_<G4UniformMagField, G4UniformMagField*, 
-    bases<G4Field, G4MagneticField> >
-    ("G4UniformMagField", "uniform magnetic field", no_init)
-    // constructors
-    .def(init<const G4ThreeVector&>())
-    .def(init<const G4double, G4double, G4double>())
-    // ---
-    .def("SetFieldValue",         &G4UniformMagField::SetFieldValue)
-    .def("GetConstantFieldValue", &G4UniformMagField::GetConstantFieldValue)
-    ;
+  py::class_<G4UniformMagField, G4MagneticField>
+  (m, "G4UniformMagField")
+  // ---
+  .def(py::init<const G4ThreeVector&>())
+  .def(py::init<const G4double, G4double, G4double>())
+  // ---
+  .def("Clone",                 &G4UniformMagField::Clone)
+  .def("SetFieldValue",         &G4UniformMagField::SetFieldValue)
+  .def("GetConstantFieldValue", &G4UniformMagField::GetConstantFieldValue)
+  ;
 }

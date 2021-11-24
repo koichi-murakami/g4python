@@ -22,24 +22,13 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Field.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Field.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Field()
+// ==========================================================================
+void export_G4Field(py::module& m)
 {
-  class_<G4Field, G4Field*, boost::noncopyable>
-    ("G4Field", "base class of field", no_init)
-    ;
+  py::class_<G4Field>(m, "G4Field");
 }
-

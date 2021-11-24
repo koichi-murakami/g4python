@@ -50,11 +50,11 @@ from .G4run import *
 from .G4event import *
 from .G4tracking import *
 from .G4track import *
-from .G4processes import *
-from .G4particles import *
 from .G4geometry import *
 from .G4materials import *
 from .G4digits_hits import *
+from .G4particles import *
+from .G4processes import *
 from .G4physicslists import *
 from .G4visualization import *
 from .G4gdml import *

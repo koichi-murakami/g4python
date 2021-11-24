@@ -22,33 +22,21 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Navigator.cc
-//
-//   Only limitted functionalities are exposed.
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Navigator.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Navigator()
+// ==========================================================================
+void export_G4Navigator(py::module& m)
 {
-  class_<G4Navigator, G4Navigator*, boost::noncopyable>
-    ("G4Navigator", "navigator")
-    // ---
-    .def("GetWorldVolume",        &G4Navigator::GetWorldVolume,
-         return_value_policy<reference_existing_object>())
-    .def("GetVerboseLevel",       &G4Navigator::GetVerboseLevel)
-    .def("SetVerboseLevel",       &G4Navigator::SetVerboseLevel)
-    .def("IsActive",              &G4Navigator::IsActive)
-    .def("PrintState",            &G4Navigator::PrintState)
-    ;
+  py::class_<G4Navigator>(m, "G4Navigator")
+  // ---
+  .def("GetWorldVolume",        &G4Navigator::GetWorldVolume,
+                                py::return_value_policy::reference)
+  .def("GetVerboseLevel",       &G4Navigator::GetVerboseLevel)
+  .def("SetVerboseLevel",       &G4Navigator::SetVerboseLevel)
+  .def("IsActive",              &G4Navigator::IsActive)
+  .def("PrintState",            &G4Navigator::PrintState)
+  ;
 }
-

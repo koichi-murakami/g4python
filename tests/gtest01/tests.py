@@ -46,24 +46,19 @@ class MySteppingAction(G4UserSteppingAction):
         #print("*** (SA) dE/dx in current step=",
         #       step.GetTotalEnergyDeposit()/MeV, "MeV")
         track = step.GetTrack()
-        pass
-        #touchable= track.GetTouchable()
-        #pv= touchable.GetVolume()
-        #print pv.GetCopyNo()
-        #print touchable.GetReplicaNumber(0)
+        touchable = track.GetTouchable()
+        pv = touchable.GetVolume()
+        print("*** (SA) volume copy# = ", pv.GetCopyNo(),
+              ", rep# = ", touchable.GetReplicaNumber() )
 
-"""
 # ------------------------------------------------------------------
-class MyField(G4MagneticField):
-  "My Magnetic Field"
-
-  def GetFieldValue(self, pos, time):
-    bfield= G4ThreeVector()
-    bfield.x= 0.
-    bfield.y= 5.*tesla
-    bfield.z= 0.
-    return bfield
-"""
+class MyField(G4UserMagneticField):
+    def FieldValue(self, pos, time):
+        bfield= G4ThreeVector()
+        bfield.x= 0.
+        bfield.y= -0.5*tesla
+        bfield.z= 0.
+        return bfield
 
 # ------------------------------------------------------------------
 class AppBuilder(G4VUserActionInitialization):
@@ -97,7 +92,7 @@ class AppBuilder(G4VUserActionInitialization):
 # ==================================================================
 # main
 # ==================================================================
-def main():
+def main(vis_enabled = False):
     global ecalgeom
     ecalgeom = gtest01.EcalGeom()
     gRunManager.SetUserInitialization(ecalgeom)
@@ -112,21 +107,25 @@ def main():
     app_builder = AppBuilder()
     gRunManager.SetUserInitialization(app_builder)
 
-    # magnetic field
-    #fieldMgr= gTransportationManager.GetFieldManager()
-    #myField= G4UniformMagField(G4ThreeVector(0.,10.*tesla,0.))
-    ##myField= MyField()
-    #fieldMgr.SetDetectorField(myField)
-    #fieldMgr.CreateChordFinder(myField)
+    # magnetic field (sequential mode only)
+    global myField
+    #myField = G4UniformMagField(G4ThreeVector(0., 0.5*tesla, 0.))
+    myField = MyField()
+    field_mgr = gTransportationManager.GetFieldManager()
+    field_mgr.SetDetectorField(myField)
+    field_mgr.CreateChordFinder(myField)
 
     gRunManager.Initialize()
 
     # visualization
-    #gControlExecute("vis.mac")
+    if ( vis_enabled ):
+      vis_cp = VisControlPanel()
+
+    gControlExecute("vis.mac")
 
     # beamOn
     gRunManager.BeamOn(100)
 
 # ==================================================================
 if __name__ == '__main__':
-  main()
+    main()

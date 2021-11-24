@@ -53,6 +53,7 @@ void export_G4ThreeVector(py::module& mod)
 
   py::class_<G4ThreeVector>(mod, "G4ThreeVector")
   // ---
+  .def(py::init<>())
   .def(py::init<G4double>())
   .def(py::init<G4double, G4double>())
   .def(py::init<G4double, G4double, G4double>())

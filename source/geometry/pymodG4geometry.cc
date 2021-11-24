@@ -28,7 +28,6 @@ namespace py = pybind11;
 
 // --------------------------------------------------------------------------
 void export_G4GeometryManager(py::module&);
-void export_G4VTouchable(py::module&);
 void export_G4TouchableHistory(py::module&);
 void export_G4VPhysicalVolume(py::module&);
 void export_G4PVPlacement(py::module&);
@@ -72,13 +71,12 @@ void export_G4ChordFinder(py::module&);
 PYBIND11_MODULE(G4geometry, m)
 {
   export_G4GeometryManager(m);
-  //export_G4VTouchable(m);
-  //export_G4TouchableHistory(m);
+  export_G4TouchableHistory(m);
   export_G4VPhysicalVolume(m);
-  //export_G4PVPlacement(m);
+  export_G4PVPlacement(m);
   //export_G4PVReplica(m);
-  //export_G4LogicalVolume(m);
-  //export_G4Region(m);
+  export_G4LogicalVolume(m);
+  export_G4Region(m);
   export_G4VSolid(m);
   export_G4Box(m);
   //export_G4Cons(m);
@@ -105,10 +103,10 @@ PYBIND11_MODULE(G4geometry, m)
   //export_G4IntersectionSolid(m);
   //export_G4SubtractionSolid(m);
   export_G4TransportationManager(m);
-  //export_G4Navigator(m);
-  //export_G4FieldManager(m);
-  //export_G4Field(m);
-  //export_G4MagneticField(m);
-  //export_G4UniformMagField(m);
-  //export_G4ChordFinder(m);
+  export_G4Navigator(m);
+  export_G4FieldManager(m);
+  export_G4Field(m);
+  export_G4MagneticField(m);
+  export_G4UniformMagField(m);
+  export_G4ChordFinder(m);
 }
