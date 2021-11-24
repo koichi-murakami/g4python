@@ -22,36 +22,27 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4PVReplica.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4PVReplica.hh"
 #include "G4LogicalVolume.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4PVReplica()
+// ==========================================================================
+void export_G4PVReplica(py::module& m)
 {
-  class_<G4PVReplica, G4PVReplica*, bases<G4VPhysicalVolume>,
-    boost::noncopyable >
-    ("G4PVReplica", "physical volume placement with replication", no_init)
-    // constructors
-    .def(init<const G4String&, G4LogicalVolume*, G4LogicalVolume*,	 
-	 const EAxis, const G4int, const G4double>())
-    .def(init<const G4String&, G4LogicalVolume*, G4LogicalVolume*,	 
-	 const EAxis, const G4int, const G4double, const G4double>())
-    .def(init<const G4String&, G4LogicalVolume*, G4VPhysicalVolume*,
-	 const EAxis, const G4int, const G4double>())
-    .def(init<const G4String&, G4LogicalVolume*, G4VPhysicalVolume*,
-	 const EAxis, const G4int, const G4double, const G4double>())
-    // ---
-    .def("GetMultiplicity",  &G4PVReplica::GetMultiplicity)
-    ;
+  py::class_<G4PVReplica>(m, "G4PVReplica")
+  // ---
+  .def(py::init<const G4String&, G4LogicalVolume*, G4LogicalVolume*,
+      	        const EAxis, const G4int, const G4double>())
+
+	.def(py::init<const G4String&, G4LogicalVolume*, G4LogicalVolume*,
+	              const EAxis, const G4int, const G4double, const G4double>())
+
+	.def(py::init<const G4String&, G4LogicalVolume*, G4VPhysicalVolume*,
+	              const EAxis, const G4int, const G4double>())
+
+	.def(py::init<const G4String&, G4LogicalVolume*, G4VPhysicalVolume*,
+	              const EAxis, const G4int, const G4double, const G4double>())
+  ;
 }

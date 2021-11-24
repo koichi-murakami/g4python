@@ -22,26 +22,17 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Polyhedra.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Polyhedra.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4Polyhedra {
+// --------------------------------------------------------------------------
+namespace {
 
-// create solid methods
-
-G4Polyhedra* f1_CreatePolyhedra(const G4String& name, 
-                                G4double phiStart, G4double phiTotal, 
+// --------------------------------------------------------------------------
+G4Polyhedra* f1_CreatePolyhedra(const G4String& name,
+                                G4double phiStart, G4double phiTotal,
                                 G4int numSide, G4int numZPlanes,
                                 const std::vector<G4double>& zPlane,
                                 const std::vector<G4double>& rInner,
@@ -51,63 +42,58 @@ G4Polyhedra* f1_CreatePolyhedra(const G4String& name,
   G4double r0list[numZPlanes];
   G4double r1list[numZPlanes];
 
-  for (G4int i=0; i< numZPlanes; i++) {
-    zlist[i]= zPlane[i];
-    r0list[i]= rInner[i];
-    r1list[i]= rOuter[i];
+  for ( auto i = 0; i < numZPlanes; i++ ) {
+    zlist[i] = zPlane[i];
+    r0list[i] = rInner[i];
+    r1list[i] = rOuter[i];
   }
 
   return new G4Polyhedra(name, phiStart, phiTotal, numSide, numZPlanes,
-                        zlist, r0list, r1list);
+                         zlist, r0list, r1list);
 }
 
-
+// --------------------------------------------------------------------------
 G4Polyhedra* f2_CreatePolyhedra(const G4String& name,
                                 G4double phiStart, G4double phiTotal,
                                 G4int numSide, G4int numRZ,
-                                const std::vector<G4double>& r, 
+                                const std::vector<G4double>& r,
                                 const std::vector<G4double>& z)
 {
   G4double zlist[numRZ];
   G4double rlist[numRZ];
 
-  for (G4int i=0; i< numRZ; i++) {
-    zlist[i]= z[i];
-    rlist[i]= r[i];
+  for ( auto i = 0; i < numRZ; i++ ) {
+    zlist[i] = z[i];
+    rlist[i] = r[i];
   }
 
-  return new G4Polyhedra(name, phiStart, phiTotal, numSide, numRZ, 
+  return new G4Polyhedra(name, phiStart, phiTotal, numSide, numRZ,
                          rlist, zlist);
-
 }
 
 }
 
-using namespace pyG4Polyhedra;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Polyhedra()
+// ==========================================================================
+void export_G4Polyhedra(py::module& m)
 {
-  class_<G4Polyhedra, G4Polyhedra*, bases<G4VSolid> >
-    ("G4Polyhedra", "Polyhedra solid class", no_init)
-    // ---
-    .def("GetStartPhi",    &G4Polyhedra::GetStartPhi)
-    .def("GetEndPhi",      &G4Polyhedra::GetEndPhi)
-    .def("GetNumSide",     &G4Polyhedra::GetNumSide)
-    .def("GetNumRZCorner", &G4Polyhedra::GetNumRZCorner)
-    .def("IsOpen",         &G4Polyhedra::IsOpen)
-    .def("IsGeneric",      &G4Polyhedra::IsGeneric)
+  py::class_<G4Polyhedra, G4VSolid>(m, "G4Polyhedra")
+  .def(py::init<const G4String&, G4double, G4double, G4int, G4int,
+                const G4double*, const G4double*, const G4double*>())
 
-    // operators
-    .def(self_ns::str(self))
-    ;
+  .def(py::init<const G4String&, G4double, G4double, G4int, G4int,
+                const G4double*, const G4double*>())
+  // ---
+  .def("GetStartPhi",    &G4Polyhedra::GetStartPhi)
+  .def("GetEndPhi",      &G4Polyhedra::GetEndPhi)
+  .def("GetNumSide",     &G4Polyhedra::GetNumSide)
+  .def("GetNumRZCorner", &G4Polyhedra::GetNumRZCorner)
+  .def("IsOpen",         &G4Polyhedra::IsOpen)
+  .def("IsGeneric",      &G4Polyhedra::IsGeneric)
+  ;
 
   // Create solid
-  def("CreatePolyhedra", f1_CreatePolyhedra,
-      return_value_policy<manage_new_object>());
-  def("CreatePolyhedra", f2_CreatePolyhedra,
-      return_value_policy<manage_new_object>());
+  m.def("CreatePolyhedra", &::f1_CreatePolyhedra,
+                           py::return_value_policy::reference);
+  m.def("CreatePolyhedra", &::f2_CreatePolyhedra,
+                           py::return_value_policy::reference);
 }
-

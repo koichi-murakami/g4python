@@ -22,47 +22,31 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Tet.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Tet.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4Tet {
+// --------------------------------------------------------------------------
+namespace {
 
 G4Tet* CreateTet(const G4String& name, G4ThreeVector anchor, G4ThreeVector p2,
-                 G4ThreeVector p3, G4ThreeVector p4)
+                                       G4ThreeVector p3, G4ThreeVector p4)
 {
   return new G4Tet(name, anchor, p2, p3, p4);
 }
 
 }
 
-using namespace pyG4Tet;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Tet()
+// ==========================================================================
+void export_G4Tet(py::module& m)
 {
-  class_<G4Tet, G4Tet*, bases<G4VSolid> >
-    ("G4Tet", "tetrahedra solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4ThreeVector, G4ThreeVector, G4ThreeVector,
-                               G4ThreeVector>())
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4Tet, G4VSolid>(m, "G4Tet")
+  // ---
+  .def(py::init<const G4String&, G4ThreeVector, G4ThreeVector,
+                                 G4ThreeVector, G4ThreeVector>())
+  ;
 
-    // Create solid
-    def("CreateTet", CreateTet, return_value_policy<manage_new_object>());
-
+  // ---
+  m.def("CreateTet", CreateTet, py::return_value_policy::reference);
 }

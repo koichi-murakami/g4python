@@ -22,21 +22,13 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Orb.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Orb.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4Orb {
+// --------------------------------------------------------------------------
+namespace {
 
 G4Orb* CreateOrb(const G4String& name, G4double pRmax)
 {
@@ -45,25 +37,19 @@ G4Orb* CreateOrb(const G4String& name, G4double pRmax)
 
 }
 
-using namespace pyG4Orb;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Orb()
+// ==========================================================================
+void export_G4Orb(py::module& m)
 {
-  class_<G4Orb, G4Orb*, bases<G4VSolid> >
-    ("G4Orb", "Orb solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double>())
-    // ---
-    .def("GetRadius", &G4Orb::GetRadius)
-    .def("SetRadius", &G4Orb::SetRadius)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4Orb, G4VSolid>(m, "G4Orb")
+  // ---
+  .def(py::init<const G4String&, G4double>())
 
-    // Create solid
-    def("CreateOrb", CreateOrb, return_value_policy<manage_new_object>());
+  // ---
+  .def("GetRadius", &G4Orb::GetRadius)
+  .def("SetRadius", &G4Orb::SetRadius)
+  ;
+
+  // ---
+  m.def("CreateOrb", &::CreateOrb, py::return_value_policy::reference);
 
 }

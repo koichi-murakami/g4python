@@ -22,35 +22,24 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4BooleanSolid.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4BooleanSolid.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4BooleanSolid()
+// ==========================================================================
+void export_G4BooleanSolid(py::module& m)
 {
-  class_<G4BooleanSolid, G4BooleanSolid*, bases<G4VSolid>, boost::noncopyable>
-    ("G4BooleanSolid", "boolean solid class", no_init)
-    // ---
-    .def("GetCubVolStatistics",   &G4BooleanSolid::GetCubVolStatistics)
-    .def("GetCubVolEpsilon",      &G4BooleanSolid::GetCubVolEpsilon)
-    .def("SetCubVolStatistics",   &G4BooleanSolid::SetCubVolStatistics)
-    .def("SetCubVolEpsilon",      &G4BooleanSolid::SetCubVolEpsilon)
-    .def("GetAreaStatistics",     &G4BooleanSolid::GetAreaStatistics)
-    .def("GetAreaAccuracy",       &G4BooleanSolid::GetAreaAccuracy)
-    .def("SetAreaStatistics",     &G4BooleanSolid::SetAreaStatistics)
-    .def("SetAreaAccuracy",       &G4BooleanSolid::SetAreaAccuracy)
-    .def("GetPointOnSurface",     &G4BooleanSolid::GetPointOnSurface)
-    ;
-
+  py::class_<G4BooleanSolid, G4VSolid>(m, "G4BooleanSolid")
+  // ---
+  .def("GetCubVolStatistics",   &G4BooleanSolid::GetCubVolStatistics)
+  .def("GetCubVolEpsilon",      &G4BooleanSolid::GetCubVolEpsilon)
+  .def("SetCubVolStatistics",   &G4BooleanSolid::SetCubVolStatistics)
+  .def("SetCubVolEpsilon",      &G4BooleanSolid::SetCubVolEpsilon)
+  .def("GetAreaStatistics",     &G4BooleanSolid::GetAreaStatistics)
+  .def("GetAreaAccuracy",       &G4BooleanSolid::GetAreaAccuracy)
+  .def("SetAreaStatistics",     &G4BooleanSolid::SetAreaStatistics)
+  .def("SetAreaAccuracy",       &G4BooleanSolid::SetAreaAccuracy)
+  .def("GetPointOnSurface",     &G4BooleanSolid::GetPointOnSurface)
+  ;
 }
-

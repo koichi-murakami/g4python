@@ -22,64 +22,44 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Tubs.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Tubs.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4Tubs {
+// --------------------------------------------------------------------------
+namespace {
 
-G4Tubs* CreateTubs(const G4String& name, G4double pRMin, G4double pRMax,
-                   G4double pDz, G4double pSPhi, G4double pDPhi )
+G4Tubs* CreateTubs(const G4String& name,
+                   G4double pRMin, G4double pRMax, G4double pDz,
+                   G4double pSPhi, G4double pDPhi )
 {
   return new G4Tubs(name, pRMin, pRMax, pDz, pSPhi, pDPhi);
 }
 
 }
 
-using namespace pyG4Tubs;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Tubs()
+// ==========================================================================
+void export_G4Tubs(py::module& m)
 {
-  class_<G4Tubs, G4Tubs*, bases<G4VSolid> >
-    ("G4Tubs", "Tube solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double,
-	 G4double, G4double>())
-    // ---
-    .def("GetInnerRadius",   &G4Tubs::GetInnerRadius)
-    .def("GetOuterRadius",   &G4Tubs::GetOuterRadius)
-    .def("GetZHalfLength",   &G4Tubs::GetZHalfLength)
-    .def("GetStartPhiAngle", &G4Tubs::GetStartPhiAngle)
-    .def("GetDeltaPhiAngle", &G4Tubs::GetDeltaPhiAngle)
-    .def("SetInnerRadius",   &G4Tubs::SetInnerRadius)
-    .def("SetOuterRadius",   &G4Tubs::SetOuterRadius)
-    .def("SetZHalfLength",   &G4Tubs::SetZHalfLength)
-    .def("SetStartPhiAngle", &G4Tubs::SetStartPhiAngle)
-    .def("SetDeltaPhiAngle", &G4Tubs::SetDeltaPhiAngle)
-    .def("GetRMin",          &G4Tubs::GetRMin)
-    .def("GetRMax",          &G4Tubs::GetRMax)
-    .def("GetDz",            &G4Tubs::GetDz)
-    .def("GetSPhi",          &G4Tubs::GetSPhi)
-    .def("GetDPhi",          &G4Tubs::GetDPhi)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4Tubs, G4VSolid>(m, "G4Tubs")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                 G4double, G4double>())
+  // ---
+  .def("GetInnerRadius",   &G4Tubs::GetInnerRadius)
+  .def("GetOuterRadius",   &G4Tubs::GetOuterRadius)
+  .def("GetZHalfLength",   &G4Tubs::GetZHalfLength)
+  .def("GetStartPhiAngle", &G4Tubs::GetStartPhiAngle)
+  .def("GetDeltaPhiAngle", &G4Tubs::GetDeltaPhiAngle)
+  .def("SetInnerRadius",   &G4Tubs::SetInnerRadius)
+  .def("SetOuterRadius",   &G4Tubs::SetOuterRadius)
+  .def("SetZHalfLength",   &G4Tubs::SetZHalfLength)
+  .def("SetStartPhiAngle", &G4Tubs::SetStartPhiAngle)
+  .def("SetDeltaPhiAngle", &G4Tubs::SetDeltaPhiAngle)
+  ;
 
-    // Create solid
-    def("CreateTubs", CreateTubs, return_value_policy<manage_new_object>());
+  // ---
+  m.def("CreateTubs", &::CreateTubs, py::return_value_policy::reference);
 
 }
-

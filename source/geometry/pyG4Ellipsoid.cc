@@ -22,63 +22,49 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Ellipsoid.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Ellipsoid.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4Ellipsoid {
+// --------------------------------------------------------------------------
+namespace {
 
 G4Ellipsoid* CreateEllipsoid(const G4String& name,
                              G4double  pxSemiAxis,
                              G4double  pySemiAxis,
                              G4double  pzSemiAxis,
-                             G4double  pzBottomCut=0,
-                             G4double  pzTopCut=0)
+                             G4double  pzBottomCut = 0.,
+                             G4double  pzTopCut = 0.)
 {
   return new G4Ellipsoid(name, pxSemiAxis, pySemiAxis, pzSemiAxis,
                          pzBottomCut, pzTopCut);
 }
 
-BOOST_PYTHON_FUNCTION_OVERLOADS(f_CreateEllipsoid, CreateEllipsoid, 4,6)
-
 }
 
-using namespace pyG4Ellipsoid;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Ellipsoid()
+// ==========================================================================
+void export_G4Ellipsoid(py::module& m)
 {
-  class_<G4Ellipsoid, G4Ellipsoid*, bases<G4VSolid> >
-    ("G4Ellipsoid", "ellipsoid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double>())
-    .def(init<const G4String&, G4double, G4double, G4double, G4double>())
-    .def(init<const G4String&, G4double, G4double, G4double, G4double,
-                               G4double>())
-    // ---
-    .def("GetSemiAxisMax", &G4Ellipsoid::GetSemiAxisMax)
-    .def("GetZBottomCut",  &G4Ellipsoid::GetZBottomCut)
-    .def("GetZTopCut",     &G4Ellipsoid::GetZTopCut)
-    .def("SetSemiAxis",  &G4Ellipsoid::SetSemiAxis)
-    .def("SetZCuts",  &G4Ellipsoid::SetZCuts)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4Ellipsoid, G4VSolid>(m, "G4Ellipsoid")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double>())
+  .def(py::init<const G4String&, G4double, G4double, G4double, G4double>())
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                 G4double, G4double>())
+  // ---
+  .def("GetSemiAxisMax", &G4Ellipsoid::GetSemiAxisMax)
+  .def("GetZBottomCut",  &G4Ellipsoid::GetZBottomCut)
+  .def("GetZTopCut",     &G4Ellipsoid::GetZTopCut)
+  .def("SetSemiAxis",    &G4Ellipsoid::SetSemiAxis)
+  .def("SetZCuts",       &G4Ellipsoid::SetZCuts)
+  ;
 
-    // Create solid
-    def("CreateEllipsoid", CreateEllipsoid,
-        f_CreateEllipsoid()[return_value_policy<manage_new_object>()]);
+  // ---
+  m.def("CreateEllipsoid", &::CreateEllipsoid,
+                           py::arg("name"),
+                           py::arg("px"), py::arg("py"), py::arg("pz"),
+                           py::arg("bottom_cut") = 0.,
+                           py::arg("top_cut") = 0.,
+                           py::return_value_policy::reference);
 }
-

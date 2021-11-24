@@ -22,66 +22,44 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4PVPlacement.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
-#include "G4Version.hh"
+#include <pybind11/pybind11.h>
 #include "G4PVPlacement.hh"
 #include "G4LogicalVolume.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4PVPlacement {
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_CheckOverlaps,
-                                       CheckOverlaps, 0, 3)
-
-}
-
-using namespace pyG4PVPlacement;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4PVPlacement()
+// ==========================================================================
+void export_G4PVPlacement(py::module& m)
 {
-  class_<G4PVPlacement, G4PVPlacement*, bases<G4VPhysicalVolume>,
-    boost::noncopyable >
-    ("G4PVPlacement", "physical volume placement", no_init)
-    // ---
-    .def(init<G4RotationMatrix*, const G4ThreeVector&,
-	 G4LogicalVolume*, const G4String&,
-	 G4LogicalVolume*, G4bool, G4int>())
-    .def(init<const G4Transform3D&, G4LogicalVolume*,
-	 const G4String&, G4LogicalVolume*, G4bool, G4int>())
-    .def(init<G4RotationMatrix*, const G4ThreeVector&,
-	 const G4String, G4LogicalVolume*,
-	 G4VPhysicalVolume*, G4bool, G4int>())
-    .def(init<const G4Transform3D&, const G4String&,
-	 G4LogicalVolume*, G4VPhysicalVolume*, G4bool, G4int>())
-#if G4VERSION_NUMBER >=800
-    .def(init<G4RotationMatrix*, const G4ThreeVector&,
-	 G4LogicalVolume*, const G4String&,
-	 G4LogicalVolume*, G4bool, G4int, G4bool>())
-    .def(init<const G4Transform3D&, G4LogicalVolume*,
-	 const G4String&, G4LogicalVolume*, G4bool, G4int, G4bool>())
-    .def(init<G4RotationMatrix*, const G4ThreeVector&,
-	 const G4String, G4LogicalVolume*,
-	 G4VPhysicalVolume*, G4bool, G4int, G4bool>())
-    .def(init<const G4Transform3D&, const G4String&,
-	 G4LogicalVolume*, G4VPhysicalVolume*, G4bool, G4int, G4bool>())
-#endif
-    // ---
-#if G4VERSION_NUMBER >=800
-    .def("CheckOverlaps", &G4PVPlacement::CheckOverlaps, f_CheckOverlaps())
-#endif
-    ;
-}
+  py::class_<G4PVPlacement>(m, "G4PVPlacement")
+  // ---
+  .def(py::init<G4RotationMatrix*, const G4ThreeVector&, G4LogicalVolume*,
+                const G4String&, G4LogicalVolume*, G4bool, G4int>())
 
+  .def(py::init<const G4Transform3D&, G4LogicalVolume*, const G4String&,
+                G4LogicalVolume*, G4bool, G4int>())
+
+  .def(py::init<G4RotationMatrix*, const G4ThreeVector&, const G4String&,
+                G4LogicalVolume*, G4VPhysicalVolume*, G4bool, G4int>())
+
+  .def(py::init<const G4Transform3D&, const G4String&, G4LogicalVolume*,
+                G4VPhysicalVolume*, G4bool, G4int>())
+
+	.def(py::init<G4RotationMatrix*, const G4ThreeVector&, G4LogicalVolume*,
+                const G4String&, G4LogicalVolume*, G4bool, G4int, G4bool>())
+
+	.def(py::init<const G4Transform3D&, G4LogicalVolume*, const G4String&,
+                G4LogicalVolume*, G4bool, G4int, G4bool>())
+
+  .def(py::init<G4RotationMatrix*, const G4ThreeVector&, const G4String&,
+                G4LogicalVolume*, G4VPhysicalVolume*, G4bool, G4int, G4bool>())
+
+  .def(py::init<const G4Transform3D&, const G4String&, G4LogicalVolume*,
+                G4VPhysicalVolume*, G4bool, G4int, G4bool>())
+
+  // ---
+  .def("CheckOverlaps", &G4PVPlacement::CheckOverlaps,
+                        py::arg("res") = 1000, py::arg("tol") = 0.,
+                        py::arg("verbose") = true, py::arg("maxErr") = 1)
+  ;
+}

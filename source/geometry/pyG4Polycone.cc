@@ -22,26 +22,18 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Polycone.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Polycone.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4Polycone {
+// --------------------------------------------------------------------------
+namespace {
 
-// create solid methods
-
-G4Polycone* f1_CreatePolycone(const G4String& name, G4double phiStart,
-                              G4double phiTotal, G4int numZPlanes,
+// --------------------------------------------------------------------------
+G4Polycone* f1_CreatePolycone(const G4String& name,
+                              G4double phiStart, G4double phiTotal,
+                              G4int numZPlanes,
                               const std::vector<G4double>& zPlane,
                               const std::vector<G4double>& rInner,
                               const std::vector<G4double>& rOuter)
@@ -50,62 +42,50 @@ G4Polycone* f1_CreatePolycone(const G4String& name, G4double phiStart,
   G4double r0list[numZPlanes];
   G4double r1list[numZPlanes];
 
-  for (G4int i=0; i< numZPlanes; i++) {
-    zlist[i]= zPlane[i];
-    r0list[i]= rInner[i];
-    r1list[i]= rOuter[i];
+  for ( auto i = 0; i < numZPlanes; i++ ) {
+    zlist[i] = zPlane[i];
+    r0list[i] = rInner[i];
+    r1list[i] = rOuter[i];
   }
 
   return new G4Polycone(name, phiStart, phiTotal, numZPlanes,
                         zlist, r0list, r1list);
 }
 
-
-G4Polycone* f2_CreatePolycone(const G4String& name, G4double phiStart,
-                              G4double phiTotal, G4int numRZ,
+// --------------------------------------------------------------------------
+G4Polycone* f2_CreatePolycone(const G4String& name,
+                              G4double phiStart, G4double phiTotal,
+                              G4int numRZ,
                               const std::vector<G4double>& r,
                               const std::vector<G4double>& z)
 {
   G4double zlist[numRZ];
   G4double rlist[numRZ];
 
-  for (G4int i=0; i< numRZ; i++) {
-    rlist[i]= r[i];
-    zlist[i]= z[i];
+  for (auto i = 0; i < numRZ; i++) {
+    rlist[i] = r[i];
+    zlist[i] = z[i];
   }
 
-  return new G4Polycone(name, phiStart, phiTotal, numRZ,
-                        rlist, zlist);
-
+  return new G4Polycone(name, phiStart, phiTotal, numRZ, rlist, zlist);
 }
 
 }
 
-using namespace pyG4Polycone;
-
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Polycone()
+// ==========================================================================
+void export_G4Polycone(py::module& m)
 {
-  class_<G4Polycone, G4Polycone*, bases<G4VSolid> >
-    ("G4Polycone", "Polycone solid class", no_init)
-    // ---
-    .def("GetStartPhi",    &G4Polycone::GetStartPhi)
-    .def("GetEndPhi",      &G4Polycone::GetEndPhi)
-    .def("IsOpen",         &G4Polycone::IsOpen)
-    .def("GetNumRZCorner", &G4Polycone::GetNumRZCorner)
+  py::class_<G4Polycone, G4VSolid>(m, "G4Polycone")
+  // ---
+  .def("GetStartPhi",    &G4Polycone::GetStartPhi)
+  .def("GetEndPhi",      &G4Polycone::GetEndPhi)
+  .def("IsOpen",         &G4Polycone::IsOpen)
+  .def("GetNumRZCorner", &G4Polycone::GetNumRZCorner)
+  ;
 
-    // operators
-    .def(self_ns::str(self))
-    ;
-
-  // Create solid
-  def("CreatePolycone", f1_CreatePolycone,
-      return_value_policy<manage_new_object>());
-  def("CreatePolycone", f2_CreatePolycone,
-      return_value_policy<manage_new_object>());
-
+  // ----
+  m.def("CreatePolycone", &::f1_CreatePolycone,
+                        py::return_value_policy::reference);
+  m.def("CreatePolycone", &::f2_CreatePolycone,
+                        py::return_value_policy::reference);
 }
-

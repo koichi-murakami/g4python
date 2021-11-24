@@ -49,6 +49,9 @@ void export_G4Box(py::module& m)
   .def("GetXHalfLength",   &G4Box::GetXHalfLength)
   .def("GetYHalfLength",   &G4Box::GetYHalfLength)
   .def("GetZHalfLength",   &G4Box::GetZHalfLength)
+  // ---
+  .def("GetCubicVolume",  &G4Box::GetCubicVolume)
+  .def("GetSurfaceArea",  &G4Box::GetSurfaceArea)
   ;
 
   // ---

@@ -22,23 +22,16 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Para.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Para.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4Para {
+// --------------------------------------------------------------------------
 
-G4Para* CreatePara(const G4String& name, 
+namespace {
+
+G4Para* CreatePara(const G4String& name,
                    G4double pDx, G4double pDy, G4double pDz,
                    G4double pAlpha, G4double pTheta, G4double pPhi)
 {
@@ -47,36 +40,29 @@ G4Para* CreatePara(const G4String& name,
 
 }
 
-using namespace pyG4Para;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Para()
+// ==========================================================================
+void export_G4Para(py::module& m)
 {
-  class_<G4Para, G4Para*, bases<G4VSolid> >
-    ("G4Para", "Skewed box sold class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double,
-	 G4double, G4double, G4double>())
-    // ---
-    .def("GetZHalfLength",    &G4Para::GetZHalfLength)
-    .def("GetSymAxis",        &G4Para::GetSymAxis)
-    .def("GetYHalfLength",    &G4Para::GetYHalfLength)
-    .def("GetXHalfLength",    &G4Para::GetXHalfLength)
-    .def("GetTanAlpha",       &G4Para::GetTanAlpha)
-    .def("SetXHalfLength",    &G4Para::SetXHalfLength)
-    .def("SetYHalfLength",    &G4Para::SetYHalfLength)
-    .def("SetZHalfLength",    &G4Para::SetZHalfLength)
-    .def("SetAlpha",          &G4Para::SetAlpha)
-    .def("SetTanAlpha",       &G4Para::SetTanAlpha)
-    .def("SetThetaAndPhi",    &G4Para::SetThetaAndPhi)
-    .def("SetAllParameters",  &G4Para::SetAllParameters)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4Para, G4VSolid>(m, "G4Para")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                 G4double, G4double, G4double>())
 
-    // Create solid
-    def("CreatePara", CreatePara, return_value_policy<manage_new_object>());
+  // ---
+  .def("GetZHalfLength",    &G4Para::GetZHalfLength)
+  .def("GetSymAxis",        &G4Para::GetSymAxis)
+  .def("GetYHalfLength",    &G4Para::GetYHalfLength)
+  .def("GetXHalfLength",    &G4Para::GetXHalfLength)
+  .def("GetTanAlpha",       &G4Para::GetTanAlpha)
+  .def("SetXHalfLength",    &G4Para::SetXHalfLength)
+  .def("SetYHalfLength",    &G4Para::SetYHalfLength)
+  .def("SetZHalfLength",    &G4Para::SetZHalfLength)
+  .def("SetAlpha",          &G4Para::SetAlpha)
+  .def("SetTanAlpha",       &G4Para::SetTanAlpha)
+  .def("SetThetaAndPhi",    &G4Para::SetThetaAndPhi)
+  .def("SetAllParameters",  &G4Para::SetAllParameters)
+  ;
+
+  // Create solid
+  m.def("CreatePara", &::CreatePara, py::return_value_policy::reference);
 }
-

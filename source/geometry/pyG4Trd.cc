@@ -22,59 +22,44 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Trd.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Trd.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4Trd {
+// --------------------------------------------------------------------------
+namespace {
 
 G4Trd* CreateTrd(const G4String& name, G4double pdx1, G4double pdx2,
-                 G4double pdy1, G4double pdy2, G4double pdz )
+                                       G4double pdy1, G4double pdy2,
+                                       G4double pdz )
 {
   return new G4Trd(name, pdx1, pdx2, pdy1, pdy2, pdz);
 }
 
 }
 
-using namespace pyG4Trd;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Trd()
+// ==========================================================================
+void export_G4Trd(py::module& m)
 {
-  class_<G4Trd, G4Trd*, bases<G4VSolid> >
-    ("G4Trd", "Trapezoild solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double,
-	 G4double, G4double>())
-    // ---
-    .def("GetXHalfLength1", &G4Trd::GetXHalfLength1)
-    .def("GetXHalfLength2", &G4Trd::GetXHalfLength2)
-    .def("GetYHalfLength1", &G4Trd::GetYHalfLength1)
-    .def("GetYHalfLength2", &G4Trd::GetYHalfLength2)
-    .def("GetZHalfLength",  &G4Trd::GetZHalfLength)
-    .def("SetXHalfLength1", &G4Trd::SetXHalfLength1)
-    .def("SetXHalfLength2", &G4Trd::SetXHalfLength2)
-    .def("SetYHalfLength1", &G4Trd::SetYHalfLength1)
-    .def("SetYHalfLength2", &G4Trd::SetYHalfLength2)
-    .def("SetZHalfLength",  &G4Trd::SetZHalfLength)
-    // operators
-    .def(self_ns::str(self))
-    ;
-  
-    // Create solid
-    def("CreateTrd", CreateTrd, return_value_policy<manage_new_object>());
+  py::class_<G4Trd, G4VSolid>(m, "G4Trd")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                 G4double, G4double>())
+  // ---
+  .def("GetXHalfLength1",  &G4Trd::GetXHalfLength1)
+  .def("GetXHalfLength2",  &G4Trd::GetXHalfLength2)
+  .def("GetYHalfLength1",  &G4Trd::GetYHalfLength1)
+  .def("GetYHalfLength2",  &G4Trd::GetYHalfLength2)
+  .def("GetZHalfLength",   &G4Trd::GetZHalfLength)
+  .def("SetXHalfLength1",  &G4Trd::SetXHalfLength1)
+  .def("SetXHalfLength2",  &G4Trd::SetXHalfLength2)
+  .def("SetYHalfLength1",  &G4Trd::SetYHalfLength1)
+  .def("SetYHalfLength2",  &G4Trd::SetYHalfLength2)
+  .def("SetZHalfLength",   &G4Trd::SetZHalfLength)
+  ;
+
+  // ---
+  m.def("CreateTrd", &::CreateTrd, py::return_value_policy::reference);
 
 }
-

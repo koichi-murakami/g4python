@@ -22,21 +22,13 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4EllipticalTube.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4EllipticalTube.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4EllipticalTube {
+// --------------------------------------------------------------------------
+namespace {
 
 G4EllipticalTube* CreateEllipticalTube(const G4String& name,
                                        G4double theDx,
@@ -48,32 +40,22 @@ G4EllipticalTube* CreateEllipticalTube(const G4String& name,
 
 }
 
-using namespace pyG4EllipticalTube;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4EllipticalTube()
+// ==========================================================================
+void export_G4EllipticalTube(py::module& m)
 {
-  class_<G4EllipticalTube, G4EllipticalTube*, bases<G4VSolid> >
-    ("G4EllipticalTube", "elliptical tube solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double>())
-    // ---
-    .def("GetDx",  &G4EllipticalTube::GetDx)
-    .def("GetDy",  &G4EllipticalTube::GetDy)
-    .def("GetDz",  &G4EllipticalTube::GetDz)
-    .def("SetDx",  &G4EllipticalTube::SetDx)
-    .def("SetDy",  &G4EllipticalTube::SetDy)
-    .def("SetDz",  &G4EllipticalTube::SetDz)
+  py::class_<G4EllipticalTube, G4VSolid>(m, "G4EllipticalTube")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double>())
+  // ---
+  .def("GetDx",  &G4EllipticalTube::GetDx)
+  .def("GetDy",  &G4EllipticalTube::GetDy)
+  .def("GetDz",  &G4EllipticalTube::GetDz)
+  .def("SetDx",  &G4EllipticalTube::SetDx)
+  .def("SetDy",  &G4EllipticalTube::SetDy)
+  .def("SetDz",  &G4EllipticalTube::SetDz)
+  ;
 
-    // operators
-    .def(self_ns::str(self))
-    ;
-
-    // Create solid
-    def("CreateEllipticalTube", CreateEllipticalTube,
-        return_value_policy<manage_new_object>());
-
+  // ---
+  m.def("CreateEllipticalTube", &::CreateEllipticalTube,
+                                py::return_value_policy::reference);
 }
-

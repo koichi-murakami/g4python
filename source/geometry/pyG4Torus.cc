@@ -22,21 +22,13 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Torus.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Torus.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4Torus {
+// --------------------------------------------------------------------------
+namespace {
 
 G4Torus* CreateTorus(const G4String& name, G4double pRmin, G4double pRmax,
                      G4double pRtor, G4double pSPhi, G4double pDPhi)
@@ -46,28 +38,21 @@ G4Torus* CreateTorus(const G4String& name, G4double pRmin, G4double pRmax,
 
 }
 
-using namespace pyG4Torus;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Torus()
+// ==========================================================================
+void export_G4Torus(py::module& m)
 {
-  class_<G4Torus, G4Torus*, bases<G4VSolid> >
-    ("G4Torus", "Torus solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double,
-         G4double, G4double>())
-    // ---
-    .def("GetRmin", &G4Torus::GetRmin)
-    .def("GetRmax", &G4Torus::GetRmax)
-    .def("GetRtor", &G4Torus::GetRtor)
-    .def("GetSPhi", &G4Torus::GetSPhi)
-    .def("GetDPhi", &G4Torus::GetDPhi)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4Torus, G4VSolid>(m, "G4Torus")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                G4double, G4double>())
+  // ---
+  .def("GetRmin", &G4Torus::GetRmin)
+  .def("GetRmax", &G4Torus::GetRmax)
+  .def("GetRtor", &G4Torus::GetRtor)
+  .def("GetSPhi", &G4Torus::GetSPhi)
+  .def("GetDPhi", &G4Torus::GetDPhi)
+  ;
 
-    // Create solid
-    def("CreateTorus", CreateTorus, return_value_policy<manage_new_object>());
+  // ---
+  m.def("CreateTorus", &::CreateTorus, py::return_value_policy::reference);
 }

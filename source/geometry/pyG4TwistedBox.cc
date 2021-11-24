@@ -22,56 +22,38 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4TwistedBox.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4TwistedBox.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4TwistedBox {
+// --------------------------------------------------------------------------
+namespace {
 
 G4TwistedBox* CreateTwistedBox(const G4String& name,
                                G4double  pPhiTwist,
                                G4double  pDx, G4double  pDy, G4double  pDz)
 {
-
   return new G4TwistedBox(name, pPhiTwist, pDx, pDy, pDz );
-
 }
 
 }
 
-using namespace pyG4TwistedBox;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4TwistedBox()
+// ==========================================================================
+void export_G4TwistedBox(py::module& m)
 {
-  class_<G4TwistedBox, G4TwistedBox*, bases<G4VSolid> >
-    ("G4TwistedBox", "twisted box solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double, G4double>())
-    // ---
-    .def("GetXHalfLength",   &G4TwistedBox::GetXHalfLength)
-    .def("GetYHalfLength",   &G4TwistedBox::GetYHalfLength)
-    .def("GetZHalfLength",   &G4TwistedBox::GetZHalfLength)
-    .def("GetPhiTwist",      &G4TwistedBox::GetPhiTwist)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4TwistedBox, G4VSolid>(m, "G4TwistedBox")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double, G4double>())
+  // ---
+  .def("GetXHalfLength",   &G4TwistedBox::GetXHalfLength)
+  .def("GetYHalfLength",   &G4TwistedBox::GetYHalfLength)
+  .def("GetZHalfLength",   &G4TwistedBox::GetZHalfLength)
+  .def("GetPhiTwist",      &G4TwistedBox::GetPhiTwist)
+  ;
 
-    // Create solid
-    def("CreateTwistedBox", CreateTwistedBox, 
-        return_value_policy<manage_new_object>());
+  // ---
+  m.def("CreateTwistedBox", &::CreateTwistedBox,
+                            py::return_value_policy::reference);
 
 }
-

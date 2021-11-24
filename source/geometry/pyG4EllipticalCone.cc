@@ -22,23 +22,15 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4EllipticalCone.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4EllipticalCone.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4EllipticalCone {
+// --------------------------------------------------------------------------
+namespace {
 
-G4EllipticalCone* CreateEllipticalCone(const G4String& name, 
+G4EllipticalCone* CreateEllipticalCone(const G4String& name,
                                        G4double  pxSemiAxis,
                                        G4double  pySemiAxis,
                                        G4double  zMax,
@@ -49,29 +41,21 @@ G4EllipticalCone* CreateEllipticalCone(const G4String& name,
 
 }
 
-using namespace pyG4EllipticalCone;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4EllipticalCone()
+// ==========================================================================
+void export_G4EllipticalCone(py::module& m)
 {
-  class_<G4EllipticalCone, G4EllipticalCone*, bases<G4VSolid> >
-    ("G4EllipticalCone", "elliptical cone solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double, G4double>())
-    // ---
-    .def("GetSimiAxisMax",  &G4EllipticalCone::GetSemiAxisMax)
-    .def("GetZTopCut",      &G4EllipticalCone::GetZTopCut)
-    .def("SetSemiAxis",     &G4EllipticalCone::SetSemiAxis)
-    .def("SetZCut",         &G4EllipticalCone::SetZCut)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4EllipticalCone, G4VSolid>(m, "G4EllipticalCone")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double, G4double>())
+  // ---
+  .def("GetSimiAxisMax",  &G4EllipticalCone::GetSemiAxisMax)
+  .def("GetZTopCut",      &G4EllipticalCone::GetZTopCut)
+  .def("SetSemiAxis",     &G4EllipticalCone::SetSemiAxis)
+  .def("SetZCut",         &G4EllipticalCone::SetZCut)
+  ;
 
-    // Create solid
-    def("CreateEllipticalCone", CreateEllipticalCone,
-        return_value_policy<manage_new_object>());
+  // ---
+  m.def("CreateEllipticalCone", &::CreateEllipticalCone,
+                              py::return_value_policy::reference);
 
 }
-

@@ -22,23 +22,15 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Sphere.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Sphere.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4Sphere {
+namespace {
 
-G4Sphere* CreateSphere(const G4String& name, 
+// --------------------------------------------------------------------------
+G4Sphere* CreateSphere(const G4String& name,
                        G4double pRmin, G4double pRmax,
                        G4double pSPhi, G4double pDPhi,
                        G4double pSTheta, G4double pDTheta)
@@ -48,36 +40,29 @@ G4Sphere* CreateSphere(const G4String& name,
 
 }
 
-using namespace pyG4Sphere;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Sphere()
+// ==========================================================================
+void export_G4Sphere(py::module& m)
 {
-  class_<G4Sphere, G4Sphere*, bases<G4VSolid> >
-    ("G4Sphere", "Sphere solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double,
-         G4double, G4double, G4double>())
-    // ---
-    .def("GetInsideRadius",     &G4Sphere::GetInsideRadius)
-    .def("GetOuterRadius",      &G4Sphere::GetOuterRadius)
-    .def("GetStartPhiAngle",    &G4Sphere::GetStartPhiAngle)
-    .def("GetDeltaPhiAngle",    &G4Sphere::GetDeltaPhiAngle)
-    .def("GetStartThetaAngle",  &G4Sphere::GetStartThetaAngle)
-    .def("GetDeltaThetaAngle",  &G4Sphere::GetDeltaThetaAngle)
-    .def("SetInsideRadius",     &G4Sphere::SetInsideRadius)
-    .def("SetOuterRadius",      &G4Sphere::SetOuterRadius)
-    .def("SetStartPhiAngle",    &G4Sphere::SetStartPhiAngle)
-    .def("SetDeltaPhiAngle",    &G4Sphere::SetDeltaPhiAngle)
-    .def("SetStartThetaAngle",  &G4Sphere::SetStartThetaAngle)
-    .def("SetDeltaThetaAngle",  &G4Sphere::SetDeltaThetaAngle)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4Sphere, G4VSolid>(m, "G4Sphere")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                 G4double, G4double, G4double>())
+  // ---
+  .def("GetInsideRadius",     &G4Sphere::GetInnerRadius)
+  .def("GetOuterRadius",      &G4Sphere::GetOuterRadius)
+  .def("GetStartPhiAngle",    &G4Sphere::GetStartPhiAngle)
+  .def("GetDeltaPhiAngle",    &G4Sphere::GetDeltaPhiAngle)
+  .def("GetStartThetaAngle",  &G4Sphere::GetStartThetaAngle)
+  .def("GetDeltaThetaAngle",  &G4Sphere::GetDeltaThetaAngle)
+  .def("SetInsideRadius",     &G4Sphere::SetInnerRadius)
+  .def("SetOuterRadius",      &G4Sphere::SetOuterRadius)
+  .def("SetStartPhiAngle",    &G4Sphere::SetStartPhiAngle)
+  .def("SetDeltaPhiAngle",    &G4Sphere::SetDeltaPhiAngle)
+  .def("SetStartThetaAngle",  &G4Sphere::SetStartThetaAngle)
+  .def("SetDeltaThetaAngle",  &G4Sphere::SetDeltaThetaAngle)
+  ;
 
-    // Create solid
-    def("CreateSphere", CreateSphere, return_value_policy<manage_new_object>());
+  // ---
+  m.def("CreateSphere", &::CreateSphere, py::return_value_policy::reference);
 
 }

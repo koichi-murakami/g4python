@@ -22,64 +22,52 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4Cons.cc
-//
-//                                         2005 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4Cons.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4Cons {
+// --------------------------------------------------------------------------
+namespace {
 
 G4Cons* CreateCons(const G4String& name, G4double pRmin1, G4double pRmax1,
-                   G4double pRmin2, G4double pRmax2, G4double pDz, 
-                   G4double pSPhi, G4double pDPhi)
+                                         G4double pRmin2, G4double pRmax2,
+                                         G4double pDz,
+                                         G4double pSPhi, G4double pDPhi)
 {
   return new G4Cons(name, pRmin1, pRmax1, pRmin2, pRmax2, pDz, pSPhi, pDPhi);
 }
 
 }
 
-using namespace pyG4Cons;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4Cons()
+// ==========================================================================
+void export_G4Cons(py::module& m)
 {
-  class_<G4Cons, G4Cons*, bases<G4VSolid> >
-    ("G4Cons", "Cone solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double,
-	 G4double, G4double, G4double, G4double>())
-    // ---
-    .def("GetInnerRadiusMinusZ", &G4Cons::GetInnerRadiusMinusZ)
-    .def("GetOuterRadiusMinusZ", &G4Cons::GetOuterRadiusMinusZ)
-    .def("GetInnerRadiusPlusZ",  &G4Cons::GetInnerRadiusPlusZ)
-    .def("GetOuterRadiusPlusZ",  &G4Cons::GetOuterRadiusPlusZ)
-    .def("GetZHalfLength",       &G4Cons::GetZHalfLength)
-    .def("GetStartPhiAngle",     &G4Cons::GetStartPhiAngle)
-    .def("GetDeltaPhiAngle",     &G4Cons::GetDeltaPhiAngle)
-    .def("SetInnerRadiusMinusZ", &G4Cons::SetInnerRadiusMinusZ)
-    .def("SetOuterRadiusMinusZ", &G4Cons::SetOuterRadiusMinusZ)
-    .def("SetInnerRadiusPlusZ",  &G4Cons::SetInnerRadiusPlusZ)
-    .def("SetOuterRadiusPlusZ",  &G4Cons::SetOuterRadiusPlusZ)
-    .def("SetZHalfLength",       &G4Cons::SetZHalfLength)
-    .def("SetStartPhiAngle",     &G4Cons::SetStartPhiAngle)
-    .def("SetDeltaPhiAngle",     &G4Cons::SetDeltaPhiAngle)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4Cons, G4VSolid>(m, "G4Cons")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+	                               G4double, G4double, G4double, G4double>())
+	 // ---
+	.def("GetInnerRadiusMinusZ", &G4Cons::GetInnerRadiusMinusZ)
+	.def("GetOuterRadiusMinusZ", &G4Cons::GetOuterRadiusMinusZ)
+	.def("GetInnerRadiusPlusZ",  &G4Cons::GetInnerRadiusPlusZ)
+	.def("GetOuterRadiusPlusZ",  &G4Cons::GetOuterRadiusPlusZ)
+	.def("GetZHalfLength",       &G4Cons::GetZHalfLength)
+	.def("GetStartPhiAngle",     &G4Cons::GetStartPhiAngle)
+	.def("GetDeltaPhiAngle",     &G4Cons::GetDeltaPhiAngle)
+	.def("SetInnerRadiusMinusZ", &G4Cons::SetInnerRadiusMinusZ)
+	.def("SetOuterRadiusMinusZ", &G4Cons::SetOuterRadiusMinusZ)
+	.def("SetInnerRadiusPlusZ",  &G4Cons::SetInnerRadiusPlusZ)
+	.def("SetOuterRadiusPlusZ",  &G4Cons::SetOuterRadiusPlusZ)
+	.def("SetZHalfLength",       &G4Cons::SetZHalfLength)
+	.def("SetStartPhiAngle",     &G4Cons::SetStartPhiAngle)
+	.def("SetDeltaPhiAngle",     &G4Cons::SetDeltaPhiAngle)
+	// ---
+	.def("GetCubicVolume",       &G4Cons::GetCubicVolume)
+	.def("GetSurfaceArea",       &G4Cons::GetSurfaceArea)
+	;
 
-    // Create solid
-    def("CreateCons", CreateCons, return_value_policy<manage_new_object>());
+	// ---
+	m.def("CreateCons", &::CreateCons, py::return_value_policy::reference);
 
 }
-
