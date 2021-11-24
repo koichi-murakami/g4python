@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 # ==================================================================
 #   gtest01
 #   - check basic control flow
