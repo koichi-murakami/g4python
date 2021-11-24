@@ -22,32 +22,22 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4SubtractionSolid.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4SubtractionSolid.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4SubtractionSolid()
+// ==========================================================================
+void export_G4SubtractionSolid(py::module& m)
 {
-  class_<G4SubtractionSolid, G4SubtractionSolid*,
-    bases<G4BooleanSolid>,boost::noncopyable>
-    ("G4SubtractionSolid", "subtraction solid class", no_init)
-    // ---
-    .def(init<const G4String&, G4VSolid*, G4VSolid*>())
-    .def(init<const G4String&, G4VSolid*, G4VSolid*,
-         G4RotationMatrix*, const G4ThreeVector&>())
-    .def(init<const G4String&, G4VSolid*, G4VSolid*,
-         const G4Transform3D&>())   
-    ;
+  py::class_<G4SubtractionSolid, G4BooleanSolid>(m, "G4SubtractionSolid")
+  // ---
+  .def(py::init<const G4String&, G4VSolid*, G4VSolid*>())
 
+  .def(py::init<const G4String&, G4VSolid*, G4VSolid*,
+                G4RotationMatrix*, const G4ThreeVector&>())
+
+  .def(py::init<const G4String&, G4VSolid*, G4VSolid*,
+                const G4Transform3D&>())
+  ;
 }
-

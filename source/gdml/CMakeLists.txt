@@ -3,9 +3,13 @@
 set(MODULE pyG4gdml)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
- #pyG4GDMLParser.cc
+  pyG4GDMLParser.cc
   pymodG4g4gdml.cc
 )
+
+if(GEANT4_GDML)
+  add_definitions(-DENABLE_GDML)
+endif()
 
 target_include_directories(${MODULE} PRIVATE
   ${GEANT4_INCLUDE_DIR}

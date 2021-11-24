@@ -22,21 +22,13 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4TwistedTrap.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4TwistedTrd.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4TwistedTrd {
+// --------------------------------------------------------------------------
+namespace {
 
 G4TwistedTrd* CreateTwistedTrd(const G4String& name,
                                G4double  pDx1, G4double  pDx2,
@@ -48,32 +40,24 @@ G4TwistedTrd* CreateTwistedTrd(const G4String& name,
 
 }
 
-using namespace pyG4TwistedTrd;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4TwistedTrd()
+// ==========================================================================
+void export_G4TwistedTrd(py::module& m)
 {
-  class_<G4TwistedTrd, G4TwistedTrd*, bases<G4VSolid> >
-    ("G4TwistedTrd", "twisted trapezoid solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double,
-                    G4double, G4double, G4double>())
-    // ---
-    .def("GetX1HalfLength",    &G4TwistedTrd::GetX1HalfLength)
-    .def("GetX2HalfLength",    &G4TwistedTrd::GetX2HalfLength)
-    .def("GetY1HalfLength",    &G4TwistedTrd::GetY1HalfLength)
-    .def("GetY2HalfLength",    &G4TwistedTrd::GetY2HalfLength)
-    .def("GetZHalfLength",     &G4TwistedTrd::GetZHalfLength)
-    .def("GetPhiTwist",        &G4TwistedTrd::GetPhiTwist)
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4TwistedTrd, G4VSolid>(m, "G4TwistedTrd")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                 G4double, G4double, G4double>())
+  // ---
+  .def("GetX1HalfLength",    &G4TwistedTrd::GetX1HalfLength)
+  .def("GetX2HalfLength",    &G4TwistedTrd::GetX2HalfLength)
+  .def("GetY1HalfLength",    &G4TwistedTrd::GetY1HalfLength)
+  .def("GetY2HalfLength",    &G4TwistedTrd::GetY2HalfLength)
+  .def("GetZHalfLength",     &G4TwistedTrd::GetZHalfLength)
+  .def("GetPhiTwist",        &G4TwistedTrd::GetPhiTwist)
+  ;
 
-    // Create solid
-    def("CreateTwistedTrd", CreateTwistedTrd,
-        return_value_policy<manage_new_object>());
+  // ---
+  m.def("CreateTwistedTrd",  &::CreateTwistedTrd,
+                             py::return_value_policy::reference);
 
 }
-

@@ -22,22 +22,15 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4TwistedTrap.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4TwistedTrap.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// wrappers
-// ====================================================================
-namespace pyG4TwistedTrap {
-  
+// --------------------------------------------------------------------------
+namespace {
+
+// --------------------------------------------------------------------------
 G4TwistedTrap* f1_CreateTwistedTrap(const G4String& name,
                                     G4double  pPhiTwist,
                                     G4double  pDx1, G4double  pDx2,
@@ -47,6 +40,7 @@ G4TwistedTrap* f1_CreateTwistedTrap(const G4String& name,
 }
 
 
+// --------------------------------------------------------------------------
 G4TwistedTrap* f2_CreateTwistedTrap(const G4String& name,
                                     G4double  pPhiTwist,
                                     G4double  pDz, G4double  pTheta,
@@ -55,37 +49,28 @@ G4TwistedTrap* f2_CreateTwistedTrap(const G4String& name,
                                     G4double  pDy2, G4double  pDx3,
                                     G4double  pDx4, G4double  pAlph)
 {
-  return new G4TwistedTrap(name, pPhiTwist, pDz, pTheta, pPhi, 
+  return new G4TwistedTrap(name, pPhiTwist, pDz, pTheta, pPhi,
                            pDy1, pDx1, pDx2, pDy2, pDx3, pDx4, pAlph);
 }
 
 }
 
-using namespace pyG4TwistedTrap;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4TwistedTrap()
+// ==========================================================================
+void export_G4TwistedTrap(py::module& m)
 {
-  class_<G4TwistedTrap, G4TwistedTrap*, bases<G4VSolid> >
-    ("G4TwistedTrap", "twisted trapezoid solid class", no_init)
-    // constructors
-    .def(init<const G4String&, G4double, G4double, G4double,
-                               G4double, G4double>())
-    .def(init<const G4String&, G4double, G4double, G4double,
-                               G4double, G4double, G4double,
-                               G4double, G4double, G4double,
-                               G4double, G4double>())
-    // operators
-    .def(self_ns::str(self))
-    ;
+  py::class_<G4TwistedTrap, G4VSolid>(m, "G4TwistedTrap")
+  // ---
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                 G4double, G4double>())
+  .def(py::init<const G4String&, G4double, G4double, G4double,
+                                 G4double, G4double, G4double,
+                                 G4double, G4double, G4double,
+                                 G4double, G4double>())
+  ;
 
-    // Create solid
-    def("CreateTwistedTap", f1_CreateTwistedTrap,
-        return_value_policy<manage_new_object>());
-    def("CreateTwistedTap", f2_CreateTwistedTrap,
-        return_value_policy<manage_new_object>());
-
+  // ---
+  m.def("CreateTwistedTap",  &::f1_CreateTwistedTrap,
+                             py::return_value_policy::reference);
+  m.def("CreateTwistedTap",  &::f2_CreateTwistedTrap,
+                             py::return_value_policy::reference);
 }
-

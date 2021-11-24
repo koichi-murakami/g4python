@@ -32,9 +32,5 @@ void export_G4GDMLParser(py::module&);
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4gdml, m)
 {
-  /*
-#ifdef ENABLE_GDML
-  export_G4GDMLParser();
-#endif
-*/
+  export_G4GDMLParser(m);
 }

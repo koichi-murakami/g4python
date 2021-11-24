@@ -22,32 +22,22 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4UnionSolid.cc
-//
-//                                         2007 Q
-// ====================================================================
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include "G4UnionSolid.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4UnionSolid()
+// ==========================================================================
+void export_G4UnionSolid(py::module& m)
 {
-  class_<G4UnionSolid, G4UnionSolid*,
-    bases<G4BooleanSolid>,boost::noncopyable>
-    ("G4UnionSolid", "union solid class", no_init)
-    // ---
-    .def(init<const G4String&, G4VSolid*, G4VSolid*>())
-    .def(init<const G4String&, G4VSolid*, G4VSolid*,
-         G4RotationMatrix*, const G4ThreeVector&>())
-    .def(init<const G4String&, G4VSolid*, G4VSolid*,
-         const G4Transform3D&>())   
-    ;
+  py::class_<G4UnionSolid, G4BooleanSolid>(m, "G4UnionSolid")
+  // ---
+  .def(py::init<const G4String&, G4VSolid*, G4VSolid*>())
 
+  .def(py::init<const G4String&, G4VSolid*, G4VSolid*,
+                G4RotationMatrix*, const G4ThreeVector&>())
+
+  .def(py::init<const G4String&, G4VSolid*, G4VSolid*,
+                const G4Transform3D&>())
+  ;
 }
-

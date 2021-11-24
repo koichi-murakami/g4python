@@ -22,65 +22,48 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// ====================================================================
-//   pyG4GDMLParser.cc
-//
-//                                         2007 Q
-// ====================================================================
+#define ENABLE_GDML
+#include <pybind11/pybind11.h>
 #ifdef ENABLE_GDML
-
-#include <boost/python.hpp>
 #include "G4GDMLParser.hh"
+#endif
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
-#include "G4Version.hh"
 
-using namespace boost::python;
+namespace py = pybind11;
 
-// ====================================================================
-// thin wrappers
-// ====================================================================
-namespace pyG4GDMLParser {
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_GetWorldVolume, 
-                                       GetWorldVolume, 0, 1);
-
-void (G4GDMLParser::*f1_Write)
-  (const G4String&, const G4VPhysicalVolume*, G4bool, 
-   const G4String&) = &G4GDMLParser::Write;
-
-void (G4GDMLParser::*f2_Write)
-  (const G4String&, const G4LogicalVolume*, G4bool,
-   const G4String&) = &G4GDMLParser::Write;
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(g_Write, Write, 2, 4);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_Read, Read, 1, 2);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_ReadModule, ReadModule, 1, 2);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(f_Write, Write, 1, 4);
-
-}
-
-using namespace pyG4GDMLParser;
-
-// ====================================================================
-// module definition
-// ====================================================================
-void export_G4GDMLParser()
+// ==========================================================================
+void export_G4GDMLParser(py::module& m)
 {
-  class_<G4GDMLParser, boost::noncopyable>
-    ("G4GDMLParser", "GDML parser")
-    // ---
-    .def("Read",             &G4GDMLParser::Read,       f_Read())
-    .def("ReadModule",       &G4GDMLParser::ReadModule, f_ReadModule())
-    .def("ParseST",          &G4GDMLParser::ParseST,
-         return_value_policy<reference_existing_object>())
-    .def("Write",            f1_Write, f_Write())
-    .def("Write",            f2_Write, g_Write())
-    .def("GetWorldVolume",   &G4GDMLParser::GetWorldVolume,
-         f_GetWorldVolume()
-         [return_value_policy<reference_existing_object>()])
-    ;
-}
+#ifdef ENABLE_GDML
+  py::class_<G4GDMLParser>(m, "G4GDMLParser")
+  // ---
+  .def("Read",           &G4GDMLParser::Read,
+                         py::arg("fname"), py::arg("validate") = true)
 
+  .def("ReadModule",     &G4GDMLParser::ReadModule,
+                         py::arg("fname"), py::arg("validae") = true)
+
+  .def("Write",
+       py::overload_cast<const G4String&, const G4VPhysicalVolume*,
+                         G4bool, const G4String&>
+      (&G4GDMLParser::Write),
+       py::arg("fname"), py::arg("pvol") = nullptr, py::arg("ref") = true,
+       py::arg("loc") = G4GDML_DEFAULT_SCHEMALOCATION)
+
+  .def("Write",
+       py::overload_cast<const G4String&, const G4LogicalVolume*,
+                         G4bool, const G4String&>
+      (&G4GDMLParser::Write),
+       py::arg("fname"), py::arg("lvol") = nullptr, py::arg("ref") = true,
+       py::arg("loc") = G4GDML_DEFAULT_SCHEMALOCATION)
+
+  .def("ParseST",          &G4GDMLParser::ParseST,
+                           py::return_value_policy::reference)
+
+  .def("GetWorldVolume",   &G4GDMLParser::GetWorldVolume,
+                           py::arg("setupname") = "Default",
+                           py::return_value_policy::reference)
+  ;
 #endif
+}
