@@ -22,7 +22,6 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#define ENABLE_GDML
 #include <pybind11/pybind11.h>
 #ifdef ENABLE_GDML
 #include "G4GDMLParser.hh"
