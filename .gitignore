@@ -27,6 +27,7 @@ i
 
 # data
 *.csv
+*-checkpoint.ipynb
 
 # directories
 build*/
