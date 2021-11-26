@@ -26,4 +26,5 @@ set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
 
 #------------------------------------------------------------------------------
 configure_file(tests.py tests.py COPYONLY)
+configure_file(write_gdml.py write_gdml.py COPYONLY)
 configure_file(vis.mac vis.mac COPYONLY)

@@ -79,3 +79,4 @@ add_subdirectory(source)
 # add tests
 add_subdirectory(tests/gtest01)
 add_subdirectory(tests/gtest02)
+add_subdirectory(tests/gtest03)

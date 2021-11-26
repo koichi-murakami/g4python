@@ -36,6 +36,7 @@ void export_G4GDMLParser(py::module& m)
 {
 #ifdef ENABLE_GDML
   py::class_<G4GDMLParser>(m, "G4GDMLParser")
+  .def(py::init<>())
   // ---
   .def("Read",           &G4GDMLParser::Read,
                          py::arg("fname"), py::arg("validate") = true)

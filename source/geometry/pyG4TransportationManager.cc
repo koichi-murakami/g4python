@@ -43,6 +43,9 @@ void export_G4TransportationManager(py::module& m)
   // ---
   .def("GetFieldManager",   &G4TransportationManager::GetFieldManager,
                             py::return_value_policy::reference)
+  .def("GetNavigatorForTracking",
+                          &G4TransportationManager::GetNavigatorForTracking,
+                          py::return_value_policy::reference)
   .def("GetNoActiveNavigators", &G4TransportationManager::GetNoActiveNavigators)
   .def("GetNoWorlds",       &G4TransportationManager::GetNoWorlds)
   .def("GetParallelWorld",  &G4TransportationManager::GetParallelWorld,
