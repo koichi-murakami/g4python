@@ -1,4 +1,4 @@
-# g4python
+# Geant4Py
 
 [![geant4](https://img.shields.io/badge/geant4-11.0-blue.svg)](http://www.geant4.org/)
 
@@ -21,13 +21,13 @@ CMake(3.16+) is used for building the tool.
 * Python 3.6+
 * Anaconda Python3 (2021.05)
 
-### Pybind11
+### pybind11
 
-`Pybind11` is a binding tool between C++ and Python.
+`pybind11` is a binding tool between C++ and Python.
 
 https://github.com/pybind/pybind11
 
-You can install Pybind11 with system packaging tools
+You can install `pybind11` with system packaging tools
 (e.g. apt, dnf, Homebrew).
 
 Ubuntu (apt)
@@ -101,8 +101,11 @@ Here you can set
 * Geant4 installation path [$HOME/opt/geant4/11.0]
 * Pybind11 cmake config path [/opt/homebrew/share/cmake/pybind11]
 
-> Here we assume `pybind11` is installed in the system directory
-> for Linux systems.
+> In the config file, we set the pybind11 path to the default
+> installation path of Homebrew in macOS.
+> We assume `pybind11` is installed in the system directory
+> for Linux systems. So it works both on Linux and macOS.
+> If you use your own installed pybind11, set the installation path here.
 
 > !!! Warning !!!
 >
@@ -127,6 +130,9 @@ in a temporal working directory (`build`).
 
 
 `Geant4Py` is installed in `$HOME/opt/geant4/geant4py-11.0.0`.
+In this case,`$HOME/opt/geant4/geant4py-11.0.0/site-packages`
+is needed for `PYTHONPATH` environment variable as Python module import path.
+
 ~~~~
 # tree geant4py-11.0.0
 geant4py-11.0.0
