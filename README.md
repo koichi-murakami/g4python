@@ -2,7 +2,11 @@
 
 [![geant4](https://img.shields.io/badge/geant4-11.0-blue.svg)](http://www.geant4.org/)
 
-Geant4-Python interface
+Geant4-Python interface.
+
+Formerly c++-python bridge was realized with Boost-Python.
+From Geant4 version 11, we migrate to use `pybind11` as a Python binding tool,
+and completely revise the toolset.
 
 
 ## System Requirements
