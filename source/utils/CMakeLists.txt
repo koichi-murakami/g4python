@@ -1,11 +1,14 @@
 # - build module
 #------------------------------------------------------------------------------
-set(MODULE pyG4digis_hits)
+set(MODULE pyUtils)
 #------------------------------------------------------------------------------
 pybind11_add_module(${MODULE}
-  pyG4ScoringManager.cc
-  pyG4VSensitiveDetector.cc
-  pymodG4digits_hits.cc
+  eventcounter.cc
+  medicalbeam.cc
+  particlegun.cc
+  gps.cc
+  water_phantom.cc
+  pymod_utils.cc
 )
 
 target_include_directories(${MODULE} PRIVATE
@@ -23,8 +26,12 @@ target_link_libraries(${MODULE} PRIVATE
 
 #------------------------------------------------------------------------------
 set_target_properties(${MODULE} PROPERTIES PREFIX "")
-set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4digits_hits")
+set_target_properties(${MODULE} PROPERTIES OUTPUT_NAME "G4utils")
 set_target_properties(${MODULE} PROPERTIES SUFFIX ".so")
 
+#------------------------------------------------------------------------------
+file (GLOB PY_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.py)
+
 # install
-install(TARGETS ${MODULE} LIBRARY DESTINATION ${G4MODULES_INSTALL_DIR})
+install(TARGETS ${MODULE} LIBRARY DESTINATION ${G4MODULES_INSTALL_DIR}/utils)
+install (FILES ${PY_FILES} DESTINATION ${G4MODULES_INSTALL_DIR}/utils)

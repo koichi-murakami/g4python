@@ -22,33 +22,41 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-#include <pybind11/pybind11.h>
-#include "G4UIterminal.hh"
-#include "G4UItcsh.hh"
-#include "G4UIcsh.hh"
+//
+//
+/// \file DetectorConstruction.hh
+/// \brief Definition of the B1::DetectorConstruction class
 
-namespace py = pybind11;
+#ifndef B1DetectorConstruction_h
+#define B1DetectorConstruction_h 1
 
-static G4UIterminal* session = nullptr;
+#include "G4VUserDetectorConstruction.hh"
+#include "globals.hh"
 
-// --------------------------------------------------------------------------
-namespace {
+class G4VPhysicalVolume;
+class G4LogicalVolume;
 
-void StartUISession()
+/// Detector construction class to define materials and geometry.
+
+namespace B1
 {
-  if (session == nullptr ) {
-    auto tcsh = new G4UItcsh("geant4(%s)[%/]:");
 
-    session = new G4UIterminal(tcsh, false);
-  }
-
-  session-> SessionStart();
-}
-
-}
-
-// ==========================================================================
-void export_G4UIterminal(py::module& m)
+class DetectorConstruction : public G4VUserDetectorConstruction
 {
-  m.def("StartUISession", &::StartUISession);
+  public:
+    DetectorConstruction();
+    ~DetectorConstruction() override;
+
+    G4VPhysicalVolume* Construct() override;
+
+    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
+
+  protected:
+    G4LogicalVolume* fScoringVolume = nullptr;
+};
+
 }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#endif

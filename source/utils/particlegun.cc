@@ -29,10 +29,10 @@
 namespace py = pybind11;
 
 // --------------------------------------------------------------------------
-class ParticleGunGenerator : public G4VUserPrimaryGeneratorAction {
+class ParticleGun : public G4VUserPrimaryGeneratorAction {
 public:
-  ParticleGunGenerator();
-  virtual ~ParticleGunGenerator();
+  ParticleGun();
+  ~ParticleGun() override;
 
   G4ParticleGun* GetGun() const;
 
@@ -44,37 +44,36 @@ private:
 };
 
 // --------------------------------------------------------------------------
-ParticleGunGenerator::ParticleGunGenerator()
+ParticleGun::ParticleGun()
   : gun_{nullptr}
 {
   gun_ = new G4ParticleGun();
 }
 
 // --------------------------------------------------------------------------
-ParticleGunGenerator::~ParticleGunGenerator()
+ParticleGun::~ParticleGun()
 {
   delete gun_;
 }
 
 // --------------------------------------------------------------------------
-void ParticleGunGenerator::GeneratePrimaries(G4Event* event)
+void ParticleGun::GeneratePrimaries(G4Event* event)
 {
   gun_-> GeneratePrimaryVertex(event);
 }
 
 // --------------------------------------------------------------------------
-inline G4ParticleGun* ParticleGunGenerator::GetGun() const
+inline G4ParticleGun* ParticleGun::GetGun() const
 {
   return gun_;
 }
 
 // ==========================================================================
-void export_ParticleGunGenerator(py::module& m)
+void export_ParticleGun(py::module& m)
 {
-  py::class_<ParticleGunGenerator, G4VUserPrimaryGeneratorAction>
-  (m, "ParticleGunGenerator")
+  py::class_<ParticleGun, G4VUserPrimaryGeneratorAction>(m, "ParticleGun")
   .def(py::init<>())
-  .def("GetGun",  &ParticleGunGenerator::GetGun,
+  .def("GetGun",  &ParticleGun::GetGun,
                   py::return_value_policy::reference)
   ;
 }

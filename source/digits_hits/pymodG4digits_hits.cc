@@ -28,9 +28,11 @@ namespace py = pybind11;
 
 // --------------------------------------------------------------------------
 void export_G4VSensitiveDetector(py::module&);
+void export_G4ScoringManager(py::module&);
 
 // --------------------------------------------------------------------------
 PYBIND11_MODULE(G4digits_hits, m)
 {
   export_G4VSensitiveDetector(m);
+  export_G4ScoringManager(m);
 }

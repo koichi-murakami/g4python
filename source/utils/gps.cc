@@ -23,32 +23,47 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
-#include "G4UIterminal.hh"
-#include "G4UItcsh.hh"
-#include "G4UIcsh.hh"
+#include "G4GeneralParticleSource.hh"
+#include "G4VUserPrimaryGeneratorAction.hh"
 
 namespace py = pybind11;
 
-static G4UIterminal* session = nullptr;
+// --------------------------------------------------------------------------
+class GPS : public G4VUserPrimaryGeneratorAction {
+public:
+  GPS();
+  ~GPS() override;
+
+  void GeneratePrimaries(G4Event* event) override;
+
+private:
+  G4GeneralParticleSource* gps_;
+
+};
 
 // --------------------------------------------------------------------------
-namespace {
-
-void StartUISession()
+GPS::GPS()
+  : gps_{nullptr}
 {
-  if (session == nullptr ) {
-    auto tcsh = new G4UItcsh("geant4(%s)[%/]:");
-
-    session = new G4UIterminal(tcsh, false);
-  }
-
-  session-> SessionStart();
+  gps_ = new G4GeneralParticleSource();
 }
 
+// --------------------------------------------------------------------------
+GPS::~GPS()
+{
+  delete gps_;
+}
+
+// --------------------------------------------------------------------------
+void GPS::GeneratePrimaries(G4Event* event)
+{
+  gps_-> GeneratePrimaryVertex(event);
 }
 
 // ==========================================================================
-void export_G4UIterminal(py::module& m)
+void export_GPS(py::module& m)
 {
-  m.def("StartUISession", &::StartUISession);
+  py::class_<GPS, G4VUserPrimaryGeneratorAction>(m, "GPS")
+  .def(py::init<>())
+  ;
 }

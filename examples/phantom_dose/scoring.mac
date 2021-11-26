@@ -1,0 +1,13 @@
+# scoring.mac
+
+# define scoring mesh
+/score/create/boxMesh  voxel_dose
+/score/mesh/boxSize 15.25 15.25 15. cm
+/score/mesh/translate/xyz 0. 0. 0. mm
+#
+/score/mesh/nBin 61 61 150
+#/score/mesh/nBin 10 10 100 
+/score/quantity/doseDeposit dose
+/score/close
+/score/list
+

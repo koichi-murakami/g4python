@@ -10,7 +10,6 @@ pybind11_add_module(${MODULE}
   pyG4StackManager.cc
   pyG4UserEventAction.cc
   pyG4UserStackingAction.cc
-  pyParticleGunGenerator.cc
   pymodG4event.cc
 )
 

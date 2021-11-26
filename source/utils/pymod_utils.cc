@@ -23,32 +23,22 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
-#include "G4UIterminal.hh"
-#include "G4UItcsh.hh"
-#include "G4UIcsh.hh"
 
 namespace py = pybind11;
 
-static G4UIterminal* session = nullptr;
+// --------------------------------------------------------------------------
+void export_EventCounter(py::module&);
+void export_ParticleGun(py::module&);
+void export_GPS(py::module&);
+void export_MedicalBeam(py::module&);
+void export_WaterPhantom(py::module&);
 
 // --------------------------------------------------------------------------
-namespace {
-
-void StartUISession()
+PYBIND11_MODULE(G4utils, m)
 {
-  if (session == nullptr ) {
-    auto tcsh = new G4UItcsh("geant4(%s)[%/]:");
-
-    session = new G4UIterminal(tcsh, false);
-  }
-
-  session-> SessionStart();
-}
-
-}
-
-// ==========================================================================
-void export_G4UIterminal(py::module& m)
-{
-  m.def("StartUISession", &::StartUISession);
+  export_EventCounter(m);
+  export_ParticleGun(m);
+  export_GPS(m);
+  export_MedicalBeam(m);
+  export_WaterPhantom(m);
 }

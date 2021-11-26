@@ -35,7 +35,7 @@ namespace {
 class PyG4VisManager : public G4VisManager {
 public:
   PyG4VisManager() { SetVerboseLevel(quiet); }
-  ~PyG4VisManager() { }
+  ~PyG4VisManager() override { }
 
   static PyG4VisManager* _get_concrete_instance() {
     return dynamic_cast<PyG4VisManager*>(fpConcreteInstance);

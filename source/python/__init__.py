@@ -1,6 +1,6 @@
 """
 # ==================================================================
-#  [Geant4] module package
+#  [geant4] module package
 # ==================================================================
 """
 # ------------------------------------------------------------------
@@ -60,8 +60,6 @@ from .G4visualization import *
 from .G4gdml import *
 from .G4graphics_reps import *
 from .hepunit import *
-from .colortable import *
-from .g4viscp import *
 
 def print_version():
     print("""=============================================================
@@ -132,6 +130,9 @@ gIsotopeTable = G4Isotope.GetIsotopeTable()
 
 # gNistManager
 gNistManager = G4NistManager.Instance()
+
+# gScoringManager
+gScoringManager = G4ScoringManager.GetScoringManager()
 
 # gVisManager
 _visdriver_list = dir(G4visualization)

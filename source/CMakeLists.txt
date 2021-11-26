@@ -15,5 +15,5 @@ add_subdirectory(run)
 add_subdirectory(track)
 add_subdirectory(tracking)
 add_subdirectory(visualization)
-#
+add_subdirectory(utils)
 add_subdirectory(python)

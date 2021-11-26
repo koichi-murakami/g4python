@@ -23,37 +23,73 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
-#include "G4PyCoutDestination.hh"
-#include "G4strstreambuf.hh"
-#include "G4UImanager.hh"
+#include "G4Box.hh"
+#include "G4LogicalVolume.hh"
+#include "G4NistManager.hh"
+#include "G4PVPlacement.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VUserDetectorConstruction.hh"
 
 namespace py = pybind11;
 
 // --------------------------------------------------------------------------
-namespace {
+class WaterPhantom : public G4VUserDetectorConstruction {
+public:
+  WaterPhantom();
+  ~WaterPhantom() override = default;
+
+  G4VPhysicalVolume* Construct() override;
+
+  double phantomXY;
+  double phantomZ;
+};
 
 // --------------------------------------------------------------------------
-// G4cout/cerr are set to Python stdout
-void SetG4PyCoutDestination()
+WaterPhantom::WaterPhantom()
 {
-  auto UImgr = G4UImanager::GetUIpointer();
-  auto pycout = new G4PyCoutDestination();
-  G4coutbuf.SetDestination(pycout);
-  G4cerrbuf.SetDestination(pycout);
+  phantomXY = 30.5*cm;
+  phantomZ = 30.*cm;
 }
 
 // --------------------------------------------------------------------------
-void ResetG4PyCoutDestination()
+G4VPhysicalVolume* WaterPhantom::Construct()
 {
-  auto UImgr = G4UImanager::GetUIpointer();
-  UImgr-> SetCoutDestination(0);
+  auto nist_manager = G4NistManager::Instance();
+
+  // world volume
+  const double kDXY_World = 50.*cm;
+  const double kDZ_World = 300.*cm;
+  auto world_box = new G4Box("world", kDXY_World/2., kDXY_World/2.,
+                                      kDZ_World/2.);
+  auto air = nist_manager-> FindOrBuildMaterial("G4_AIR");
+  auto world_lv = new G4LogicalVolume(world_box, air, "world");
+  auto world_pv = new G4PVPlacement(nullptr, G4ThreeVector(), "world",
+                                             world_lv, nullptr, false, 0);
+
+  // phantom
+  const double kDXY_Phantom = 30.5*cm;
+  const double kDZ_Phantom = 30.*cm;
+
+  auto phantom_box = new G4Box("phantom", phantomXY/2., phantomXY/2.,
+                                          phantomZ/2.);
+  auto water = nist_manager-> FindOrBuildMaterial("G4_WATER");
+  auto phantom_lv = new G4LogicalVolume(phantom_box, water, "phantom");
+  auto phantom = new G4PVPlacement(0, G4ThreeVector(),
+                                   phantom_lv, "phantom", world_lv, false, 0);
+
+  return world_pv;
 }
 
-}
 
 // ==========================================================================
-void export_globals(py::module& m)
+using c = WaterPhantom;
+
+void export_WaterPhantom(py::module& m)
 {
-  m.def("SetG4PyCoutDestination",   &::SetG4PyCoutDestination);
-  m.def("ResetG4PyCoutDestination", &::ResetG4PyCoutDestination);
+  py::class_<WaterPhantom, G4VUserDetectorConstruction>(m, "WaterPhantom")
+  .def(py::init<>())
+  // ---
+  .def_readwrite("phantomXY", &c::phantomXY)
+  .def_readwrite("phantomZ",  &c::phantomZ)
+  ;
 }

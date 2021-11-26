@@ -1,24 +1,6 @@
 #==============================================================================
-#  CMakeLists.txt for buidlig Geant4-Python
-#
-#  ***************************
-#  !! DONOT EDIT THIS FILE  !!
-#  ***************************
+#  common settng for Geant4-Python
 #==============================================================================
-cmake_minimum_required(VERSION 3.16...3.21)
-
-#==============================================================================
-project(Geaant4-Python CXX)
-#==============================================================================
-include(config.cmake)
-
-#------------------------------------------------------------------------------
-# cmake modules
-set(CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/cmake
-   {CMAKE_PREFIX_PATH})
-
-# python module install path
-set(G4MODULES_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/site-packages/geant4)
 
 # find packages
 find_package(Geant4 REQUIRED)
@@ -65,17 +47,3 @@ message(STATUS "PYTHON3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
 message(STATUS "pybind11_VERSION: ${pybind11_VERSION}")
 message(STATUS "pybind11_INCLUDE_DIR: ${pybind11_INCLUDE_DIR}")
 message(STATUS "--------------------------------------------------------")
-
-#------------------------------------------------------------------------------
-# install cmake files
-file (GLOB CMAKE_FILES ${PROJECT_SOURCE_DIR}/cmake/*.cmake)
-install (FILES ${CMAKE_FILES}
-         DESTINATION ${CMAKE_INSTALL_PREFIX}/share/cmake)
-
-#------------------------------------------------------------------------------
-# add source
-add_subdirectory(source)
-
-# add tests
-add_subdirectory(tests/gtest01)
-add_subdirectory(tests/gtest02)

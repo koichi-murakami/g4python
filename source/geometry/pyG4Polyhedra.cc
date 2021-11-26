@@ -23,6 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "G4Polyhedra.hh"
 
 namespace py = pybind11;

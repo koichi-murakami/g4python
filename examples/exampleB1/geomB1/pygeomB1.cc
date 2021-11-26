@@ -23,32 +23,18 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
-#include "G4UIterminal.hh"
-#include "G4UItcsh.hh"
-#include "G4UIcsh.hh"
+#include "DetectorConstruction.hh"
+#include "G4VPhysicalVolume.hh"
 
 namespace py = pybind11;
-
-static G4UIterminal* session = nullptr;
-
-// --------------------------------------------------------------------------
-namespace {
-
-void StartUISession()
-{
-  if (session == nullptr ) {
-    auto tcsh = new G4UItcsh("geant4(%s)[%/]:");
-
-    session = new G4UIterminal(tcsh, false);
-  }
-
-  session-> SessionStart();
-}
-
-}
+using namespace B1;
 
 // ==========================================================================
-void export_G4UIterminal(py::module& m)
+PYBIND11_MODULE(geomB1, m)
 {
-  m.def("StartUISession", &::StartUISession);
+  py::class_<DetectorConstruction, G4VUserDetectorConstruction>(m, "geomB1")
+  .def(py::init<>())
+  .def("Constract", &DetectorConstruction::Construct,
+                    py::return_value_policy::reference)
+  ;
 }

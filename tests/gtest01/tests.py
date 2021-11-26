@@ -4,6 +4,7 @@
 #   - check basic control flow
 # ==================================================================
 from geant4 import *
+import geant4.utils
 import gtest01
 
 # ==================================================================
@@ -65,13 +66,13 @@ class AppBuilder(G4VUserActionInitialization):
 
   def Build(self):
     global particle_gun
-    #particle_gun = ParticleGunGenerator()
-    particle_gun = MyPrimaryGeneratorAction()
+    particle_gun = geant4.utils.ParticleGun()
+    #particle_gun = MyPrimaryGeneratorAction()
     self.SetUserAction(particle_gun)
 
     # setup particle gun
-    #pg = particle_gun.GetGun()
-    pg = particle_gun.pg
+    pg = particle_gun.GetGun()
+    #pg = particle_gun.pg
     pg.SetParticleByName("e-")
     pg.SetParticleEnergy(200.*MeV)
     pg.SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.))
@@ -92,7 +93,7 @@ class AppBuilder(G4VUserActionInitialization):
 # ==================================================================
 # main
 # ==================================================================
-def main(vis_enabled = False):
+def main():
     global ecalgeom
     ecalgeom = gtest01.EcalGeom()
     gRunManager.SetUserInitialization(ecalgeom)
@@ -118,9 +119,6 @@ def main(vis_enabled = False):
     gRunManager.Initialize()
 
     # visualization
-    if ( vis_enabled ):
-      vis_cp = VisControlPanel()
-
     gControlExecute("vis.mac")
 
     # beamOn

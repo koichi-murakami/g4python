@@ -3,7 +3,7 @@
 #  [visualization control panel] module package
 # ==================================================================
 """
-from .G4intercoms import *
+from .. import G4intercoms
 
 # ------------------------------------------------------------------
 # Scene
@@ -19,18 +19,18 @@ class G4Scene :
         self._mode = ("accumulate", "refresh")
 
     def create_scene(self):
-        ApplyUICommand("/vis/scene/create " + self.name)
-        ApplyUICommand("/vis/scene/add/volume %s %d" %
+        G4intercoms.ApplyUICommand("/vis/scene/create " + self.name)
+        G4intercoms.ApplyUICommand("/vis/scene/add/volume %s %d" %
                        (self.volume, self.copyno))
-        ApplyUICommand("/vis/scene/add/trajectories")
+        G4intercoms.ApplyUICommand("/vis/scene/add/trajectories")
         self.update_scene()
 
     def update_scene(self):
-        ApplyUICommand("/vis/scene/select " + self.name)
-        ApplyUICommand("/vis/sceneHandler/attach")
-        ApplyUICommand("/vis/scene/endOfEventAction %s" %
+        G4intercoms.ApplyUICommand("/vis/scene/select " + self.name)
+        G4intercoms.ApplyUICommand("/vis/sceneHandler/attach")
+        G4intercoms.ApplyUICommand("/vis/scene/endOfEventAction %s" %
                        (self._mode[self.mode_eventaction]) )
-        ApplyUICommand("/vis/scene/endOfRunAction %s" %
+        G4intercoms.ApplyUICommand("/vis/scene/endOfRunAction %s" %
                        (self._mode[self.mode_runaction]) )
 
 # ------------------------------------------------------------------
@@ -43,28 +43,27 @@ class VisControlPanel :
         self.viewpoint =  [270., 90.]
         self.selected = 0
 
-        rc = ApplyUICommand("/vis/open " + gsys)
+        rc = G4intercoms.ApplyUICommand("/vis/open " + gsys)
         if rc != 0:
-            print("Canot open visualization.")
-            return
+            raise RuntimeError("!!! canot open visualization.")
 
         self.scenelist[0].create_scene()
 
-        ApplyUICommand("/vis/viewer/set/viewpointThetaPhi %f %f" %
+        G4intercoms.ApplyUICommand("/vis/viewer/set/viewpointThetaPhi %f %f" %
                        (self.viewpoint[0], self.viewpoint[1]) )
-        ApplyUICommand("/tracking/storeTrajectory 1")
+        G4intercoms.ApplyUICommand("/tracking/storeTrajectory 1")
 
     def add_scene(self, ascene):
         if type(ascene) is not G4Scene :
-            print("!!! scene should be G4Scene.")
-            return
+            raise RuntimeError("!!! scene should be G4Scene.")
+
         self.scenelist.append(ascene)
         self.selected = len(self.scenelist) - 1
 
     def add_scene_with_name(self, name):
         if type(name) is not str :
-            print("!!! name should be str.")
-            return
+            raise RuntimeError("!!! name should be str.")
+
         new_scene = G4Scene(name)
         self.scenelist.append(new_scene)
         self.selected = len(self.scenelist) - 1
@@ -81,11 +80,11 @@ class VisControlPanel :
 
     def select_scene(self, iscene):
         if iscene < 0 or iscene >= len(self.scenelist):
-            print("!!! scene out of range.")
-            return
+            raise IndexError("!!! scene out of range.")
+
 
         self.selected = iscene
         self.scenelist[iscene].update_scene()
 
-        ApplyUICommand("/vis/viewer/set/viewpointThetaPhi %f %f" %
+        G4intercoms.ApplyUICommand("/vis/viewer/set/viewpointThetaPhi %f %f" %
                        (self.viewpoint[0], self.viewpoint[1]) )

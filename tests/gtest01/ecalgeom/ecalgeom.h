@@ -32,7 +32,7 @@ public:
   EcalGeom() = default;
   ~EcalGeom() = default;
 
-  virtual G4VPhysicalVolume* Construct();
+  G4VPhysicalVolume* Construct() override;
 };
 
 #endif

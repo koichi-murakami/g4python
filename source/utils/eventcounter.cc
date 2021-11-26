@@ -23,32 +23,79 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
-#include "G4UIterminal.hh"
-#include "G4UItcsh.hh"
-#include "G4UIcsh.hh"
+#include <sstream>
+#include <string>
+#include "G4UserEventAction.hh"
+#include "G4Event.hh"
 
 namespace py = pybind11;
 
-static G4UIterminal* session = nullptr;
+// --------------------------------------------------------------------------
+class EventCounter : public G4UserEventAction {
+public:
+  EventCounter();
+  ~EventCounter() override = default;
+
+  void SetCheckCounter(int val);
+
+  virtual void BeginOfEventAction(const G4Event* event);
+  virtual void EndOfEventAction(const G4Event* event);
+
+private:
+  int check_counter_;
+
+};
+
+// ==========================================================================
+inline void EventCounter::SetCheckCounter(int val)
+{
+  check_counter_ = val;
+}
+
 
 // --------------------------------------------------------------------------
 namespace {
 
-void StartUISession()
+// --------------------------------------------------------------------------
+void ShowProgress(int nprocessed, const std::string& key)
 {
-  if (session == nullptr ) {
-    auto tcsh = new G4UItcsh("geant4(%s)[%/]:");
-
-    session = new G4UIterminal(tcsh, false);
-  }
-
-  session-> SessionStart();
+  G4cout << "[MESSAGE] event-loop check point: "
+         << nprocessed << " events processed." << G4endl;
 }
 
+} // end of namespace
+
+// --------------------------------------------------------------------------
+EventCounter::EventCounter()
+  : check_counter_{1000}
+{
+}
+
+// --------------------------------------------------------------------------
+void EventCounter::BeginOfEventAction(const G4Event* event)
+{
+  int ievent = event-> GetEventID();
+}
+
+// --------------------------------------------------------------------------
+void EventCounter::EndOfEventAction(const G4Event* event)
+{
+  int ievent = event-> GetEventID();
+  constexpr int kKiloEvents = 1000;
+
+  if ( ievent % check_counter_ == 0 && ievent != 0 ) {
+    int event_in_kilo = ievent / kKiloEvents;
+    std::stringstream key;
+    key << "EventCheckPoint:" << event_in_kilo << "K";
+    ::ShowProgress(ievent, key.str());
+  }
 }
 
 // ==========================================================================
-void export_G4UIterminal(py::module& m)
+void export_EventCounter(py::module& m)
 {
-  m.def("StartUISession", &::StartUISession);
+  py::class_<EventCounter, G4UserEventAction>(m, "EventCounter")
+  .def(py::init<>())
+  .def("SetCheckCounter",  &EventCounter::SetCheckCounter)
+  ;
 }
