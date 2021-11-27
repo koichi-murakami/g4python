@@ -32,7 +32,9 @@ using namespace B1;
 // ==========================================================================
 PYBIND11_MODULE(geomB1, m)
 {
-  py::class_<DetectorConstruction, G4VUserDetectorConstruction>(m, "geomB1")
+  py::class_<DetectorConstruction, G4VUserDetectorConstruction,
+  std::unique_ptr<DetectorConstruction, py::nodelete>>(m, "geomB1")
+  // ---
   .def(py::init<>())
   .def("Constract", &DetectorConstruction::Construct,
                     py::return_value_policy::reference)

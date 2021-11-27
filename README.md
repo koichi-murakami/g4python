@@ -701,7 +701,7 @@ a local variable is automatically deleted on the Python side.
 This mechanism is different from objects allocated in C++.
 Some classes are taken care as `nodeleted` objects in Geant4Py,
 but still not perfect. If there is a weird behavior (seg. fault),
-set the Python variable as global.
+set the Python variable as `global`.
 
 > !!! Note !!!
 >

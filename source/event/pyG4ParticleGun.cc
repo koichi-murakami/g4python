@@ -55,7 +55,9 @@ std::string GetParticleByName(G4ParticleGun* gun)
 // ==========================================================================
 void export_G4ParticleGun(py::module& m)
 {
-  py::class_<G4ParticleGun>(m, "G4ParticleGun")
+  py::class_<G4ParticleGun,
+             std::unique_ptr<G4ParticleGun, py::nodelete>>(m, "G4ParticleGun")
+  // ---
   .def(py::init<>())
   .def(py::init<G4int>())
   .def(py::init<G4ParticleDefinition*>())
