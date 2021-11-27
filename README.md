@@ -347,7 +347,7 @@ We recommend using Anaconda version of Python3/Ipython3/Jupyter.
 * Ipython frontend
 * Jupyter (Jupyter-notebook / Jupyter-lab)
 
-## Import geant4
+### Importing geant4
 
 `Geant4Py` is loaded with importing the module. You can see
 what is defined in the module with `help` command.
@@ -421,7 +421,7 @@ FUNCTIONS
 ...
 ~~~
 
-## gtest01
+### gtest01
 
 Change the working directory to the build location after
 build and install Geant4Py.
@@ -524,3 +524,18 @@ In [1]: %run tets.py
 *** (EEA) events processed = 0
 *** (ERA) run ID =  0
 ~~~~
+
+## Examples/exampleB1
+This exampe has the same capability of Geant4 basic example B1.
+The geometry is implemented in C++ and exported to a Python module.
+
+~~~
+# cd examples/exampleB1
+# ls
+geomB1/  CMakeLists.txt  exampleB1.ipynb
+# ls ./geomB1
+# ls geomB1
+DetectorConstruction.cc  DetectorConstruction.hh  pygeomB1.cc
+~~~
+Before run the example, you should build the module.
+We provide `CMakeLists.txt` for building a user module.
