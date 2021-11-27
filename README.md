@@ -318,7 +318,20 @@ in the Linux environment.
 **G4PY_QT5_PRELOAD** (Anaconda, Qt5)
 
 If you use the Anaconda version of Ptyhon3, there might be a conflict
-between the Qt5 libraries.
+between the Qt5 libraries. When Geant4Py detects the conflict,
+it shows the following warning message.
+
+~~~~
+#####################################################################
+!!! Warning !!!
+A non-system python (e.g. Anaconda version of Python) is detected.
+If you have a problem with Qt5 library version,
+set the environment variables, "G4PY_QT5_PRELOAD = 1"
+to preload the system Qt5 library as a temporal solution.
+Please consider to install Geant4 library without the Qt feature.
+#####################################################################
+~~~~
+
 To avoid the conflict, Geant4Py will preload the system Qt5
 when this environment variable is set.
 ~~~
