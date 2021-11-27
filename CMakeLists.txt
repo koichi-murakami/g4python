@@ -1,5 +1,5 @@
 #==============================================================================
-#  CMakeLists.txt for buidlig Geant4-Python
+#  CMakeLists.txt for building Geant4-Python
 #
 #  ***************************
 #  !! DONOT EDIT THIS FILE  !!

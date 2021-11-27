@@ -1,5 +1,5 @@
 #==============================================================================
-#  CMakeLists.txt for buidlig Geant4Py user modules
+#  CMakeLists.txt for building Geant4Py user modules
 #==============================================================================
 cmake_minimum_required(VERSION 3.16...3.21)
 
