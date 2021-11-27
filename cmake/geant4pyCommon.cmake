@@ -3,7 +3,7 @@
 #==============================================================================
 
 # find packages
-find_package(Geant4 REQUIRED)
+find_package(geant4py REQUIRED)
 if(GEANT4_FOUND)
   if(NOT (${GEANT4_VERSION} VERSION_GREATER_EQUAL 11.0.0))
     message(FATAL_ERROR "Geant4 v11.0.0+ is required.")

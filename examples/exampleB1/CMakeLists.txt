@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.16...3.21)
 project(geomB1)
 #==============================================================================
 # Geant4Py cmake path
-set(Geant4_DIR $ENV{HOME}/opt/geant4/geant4py-11.0.0/share/cmake)
+set(geant4py_DIR $ENV{HOME}/opt/geant4/geant4py-11.0.0/share/cmake)
 
 # Geant4 installation path
 set(GEANT4_INSTALL $ENV{HOME}/opt/geant4/11.0
@@ -27,7 +27,7 @@ set(pybind11_DIR /opt/homebrew/share/cmake/pybind11
 set(MODULE ${CMAKE_PROJECT_NAME})
 set(G4MODULES_INSTALL_DIR ${CMAKE_INSTALL_PREFIX})
 
-include(${Geant4_DIR}/geant4pyCommon.cmake)
+include(${geant4py_DIR}/geant4pyCommon.cmake)
 #------------------------------------------------------------------------------
 # add source
 file(GLOB sources ${PROJECT_SOURCE_DIR}/${MODULE}/*.cc)

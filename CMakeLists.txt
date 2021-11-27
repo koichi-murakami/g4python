@@ -68,8 +68,8 @@ message(STATUS "--------------------------------------------------------")
 
 #------------------------------------------------------------------------------
 # install cmake files
-file (GLOB CMAKE_FILES ${PROJECT_SOURCE_DIR}/cmake/*.cmake)
-install (FILES ${CMAKE_FILES}
+file(GLOB CMAKE_FILES ${PROJECT_SOURCE_DIR}/cmake/geant4py*.cmake)
+install(FILES ${CMAKE_FILES}
          DESTINATION ${CMAKE_INSTALL_PREFIX}/share/cmake)
 
 #------------------------------------------------------------------------------
