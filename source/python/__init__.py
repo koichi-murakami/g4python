@@ -42,6 +42,9 @@ Please consider to install Geant4 library without the Qt feature.
 # force sequential mode
 os.environ['G4FORCE_RUN_MANAGER_TYPE'] = 'Serial'
 
+# version
+__version__ ='11.0.0'
+
 # import submodules
 from .G4global import *
 from .G4interface import *

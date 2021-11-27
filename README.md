@@ -61,8 +61,8 @@ bin/  include/  lib/  share/
 
 > !!! Warning !!!
 >
-> We recommend building Geant4 library without the Qt feature for
-> the python binding purpose, because the Qt5 system library conflicts with
+> We recommend building the Geant4 library without the Qt feature for
+> the python binding purpose because the Qt5 system library conflicts with
 > the Anaconda version of Qt5.
 > See below for the mitigation of the library conflict.
 
@@ -187,7 +187,7 @@ geant4py-11.0.0
 There are two types of user codes in the software.
 
 ### Tests
-Testing codes are located in the `tests` directory that are build
+Testing codes are located in the `tests` directory that is build
 with cmake build.
 
 ~~~~
@@ -228,11 +228,11 @@ Each test demonstrates:
 
 ### Examples
 On the other hand, we provide a set of examples that demonstrates
-how to create users' own modules and run GeantPy in the Jupyter
+how to create users' modules and run GeantPy in the Jupyter
 environment. There are complete examples that are self-documented
 and run in Jupyter notebooks.
 
-In the `examples` directoy, there are three examples.
+In the `examples` directory, there are three examples.
 ~~~~
 ls examples
 emplot/  exampleB1/  phantom_dose/
@@ -254,7 +254,7 @@ At first, source the geant4 setup file.
 # source [Geant4 install path]/bin/geant4.sh (bash)
 # source [Geant4 install path]/bin/geant4.csh (csh/tcsh)
 
-for zsh, onece change directory, then source the file
+For zsh, once change directory, then source the file
 # cd [Geant4 install path]/bin
 # source geant4.sh (zsh)
 ~~~~
@@ -289,7 +289,7 @@ Also, the library location (`LD_LIBRARY_PATH`) is defined.
 /home/kmura/opt/geant4/11.0/lib:/usr/lib/x86_64-linux-gnu
 ~~~
 
-> In macOS, this enviroment is not nccessary.
+> In macOS, this environment is not necessary.
 
 
 **PYTHON_PATH**
@@ -306,7 +306,7 @@ To run Geant4 in Python, there are some additional settings.
 
 **LD_PRELOAD**
 
-For TLS memory allocation, currently we have to preload a Geant4 library
+For TLS memory allocation, currently, we have to preload a Geant4 library
 in the Linux environment.
 ~~~
 # export LD_PRELOAD=libG4run.so (bash/zsh)
@@ -318,16 +318,22 @@ in the Linux environment.
 
 **G4PY_QT5_PRELOAD**
 
-If you use Anaconda version of Ptyhon3, there might be library conflict
-for Qt5 library. To avoid the conflict,  Geant4Py will preload the sytem
-Qt5 forcely if this enviroment variable is set.
+If you use the Anaconda version of Ptyhon3, there might be a library conflict
+for the Qt5 library. To avoid the conflict,  Geant4Py will preload the system
+Qt5 forcibly if this environment variable is set.
 ~~~
 # export G4PY_QT5_PRELOAD=1 (bash/zsh)
 # setenv G4PY_QT5_PRELOAD 1 (csh/tcsh)
 ~~~
 
 > This is a temporal solution. We recommend building Geant4 without
-> the Qt5 feature to avoid the conflict.
+> the Qt5 feature to avoid conflict.
+
+
+### Multi-threading feature
+In the current version of Geant4Py, we limit Geant4 in sequential mode
+forcibly by setting `G4FORCE_RUN_MANAGER_TYPE` inside `__init__.py`
+script. In the future release, hopefully, we can release this limitation.
 
 ----
 ## How to run Python
@@ -340,6 +346,80 @@ We recommend using Anaconda version of Python3/Ipython3/Jupyter.
 * Anaconda Python3 and virtual env versions
 * Ipython frontend
 * Jupyter (Jupyter-notebook / Jupyter-lab)
+
+## Import geant4
+
+`Geant4Py` is loaded with importing the module. You can see
+what is defined in the module with `help` command.
+
+~~~
+# python3
+Python 3.8.8 (default, Apr 13 2021, 19:58:26)
+[GCC 7.3.0] :: Anaconda, Inc. on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import geant4
+=============================================================
+  _____              __  ____ ___
+ / ___/__ ___ ____  / /_/ / // _ \__ __  Geant4-Python Interface
+/ (_ / -_) _ `/ _ \/ __/_  _/ ___/ // /  Version: 1100
+\___/\__/\_,_/_//_/\__/ /_//_/   \_, /   Date: (31-October-2021)
+                                /___/
+=============================================================
+
+Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Forcing G4RunManager type...
+
+
+          ################################
+          !!! G4Backtrace is activated !!!
+          ################################
+
+
+**************************************************************
+ Geant4 version Name: geant4-10-07-ref-09 [MT]   (31-October-2021)
+                       Copyright : Geant4 Collaboration
+                      References : NIM A 506 (2003), 250-303
+                                 : IEEE-TNS 53 (2006), 270-278
+                                 : NIM A 835 (2016), 186-225
+                             WWW : http://geant4.org/
+**************************************************************
+
+Visualization Manager instantiating with verbosity "warnings (3)"...
+>>> help(geant4)
+Help on package geant4:
+
+NAME
+    geant4
+
+DESCRIPTION
+    # ==================================================================
+    #  [geant4] module package
+    # ==================================================================
+
+PACKAGE CONTENTS
+    G4digits_hits
+    G4event
+    G4gdml
+    G4geometry
+    G4global
+    G4graphics_reps
+    G4intercoms
+    G4interface
+    G4materials
+    G4particles
+    G4physicslists
+    G4processes
+    G4run
+    G4track
+    G4tracking
+    G4visualization
+    hepunit
+    utils (package)
+
+FUNCTIONS
+    ApplyUICommand(...) method of builtins.PyCapsule instance
+        ApplyUICommand(arg0: geant4.G4global.G4String) -> G4UIcommandStatus
+...
+~~~
 
 ## gtest01
 
@@ -358,12 +438,12 @@ __pycache__/  cmake_install.cmake  Makefile   vis.mac
 CMakeFiles/   gtest01.so*          tests.py*  write_gdml.py*
 ~~~
 
-`gtest01.so` is a user module that icludes user geometry definition
+`gtest01.so` is a user module that includes user geometry definition
 described in C++.
 
-You can run the python script directly. The the Geant4 application
-is setup and run simulation. If visualiation is activated,
-you can see event display in a OpenGL window.
+You can run the python script directly. The Geant4 application
+is set up and run the simulation. If visualization is activated,
+you can see the event display in an OpenGL window.
 ~~~
 # ./tests.py
 
@@ -437,6 +517,7 @@ Type 'copyright', 'credits' or 'license' for more information
 IPython 7.22.0 -- An enhanced Interactive Python. Type '?' for help.
 
 In [1]: %run tets.py
+
 ...  (run the simulation)
 
 *** (BRA) #event to be processed =  100
