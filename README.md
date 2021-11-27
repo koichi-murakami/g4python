@@ -5,8 +5,8 @@
 Geant4-Python interface.
 
 Formerly c++-python bridge was realized with Boost-Python.
-From Geant4 version 11, we migrate to use `pybind11` as a Python binding tool,
-and completely revise the toolset.
+From Geant4 version 11, we migrate to `pybind11` as a Python binding tool,
+and revise the toolset using pybind11.
 
 
 ## System Requirements
@@ -143,7 +143,7 @@ is needed for `PYTHONPATH` environment variable as Python module import path.
 geant4py-11.0.0
 ├── share
 │   └── cmake
-│       ├── Geant4Config.cmake
+│       ├── geant4pyConfig.cmake
 │       └── geant4pyCommon.cmake
 └── site-packages
     └── geant4
@@ -295,7 +295,7 @@ Also, the library location (`LD_LIBRARY_PATH`) is defined.
 **PYTHON_PATH**
 
 Python needs to know where the Geant4Py module is installed.
-The location can be sepcified with `PYTHON_PATH`.
+The location can be specified with `PYTHON_PATH`.
 
 ~~~
 # export PYTHONPATH=~/opt/geant4/geant4py-11.0.0/site-packages (bash/zsh)
