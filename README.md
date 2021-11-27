@@ -61,8 +61,9 @@ bin/  include/  lib/  share/
 
 > !!! Warning !!!
 >
-> We recommend building the Geant4 library without the Qt feature,
-> because the Qt5 system library conflicts with the Anaconda version of Qt5.
+> We recommend building the Geant4 library without the Qt feature for
+> the python binding purpose, because the Qt5 system library conflicts with
+> the Anaconda version of Qt5.
 > See below for the mitigation of the library conflict.
 
 ----
@@ -103,7 +104,7 @@ set(pybind11_DIR /opt/homebrew/share/cmake/pybind11
 Here you can set
 * Geant4Py installation directory [$HOME/opt/geant4/geant4py-11.0.0]
 * Geant4 installation path [$HOME/opt/geant4/11.0]
-* Pybind11 cmake config path [/opt/homebrew/share/cmake/pybind11]
+* pybind11 cmake config path [/opt/homebrew/share/cmake/pybind11]
 
 > In the config file, we set the pybind11 path to the default
 > installation path of Homebrew in macOS.
@@ -180,12 +181,14 @@ geant4py-11.0.0
                 └── __init__.cpython-38.pyc
 ~~~~
 
-## How to Use:
+----
+## Tests and Examples
 
-There are two types of tests and examples in the software.
+There are two types of user codes in the software.
 
-There are testing codes in the `tests` directory that are build
-with cmake installation build.
+### Tests
+Testing codes are located in the `tests` directory that are build
+with cmake build.
 
 ~~~~
 # ls tests
@@ -201,15 +204,44 @@ CMakeFiles/   gtest01.so*          tests.py*  write_gdml.py*
 ~~~~
 
 Here, Python testing scripts are copied from the original and
-a user module (`gtest01.so`) is built in the same directory.
+a user module (`gtest01.so`) is built and installed in the directory.
 
 Each test demonstrates:
 
 **gtest01**
 * How to export c++ code fragments to Python
+  * `ecalgeom` is described in C++ and exposed to a Python module
 * How to use Geant4Py in Python
   * use Geant4 objects
   * define user classes (geometry/physics list/user actions)
   * set up Geant4 application
-  * define magnetic field in Python
+  * define a magnetic field in Python
   * export geometry to a GDML file
+
+**gtest02**
+* tests for creating basic solids
+* generate a VRML file for each solid
+* You can see VRML files with `veiw3dscene`
+
+**gtest03**
+* test for reading GDML file as geometry
+
+### Examples
+On the other hand, we provide a set of examples that demonstrates
+how to create users' own modules and run GeantPy in the Jupyter
+environment. There are complete examples that are self-documented
+and run in Jupyter notebooks.
+
+In the `examples` directoy, there are three examples.
+~~~~
+ls examples
+emplot/  exampleB1/  phantom_dose/
+~~~~
+
+In each example, there is a Jupyter notebook (`.ipynb`) file.
+You can open and run the notebook with Jupyter (lab/notebook).
+
+------
+## What You should know before
+
+There are some tips for running Geant4 with Python.
