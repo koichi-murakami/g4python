@@ -41,7 +41,8 @@ G4Tet* CreateTet(const G4String& name, G4ThreeVector anchor, G4ThreeVector p2,
 // ==========================================================================
 void export_G4Tet(py::module& m)
 {
-  py::class_<G4Tet, G4VSolid>(m, "G4Tet")
+  py::class_<G4Tet, G4VSolid, std::unique_ptr<G4Tet, py::nodelete>>
+  (m, "G4Tet")
   // ---
   .def(py::init<const G4String&, G4ThreeVector, G4ThreeVector,
                                  G4ThreeVector, G4ThreeVector>())

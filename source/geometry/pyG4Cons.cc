@@ -43,7 +43,8 @@ G4Cons* CreateCons(const G4String& name, G4double pRmin1, G4double pRmax1,
 // ==========================================================================
 void export_G4Cons(py::module& m)
 {
-  py::class_<G4Cons, G4VSolid>(m, "G4Cons")
+  py::class_<G4Cons, G4VSolid, std::unique_ptr<G4Cons, py::nodelete>>
+  (m, "G4Cons")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double,
 	                               G4double, G4double, G4double, G4double>())

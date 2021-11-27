@@ -130,7 +130,8 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(gtest01, m)
 {
-  py::class_<EcalGeom, G4VUserDetectorConstruction>(m, "EcalGeom")
+  py::class_<EcalGeom, G4VUserDetectorConstruction,
+             std::unique_ptr<EcalGeom, py::nodelete>>(m, "EcalGeom")
   .def(py::init<>())
   .def("Constract",    &EcalGeom::Construct,
        py::return_value_policy::reference)

@@ -10,20 +10,16 @@ from tests import *
 # main
 # ==================================================================
 def main():
-    global ecalgeom
     ecalgeom = gtest01.EcalGeom()
     gRunManager.SetUserInitialization(ecalgeom)
 
-    global phys_list
     phys_list = FTFP_BERT()
     gRunManager.SetUserInitialization(phys_list)
 
-    global app_builder
     app_builder = AppBuilder()
     gRunManager.SetUserInitialization(app_builder)
 
     # magnetic field (sequential mode only)
-    global myField
     #myField = G4UniformMagField(G4ThreeVector(0., 0.5*tesla, 0.))
     myField = MyField()
     field_mgr = gTransportationManager.GetFieldManager()

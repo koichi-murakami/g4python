@@ -31,7 +31,8 @@ namespace py = pybind11;
 // ==========================================================================
 void export_G4PVPlacement(py::module& m)
 {
-  py::class_<G4PVPlacement, G4VPhysicalVolume>(m, "G4PVPlacement")
+  py::class_<G4PVPlacement, G4VPhysicalVolume,
+             std::unique_ptr<G4PVPlacement, py::nodelete>>(m, "G4PVPlacement")
   // ---
   .def(py::init<G4RotationMatrix*, const G4ThreeVector&, G4LogicalVolume*,
                 const G4String&, G4LogicalVolume*, G4bool, G4int>())

@@ -42,7 +42,8 @@ G4TwistedBox* CreateTwistedBox(const G4String& name,
 // ==========================================================================
 void export_G4TwistedBox(py::module& m)
 {
-  py::class_<G4TwistedBox, G4VSolid>(m, "G4TwistedBox")
+  py::class_<G4TwistedBox, G4VSolid,
+             std::unique_ptr<G4TwistedBox, py::nodelete>>(m, "G4TwistedBox")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double, G4double>())
   // ---

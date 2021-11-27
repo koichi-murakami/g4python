@@ -186,7 +186,7 @@ geant4py-11.0.0
 There are two types of user codes in the software.
 
 ### Tests
-Testing codes are located in the `tests` directory that is build
+Testing codes are located in the `tests` directory that is built
 with cmake build.
 
 ~~~~
@@ -226,7 +226,7 @@ Each test demonstrates:
 * test for reading GDML file as geometry
 
 ### Examples
-On the other hand, we provide examples that demonstrate
+On the other hand, we provide examples demonstrating
 how to create users' modules and run GeantPy in the Jupyter
 environment. There are complete examples that are self-documented
 and run in Jupyter notebooks.
@@ -324,11 +324,12 @@ it shows the following warning message.
 ~~~~
 #####################################################################
 !!! Warning !!!
-A non-system python (e.g. Anaconda version of Python) is detected.
+A non-system python (e.g., Anaconda version of Python) is detected.
 If you have a problem with Qt5 library version,
 set the environment variables, "G4PY_QT5_PRELOAD = 1"
 to preload the system Qt5 library as a temporal solution.
-Please consider to install Geant4 library without the Qt feature.
+Please consider installing a Geant4 library for Geant4Py
+without the Qt feature.
 #####################################################################
 ~~~~
 
@@ -352,8 +353,8 @@ script. In the future release, we can lift this limit hopefully.
 ## How to run Python
 
 You have several ways of running Python. If you install Anaconda,
-you have several variants of Python instances.
-We recommend using the Anaconda version of Python3/Ipython3/Jupyter.
+you can run several variants of Python instances.
+We recommend an Anaconda version of Python3/Ipython3/Jupyter.
 
 * System Python3
 * Anaconda Python3 and virtual env versions
@@ -362,7 +363,7 @@ We recommend using the Anaconda version of Python3/Ipython3/Jupyter.
 
 ### Importing geant4
 
-`Geant4Py` is loaded with importing the module. You can see
+`Geant4Py` is loaded with importing the *`geant4`* module. You can see
 what is defined in the module with `help` command.
 
 ~~~
@@ -670,3 +671,38 @@ These modules are provided as utility modules that should be loaded on demand.
 * WaterPhantom: Water phantom geometry
 * MedicalBeam: Primary generator with medical beam profile (SSD/beam shaping)
 * EventCount: Event content event action
+
+----
+## Tips
+
+### Global variables and functions
+
+In Geant4Py, we instantiate Geant4 singleton manager objects
+(e.g., `G4RunManager`) at the timing of module loading.
+These instances are assigned to global variables inside Python,
+that starts with *g* character.
+
+For example,
+* RunManger : `gRunManager`
+* EventManager : `gEventManager`
+* NistManager : `gNistManager`
+* ScoringManager : `gScoringManager`
+
+Also, some useful methods are defined as global functions.
+
+* `gStartUISession`, `StartUISession` : Start UI terminal
+* `gControlExecute`, `ControlExecute` : Execute a macro file
+* `gApplyUICommand`, `ApplyUICommand` : Execute UI command
+* `gGetCurrentValue`, `GetCurrentValue` : Get current value of UI command
+
+### Python objects
+Python variables are automatically managed, which means
+a local variable is automatically deleted on the Python side.
+This mechanism is different from objects allocated in C++.
+Some classes are taken care as `nodeleted` objects in Geant4Py,
+but still not perfect. If there is a weird behavior (seg. fault),
+set the Python variable as global.
+
+> !!! Note !!!
+>
+>  An object of user inherited class in Python should be set as global.

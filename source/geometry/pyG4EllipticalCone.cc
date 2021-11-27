@@ -44,7 +44,9 @@ G4EllipticalCone* CreateEllipticalCone(const G4String& name,
 // ==========================================================================
 void export_G4EllipticalCone(py::module& m)
 {
-  py::class_<G4EllipticalCone, G4VSolid>(m, "G4EllipticalCone")
+  py::class_<G4EllipticalCone, G4VSolid,
+             std::unique_ptr<G4EllipticalCone, py::nodelete>>
+  (m, "G4EllipticalCone")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double, G4double>())
   // ---

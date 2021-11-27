@@ -42,7 +42,8 @@ G4Trd* CreateTrd(const G4String& name, G4double pdx1, G4double pdx2,
 // ==========================================================================
 void export_G4Trd(py::module& m)
 {
-  py::class_<G4Trd, G4VSolid>(m, "G4Trd")
+  py::class_<G4Trd, G4VSolid, std::unique_ptr<G4Trd, py::nodelete>>
+  (m, "G4Trd")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double,
                                  G4double, G4double>())

@@ -32,7 +32,8 @@ namespace py = pybind11;
 // ==========================================================================
 void export_G4VisAttributes(py::module& m)
 {
-  py::class_<G4VisAttributes>vis_attributes(m, "G4VisAttributes");
+  py::class_<G4VisAttributes, std::unique_ptr<G4VisAttributes, py::nodelete>>
+  vis_attributes(m, "G4VisAttributes");
   vis_attributes
   // ---
   .def(py::init<>())

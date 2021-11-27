@@ -53,7 +53,8 @@ namespace py = pybind11;
 // --------------------------------------------------------------------------
 // macro for adding physics lists
 #define ADD_PHYSICS_LIST(plname) \
-  py::class_<plname, G4VModularPhysicsList, G4VUserPhysicsList>(m, #plname)\
+  py::class_<plname, G4VModularPhysicsList, G4VUserPhysicsList,\
+  std::unique_ptr<plname,py::nodelete>>(m, #plname)\
   .def(py::init<>());\
   AddPhysicsList(#plname);
 

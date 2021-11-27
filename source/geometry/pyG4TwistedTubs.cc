@@ -87,7 +87,8 @@ G4TwistedTubs* f4_CreateTwistedTubs(const G4String& name,
 // ==========================================================================
 void export_G4TwistedTubs(py::module& m)
 {
-  py::class_<G4TwistedTubs, G4VSolid>(m, "G4TwistedTubs")
+  py::class_<G4TwistedTubs, G4VSolid,
+             std::unique_ptr<G4TwistedTubs, py::nodelete>>(m, "G4TwistedTubs")
   // constructors
   .def(py::init<const G4String&, G4double, G4double, G4double,
                              G4double, G4double>())

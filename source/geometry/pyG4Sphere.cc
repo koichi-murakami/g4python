@@ -43,7 +43,8 @@ G4Sphere* CreateSphere(const G4String& name,
 // ==========================================================================
 void export_G4Sphere(py::module& m)
 {
-  py::class_<G4Sphere, G4VSolid>(m, "G4Sphere")
+  py::class_<G4Sphere, G4VSolid, std::unique_ptr<G4Sphere, py::nodelete>>
+  (m, "G4Sphere")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double,
                                  G4double, G4double, G4double>())

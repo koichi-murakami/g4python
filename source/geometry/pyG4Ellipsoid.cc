@@ -46,7 +46,8 @@ G4Ellipsoid* CreateEllipsoid(const G4String& name,
 // ==========================================================================
 void export_G4Ellipsoid(py::module& m)
 {
-  py::class_<G4Ellipsoid, G4VSolid>(m, "G4Ellipsoid")
+  py::class_<G4Ellipsoid, G4VSolid,
+             std::unique_ptr<G4Ellipsoid, py::nodelete>>(m, "G4Ellipsoid")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double>())
   .def(py::init<const G4String&, G4double, G4double, G4double, G4double>())

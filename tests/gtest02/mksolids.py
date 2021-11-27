@@ -26,10 +26,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructWorld(self):
-        # Python has automatic garbage collection system.
-        # Geometry objects must be defined as GLOBAL not to be deleted.
-        global sld_world, lv_world, pv_world, va_world
-
         sld_world = G4Box("world", 1.*m, 1.*m, 1.*m)
         lv_world  = G4LogicalVolume(sld_world, self.air, "world")
         pv_world  = G4PVPlacement(G4Transform3D(), lv_world, "world",
@@ -40,7 +36,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
         lv_world.SetVisAttributes(va_world)
 
         # solid object (dummy)
-        global sld_sld, lv_sld, pv_sld
         sld_sld = G4Box("dummy", 10.*cm, 10.*cm, 10.*cm)
         self.lv_object = lv_sld= G4LogicalVolume(sld_sld, self.air, "dummy")
         pv_sld = G4PVPlacement(None, G4ThreeVector(), "dummy", lv_sld,
@@ -50,7 +45,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructBox(self):
-        global sld_box
         sld_box = G4Box("box", 30.*cm, 40.*cm, 60.*cm)
         self.lv_object.SetSolid(sld_box)
         self.lv_object.SetVisAttributes(self.va_red)
@@ -58,7 +52,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructTubs(self):
-        global sld_tubs
         sld_tubs = G4Tubs("tubs", 10.*cm, 15.*cm, 20.*cm, 0., pi)
         self.lv_object.SetSolid(sld_tubs)
         self.lv_object.SetVisAttributes(self.va_cyan)
@@ -66,7 +59,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructCons(self):
-        global sld_cons
         sld_cons = G4Cons("cons", 5.*cm, 10.*cm, 20.*cm, 25.*cm,
                          40.*cm, 0., 4./3.*pi)
         self.lv_object.SetSolid(sld_cons)
@@ -75,7 +67,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructPara(self):
-        global sld_para
         sld_para = G4Para("para", 30.*cm, 40.*cm, 60.*cm, pi/4., pi/8., 0.)
         self.lv_object.SetSolid(sld_para)
         self.lv_object.SetVisAttributes(self.va_blue)
@@ -83,7 +74,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructTrd(self):
-        global sld_trd
         sld_trd = G4Trd("trd", 30.*cm, 10.*cm, 40.*cm, 15.*cm, 60.*cm)
         self.lv_object.SetSolid(sld_trd)
         self.lv_object.SetVisAttributes(self.va_blue)
@@ -91,7 +81,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructTrap(self):
-        global sld_trap
         sld_trap = G4Trap("trap", 60.*cm, 20.*degree, 5.*degree,
                                   40.*cm, 30.*cm, 40.*cm, 10.*degree,
                                   16.*cm, 10*cm, 14.*cm, 10.*deg)
@@ -101,7 +90,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructSphere(self):
-        global sld_sphere
         sld_sphere = G4Sphere("sphere", 100.*cm, 120.*cm, 0., 180.*deg,
                                         0., 180.*deg)
         self.lv_object.SetSolid(sld_sphere)
@@ -110,7 +98,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructOrb(self):
-        global sld_orb
         sld_orb = G4Orb("orb", 100.*cm)
         self.lv_object.SetSolid(sld_orb)
         self.lv_object.SetVisAttributes(self.va_red)
@@ -118,7 +105,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructTorus(self):
-        global sld_torus
         sld_torus = G4Torus("torus", 40.*cm, 60.*cm, 200.*cm, 0., 90.*deg)
         self.lv_object.SetSolid(sld_torus)
         self.lv_object.SetVisAttributes(self.va_magenta)
@@ -132,7 +118,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
         routvec = [ 0., 10.*cm, 10.*cm, 5.*cm, 5.*cm, 10.*cm,
                    10.*cm, 2.*cm, 2.*cm ]
 
-        global sld_pcon
         sld_pcon= CreatePolycone("pcon", 0., twopi, 9, zvec, rinvec, routvec)
         self.lv_object.SetSolid(sld_pcon)
         self.lv_object.SetVisAttributes(self.va_cyan)
@@ -144,15 +129,14 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
           rinvec = [0.,0.,0.,0.,0.,0.,0. ]
           routvec = [ 0., 15.*cm, 15.*cm, 4.*cm, 4.*cm, 10.*cm, 10.*cm ]
 
-          global sld_pgon
-          sld_pgon = CreatePolyhedra("pgon", 0., twopi, 5, 7, zvec, rinvec, routvec)
-          self.lv_object.SetSolid(sld_pgon)
+          sld_phedra = CreatePolyhedra("phedra", 0., twopi, 5, 7,
+                                                 zvec, rinvec, routvec)
+          self.lv_object.SetSolid(sld_phedra)
           self.lv_object.SetVisAttributes(self.va_green)
           gRunManager.GeometryHasBeenModified()
 
     # -----------------------------------------------------------------
     def ConstructEllipticalTube(self):
-        global sld_et
         sld_et = G4EllipticalTube("ellipticaltube", 5.*cm, 10.*cm, 20.*cm)
         self.lv_object.SetSolid(sld_et)
         self.lv_object.SetVisAttributes(self.va_cyan)
@@ -160,7 +144,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructEllipsoid(self):
-        global sld_es
         sld_es = G4Ellipsoid("ellipsoid", 10.*cm, 20.*cm, 50.*cm,
                                          -10.*cm, 40.*cm)
         self.lv_object.SetSolid(sld_es)
@@ -169,7 +152,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructEllipticalCone(self):
-        global sld_ec
         sld_ec = G4EllipticalCone("ellipticalcone", 30.*cm, 60.*cm,
                                                     50.*cm, 25.*cm)
         self.lv_object.SetSolid(sld_ec)
@@ -178,7 +160,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructHype(self):
-        global sld_hype
         sld_hype= G4Hype("hype", 20.*cm, 30.*cm, 0.7, 0.7, 50.*cm)
         self.lv_object.SetSolid(sld_hype)
         self.lv_object.SetVisAttributes(self.va_blue)
@@ -186,7 +167,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
   # -----------------------------------------------------------------
     def ConstructTet(self):
-        global sld_tet
         p1 = G4ThreeVector(0., 0., math.sqrt(3.)*cm)
         p2 = G4ThreeVector(0., 2*math.sqrt(2./3.)*cm, -1./math.sqrt(3)*cm)
         p3 = G4ThreeVector(-math.sqrt(2.)*cm, -math.sqrt(2./3.)*cm,
@@ -201,7 +181,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructTwistedBox(self):
-        global sld_twb
         sld_twb = G4TwistedBox("twistedbox", 30.*deg, 30.*cm, 40.*cm, 60.*cm)
         self.lv_object.SetSolid(sld_twb)
         self.lv_object.SetVisAttributes(self.va_cyan)
@@ -209,7 +188,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructTwistedTrap(self):
-        global sld_twtrp
         sld_twtrp = G4TwistedTrap("twistedtrap", 30.*deg,
                                  60.*cm, 20.*deg, 5.*deg,
                                  40.*cm, 30.*cm, 40.*cm,
@@ -220,7 +198,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructTwistedTrd(self):
-        global sld_twtrd
         sld_twtrd = G4TwistedTrd("twistedtrd", 30.*cm, 10.*cm,
                                   40.*cm, 15.*cm, 60.*cm, 30.*deg)
         self.lv_object.SetSolid(sld_twtrd)
@@ -229,7 +206,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
 
     # -----------------------------------------------------------------
     def ConstructTwistedTubs(self):
-        global sld_twt
         sld_twt = G4TwistedTubs("twistedtube", 60.*deg,
                                 10.*cm, 15.*cm, 20.*cm, 90.*deg)
         self.lv_object.SetSolid(sld_twt)
@@ -249,17 +225,14 @@ def main():
     os.environ["G4VRMLFILE_VIEWER"]= "echo"
 
     # set geometry
-    global myDC
-    myDC= MyDetectorConstruction()
+    myDC = MyDetectorConstruction()
     gRunManager.SetUserInitialization(myDC)
 
     # physics list
-    global phys_list
     phys_list = FTFP_BERT()
     gRunManager.SetUserInitialization(phys_list)
 
     # set primary generator action
-    global particle_gun
     particle_gun = ParticleGun()
     gRunManager.SetUserAction(particle_gun)
 
@@ -308,4 +281,3 @@ def main():
 # ==================================================================
 if __name__ == '__main__':
     main()
-    del globals()["pv_sld"]

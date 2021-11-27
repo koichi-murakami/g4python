@@ -25,11 +25,12 @@ if _qt5core_lib != None and not _qt5core_lib.startswith("libQt5Core.so"):
     print("""
 #####################################################################
 !!! Warning !!!
-A non-system python (e.g. Anaconda version of Python) is detected.
+A non-system python (e.g., Anaconda version of Python) is detected.
 If you have a problem with Qt5 library version,
 set the environment variables, "G4PY_QT5_PRELOAD = 1"
 to preload the system Qt5 library as a temporal solution.
-Please consider to install Geant4 library without the Qt feature.
+Please consider installing a Geant4 library for Geant4Py
+without the Qt feature.
 #####################################################################
 """)
     if ( os.getenv('G4PY_QT5_PRELOAD') != None ):

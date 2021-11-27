@@ -41,7 +41,8 @@ G4Torus* CreateTorus(const G4String& name, G4double pRmin, G4double pRmax,
 // ==========================================================================
 void export_G4Torus(py::module& m)
 {
-  py::class_<G4Torus, G4VSolid>(m, "G4Torus")
+  py::class_<G4Torus, G4VSolid, std::unique_ptr<G4Torus, py::nodelete>>
+  (m, "G4Torus")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double,
                                 G4double, G4double>())

@@ -54,6 +54,7 @@ void export_G4VUserPrimaryGeneratorAction(py::module& m)
   (m, "G4VUserPrimaryGeneratorAction")
   // ---
   .def(py::init<>())
+  // ---
   .def("GeneratePrimaries", &G4VUserPrimaryGeneratorAction::GeneratePrimaries)
   ;
 }

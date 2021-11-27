@@ -57,7 +57,7 @@ G4VPhysicalVolume* WaterPhantom::Construct()
   auto nist_manager = G4NistManager::Instance();
 
   // world volume
-  const double kDXY_World = 50.*cm;
+  const double kDXY_World = 100.*cm;
   const double kDZ_World = 300.*cm;
   auto world_box = new G4Box("world", kDXY_World/2., kDXY_World/2.,
                                       kDZ_World/2.);

@@ -43,11 +43,11 @@ G4Para* CreatePara(const G4String& name,
 // ==========================================================================
 void export_G4Para(py::module& m)
 {
-  py::class_<G4Para, G4VSolid>(m, "G4Para")
+  py::class_<G4Para, G4VSolid, std::unique_ptr<G4Para, py::nodelete>>
+  (m, "G4Para")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double,
                                  G4double, G4double, G4double>())
-
   // ---
   .def("GetZHalfLength",    &G4Para::GetZHalfLength)
   .def("GetSymAxis",        &G4Para::GetSymAxis)

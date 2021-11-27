@@ -65,8 +65,8 @@ class MyField(G4UserMagneticField):
 class AppBuilder(G4VUserActionInitialization):
 
   def Build(self):
-    global particle_gun
-    particle_gun = geant4.utils.ParticleGun()
+    particle_gun = geant4.utils.ParticleGun() # set as nodelete
+    #global particle_gun
     #particle_gun = MyPrimaryGeneratorAction()
     self.SetUserAction(particle_gun)
 
@@ -94,22 +94,18 @@ class AppBuilder(G4VUserActionInitialization):
 # main
 # ==================================================================
 def main():
-    global ecalgeom
     ecalgeom = gtest01.EcalGeom()
     gRunManager.SetUserInitialization(ecalgeom)
 
-    global phys_list
     #phys_list = FTFP_BERT()
     pl_factory = G4PhysListFactory()
     phys_list = pl_factory.GetReferencePhysList("FTFP_BERT")
     gRunManager.SetUserInitialization(phys_list)
 
-    global app_builder
     app_builder = AppBuilder()
     gRunManager.SetUserInitialization(app_builder)
 
     # magnetic field (sequential mode only)
-    global myField
     #myField = G4UniformMagField(G4ThreeVector(0., 0.5*tesla, 0.))
     myField = MyField()
     field_mgr = gTransportationManager.GetFieldManager()

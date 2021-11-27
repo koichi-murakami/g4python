@@ -40,7 +40,8 @@ G4Orb* CreateOrb(const G4String& name, G4double pRmax)
 // ==========================================================================
 void export_G4Orb(py::module& m)
 {
-  py::class_<G4Orb, G4VSolid>(m, "G4Orb")
+  py::class_<G4Orb, G4VSolid, std::unique_ptr<G4Orb, py::nodelete>>
+  (m, "G4Orb")
   // ---
   .def(py::init<const G4String&, G4double>())
 

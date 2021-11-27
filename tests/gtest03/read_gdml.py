@@ -34,17 +34,14 @@ class AppBuilder(G4VUserActionInitialization):
 # ==================================================================
 def main():
     # geometry
-    global myDC
     myDC = MyDetectorConstruction()
     gRunManager.SetUserInitialization(myDC)
 
     # physics list
-    global phys_list
     phys_list = FTFP_BERT()
     gRunManager.SetUserInitialization(phys_list)
 
     # initialize
-    global app_builder
     app_builder = AppBuilder()
     gRunManager.SetUserInitialization(app_builder)
 

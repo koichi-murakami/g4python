@@ -40,7 +40,8 @@ G4Box* CreateBox(const std::string& name, double dx, double dy, double dz)
 // ==========================================================================
 void export_G4Box(py::module& m)
 {
-  py::class_<G4Box, G4VSolid>(m, "G4Box")
+  py::class_<G4Box, G4VSolid, std::unique_ptr<G4Box,py::nodelete>>
+  (m, "G4Box")
   .def(py::init<const G4String&, G4double, G4double, G4double>())
   // ---
   .def("SetXHalfLength",   &G4Box::SetXHalfLength)

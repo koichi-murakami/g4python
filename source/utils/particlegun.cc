@@ -71,8 +71,11 @@ inline G4ParticleGun* ParticleGun::GetGun() const
 // ==========================================================================
 void export_ParticleGun(py::module& m)
 {
-  py::class_<ParticleGun, G4VUserPrimaryGeneratorAction>(m, "ParticleGun")
+  py::class_<ParticleGun, G4VUserPrimaryGeneratorAction,
+             std::unique_ptr<ParticleGun, py::nodelete>>(m, "ParticleGun")
+  // ---
   .def(py::init<>())
+  // ---
   .def("GetGun",  &ParticleGun::GetGun,
                   py::return_value_policy::reference)
   ;

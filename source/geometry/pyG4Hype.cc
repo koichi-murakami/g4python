@@ -48,7 +48,8 @@ G4Hype* CreateHype(const G4String& name,
 // ==========================================================================
 void export_G4Hype(py::module& m)
 {
-  py::class_<G4Hype, G4VSolid>(m, "G4Hype")
+  py::class_<G4Hype, G4VSolid, std::unique_ptr<G4Hype, py::nodelete>>
+  (m, "G4Hype")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double,
                                  G4double, G4double>())
