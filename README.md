@@ -61,7 +61,7 @@ bin/  include/  lib/  share/
 
 > !!! Warning !!!
 >
-> We recommend building the Geant4 library without the Qt feature for
+> We recommend building Geant4 library without the Qt feature for
 > the python binding purpose, because the Qt5 system library conflicts with
 > the Anaconda version of Qt5.
 > See below for the mitigation of the library conflict.
@@ -245,3 +245,201 @@ You can open and run the notebook with Jupyter (lab/notebook).
 ## What You should know before
 
 There are some tips for running Geant4 with Python.
+
+As C++ Geant4 applications, you need to define some environment variables.
+
+At first, source the geant4 setup file.
+
+~~~~
+# source [Geant4 install path]/bin/geant4.sh (bash)
+# source [Geant4 install path]/bin/geant4.csh (csh/tcsh)
+
+for zsh, onece change directory, then source the file
+# cd [Geant4 install path]/bin
+# source geant4.sh (zsh)
+~~~~
+
+
+**Geant4 Data**
+
+
+The environment variables for the Geant4 data locations are defined.
+
+~~~~
+# env | grep G4
+G4NEUTRONHPDATA=/home/kmura/opt/geant4/data/11.0/G4NDL4.6
+G4LEDATA=/home/kmura/opt/geant4/data/11.0/G4EMLOW8.0
+G4LEVELGAMMADATA=/home/kmura/opt/geant4/data/11.0/PhotonEvaporation5.7
+G4RADIOACTIVEDATA=/home/kmura/opt/geant4/data/11.0/RadioactiveDecay5.6
+G4PARTICLEXSDATA=/home/kmura/opt/geant4/data/11.0/G4PARTICLEXS4.0
+G4PIIDATA=/home/kmura/opt/geant4/data/11.0/G4PII1.3
+G4REALSURFACEDATA=/home/kmura/opt/geant4/data/11.0/RealSurface2.2
+G4SAIDXSDATA=/home/kmura/opt/geant4/data/11.0/G4SAIDDATA2.0
+G4ABLADATA=/home/kmura/opt/geant4/data/11.0/G4ABLA3.1
+G4INCLDATA=/home/kmura/opt/geant4/data/11.0/G4INCL1.0
+G4ENSDFSTATEDATA=/home/kmura/opt/geant4/data/11.0/G4ENSDFSTATE2.3
+~~~~
+
+**LD_LIBRARY_PATH**
+
+Also, the library location (`LD_LIBRARY_PATH`) is defined.
+
+~~~
+# echo $LD_LIBRARY_PATH
+/home/kmura/opt/geant4/11.0/lib:/usr/lib/x86_64-linux-gnu
+~~~
+
+> In macOS, this enviroment is not nccessary.
+
+
+**PYTHON_PATH**
+
+Python needs to know where the Geant4Py module is installed.
+The location can be sepcified with `PYTHON_PATH`.
+
+~~~
+# export PYTHONPATH=~/opt/geant4/geant4py-11.0.0/site-packages (bash/zsh)
+# setenv PYTHONPATH ~/opt/geant4/geant4py-11.0.0/site-packages (csh/tcsh)
+~~~
+
+To run Geant4 in Python, there are some additional settings.
+
+**LD_PRELOAD**
+
+For TLS memory allocation, currently we have to preload a Geant4 library
+in the Linux environment.
+~~~
+# export LD_PRELOAD=libG4run.so (bash/zsh)
+# setenv LD_PRELOAD libG4run.so (csh/tcsh)
+~~~
+
+> In macOS, this is not necessary.
+
+
+**G4PY_QT5_PRELOAD**
+
+If you use Anaconda version of Ptyhon3, there might be library conflict
+for Qt5 library. To avoid the conflict,  Geant4Py will preload the sytem
+Qt5 forcely if this enviroment variable is set.
+~~~
+# export G4PY_QT5_PRELOAD=1 (bash/zsh)
+# setenv G4PY_QT5_PRELOAD 1 (csh/tcsh)
+~~~
+
+> This is a temporal solution. We recommend building Geant4 without
+> the Qt5 feature to avoid the conflict.
+
+----
+## How to run Python
+
+You have several ways of running Pyton. If you install Anaconda,
+you have several variants of Python instances.
+We recommend using Anaconda version of Python3/Ipython3/Jupyter.
+
+* System Python3
+* Anaconda Python3 and virtual env versions
+* Ipython frontend
+* Jupyter (Jupyter-notebook / Jupyter-lab)
+
+## gtest01
+
+Change the working directory to the build location after
+build and install Geant4Py.
+
+~~~
+# cd build
+# make install
+
+.... (build and install Geant4Py)
+
+# cd build/tests/gtest01
+# ls
+__pycache__/  cmake_install.cmake  Makefile   vis.mac
+CMakeFiles/   gtest01.so*          tests.py*  write_gdml.py*
+~~~
+
+`gtest01.so` is a user module that icludes user geometry definition
+described in C++.
+
+You can run the python script directly. The the Geant4 application
+is setup and run simulation. If visualiation is activated,
+you can see event display in a OpenGL window.
+~~~
+# ./tests.py
+
+=============================================================
+  _____              __  ____ ___
+ / ___/__ ___ ____  / /_/ / // _ \__ __  Geant4-Python Interface
+/ (_ / -_) _ `/ _ \/ __/_  _/ ___/ // /  Version: 1100
+\___/\__/\_,_/_//_/\__/ /_//_/   \_, /   Date: (31-October-2021)
+                                /___/
+=============================================================
+
+Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Forcing G4RunManager type...
+
+...
+
+*** (BRA) #event to be processed =  100
+*** (EEA) events processed = 0
+*** (ERA) run ID =  0
+~~~~
+
+Alternatively, you can run the script in Python frontend.
+~~~
+# python3
+Python 3.8.8 (default, Apr 13 2021, 19:58:26)
+[GCC 7.3.0] :: Anaconda, Inc. on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import tests
+
+=============================================================
+  _____              __  ____ ___
+ / ___/__ ___ ____  / /_/ / // _ \__ __  Geant4-Python Interface
+/ (_ / -_) _ `/ _ \/ __/_  _/ ___/ // /  Version: 1100
+\___/\__/\_,_/_//_/\__/ /_//_/   \_, /   Date: (31-October-2021)
+                                /___/
+=============================================================
+
+Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Forcing G4RunManager type...
+
+
+          ################################
+          !!! G4Backtrace is activated !!!
+          ################################
+
+
+**************************************************************
+ Geant4 version Name: geant4-10-07-ref-09 [MT]   (31-October-2021)
+                       Copyright : Geant4 Collaboration
+                      References : NIM A 506 (2003), 250-303
+                                 : IEEE-TNS 53 (2006), 270-278
+                                 : NIM A 835 (2016), 186-225
+                             WWW : http://geant4.org/
+**************************************************************
+
+Visualization Manager instantiating with verbosity "warnings (3)"...
+
+>>> tests.main()
+
+...  (run the simulation)
+
+*** (BRA) #event to be processed =  100
+*** (EEA) events processed = 0
+*** (ERA) run ID =  0
+~~~
+
+Also, you can run with Ipython that has rich features.
+
+~~~~
+# ipython3
+Python 3.8.8 (default, Apr 13 2021, 19:58:26)
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.22.0 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: %run tets.py
+...  (run the simulation)
+
+*** (BRA) #event to be processed =  100
+*** (EEA) events processed = 0
+*** (ERA) run ID =  0
+~~~~
