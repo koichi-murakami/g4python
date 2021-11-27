@@ -5,9 +5,8 @@
 Geant4-Python interface.
 
 Formerly c++-python bridge was realized with Boost-Python.
-From Geant4 version 11, we migrate to `pybind11` as a Python binding tool,
+In Geant4 version 11, we migrate to `pybind11` as a Python binding tool
 and revise the toolset using pybind11.
-
 
 ## System Requirements
 
@@ -27,9 +26,9 @@ CMake(3.16+) is used for building the tool.
 
 ### pybind11
 
-`pybind11` is a binding tool between C++ and Python.
+[pybind11](https://github.com/pybind/pybind11)
+is a binding tool between C++ and Python.
 
-https://github.com/pybind/pybind11
 
 You can install `pybind11` with system packaging tools
 (e.g. apt, dnf, Homebrew).
@@ -227,7 +226,7 @@ Each test demonstrates:
 * test for reading GDML file as geometry
 
 ### Examples
-On the other hand, we provide a set of examples that demonstrates
+On the other hand, we provide examples that demonstrate
 how to create users' modules and run GeantPy in the Jupyter
 environment. There are complete examples that are self-documented
 and run in Jupyter notebooks.
@@ -246,7 +245,7 @@ You can open and run the notebook with Jupyter (lab/notebook).
 
 There are some tips for running Geant4 with Python.
 
-As C++ Geant4 applications, you need to define some environment variables.
+Like C++ Geant4 applications, you need to define some environment variables.
 
 At first, source the geant4 setup file.
 
@@ -302,9 +301,9 @@ The location can be specified with `PYTHON_PATH`.
 # setenv PYTHONPATH ~/opt/geant4/geant4py-11.0.0/site-packages (csh/tcsh)
 ~~~
 
-To run Geant4 in Python, there are some additional settings.
+There are some additional settings for a specific environment.
 
-**LD_PRELOAD**
+**LD_PRELOAD** (Linux)
 
 For TLS memory allocation, currently, we have to preload a Geant4 library
 in the Linux environment.
@@ -316,11 +315,12 @@ in the Linux environment.
 > In macOS, this is not necessary.
 
 
-**G4PY_QT5_PRELOAD**
+**G4PY_QT5_PRELOAD** (Anaconda, Qt5)
 
-If you use the Anaconda version of Ptyhon3, there might be a library conflict
-for the Qt5 library. To avoid the conflict,  Geant4Py will preload the system
-Qt5 forcibly if this environment variable is set.
+If you use the Anaconda version of Ptyhon3, there might be a conflict
+between the Qt5 libraries.
+To avoid the conflict, Geant4Py will preload the system Qt5
+when this environment variable is set.
 ~~~
 # export G4PY_QT5_PRELOAD=1 (bash/zsh)
 # setenv G4PY_QT5_PRELOAD 1 (csh/tcsh)
@@ -333,14 +333,14 @@ Qt5 forcibly if this environment variable is set.
 ### Multi-threading feature
 In the current version of Geant4Py, we limit Geant4 in sequential mode
 forcibly by setting `G4FORCE_RUN_MANAGER_TYPE` inside `__init__.py`
-script. In the future release, hopefully, we can release this limitation.
+script. In the future release, we can lift this limit hopefully.
 
 ----
 ## How to run Python
 
-You have several ways of running Pyton. If you install Anaconda,
+You have several ways of running Python. If you install Anaconda,
 you have several variants of Python instances.
-We recommend using Anaconda version of Python3/Ipython3/Jupyter.
+We recommend using the Anaconda version of Python3/Ipython3/Jupyter.
 
 * System Python3
 * Anaconda Python3 and virtual env versions
@@ -464,7 +464,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 *** (ERA) run ID =  0
 ~~~~
 
-Alternatively, you can run the script in Python frontend.
+Alternatively, you can run the script in Python frontends.
 ~~~
 # python3
 Python 3.8.8 (default, Apr 13 2021, 19:58:26)
@@ -526,7 +526,7 @@ In [1]: %run tets.py
 ~~~~
 
 ## Examples/exampleB1
-This exampe has the same capability of Geant4 basic example B1.
+This example has the same capability as Geant4 basic example B1.
 The geometry is implemented in C++ and exported to a Python module.
 
 ~~~
@@ -537,5 +537,8 @@ geomB1/  CMakeLists.txt  exampleB1.ipynb
 # ls geomB1
 DetectorConstruction.cc  DetectorConstruction.hh  pygeomB1.cc
 ~~~
-Before run the example, you should build the module.
+
+Before running the example, you should build the module.
 We provide `CMakeLists.txt` for building a user module.
+
+[Jupyter notebook for exampleB1](https://github.com/koichi-murakami/g4python/blob/79522962dd772c93778d46668c7b532d3d8bfc21/examples/exampleB1/exampleB1.ipynb)
