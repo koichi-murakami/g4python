@@ -36,7 +36,7 @@ namespace py = pybind11;
 // ==========================================================================
 void export_G4Region(py::module& m)
 {
-  py::class_<G4Region>(m, "G4Region")
+  py::class_<G4Region, std::unique_ptr<G4Region, py::nodelete>>(m, "G4Region")
   // ---
   .def(py::init<const G4String&>())
   // ---

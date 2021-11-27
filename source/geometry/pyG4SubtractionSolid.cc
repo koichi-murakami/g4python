@@ -30,7 +30,9 @@ namespace py = pybind11;
 // ==========================================================================
 void export_G4SubtractionSolid(py::module& m)
 {
-  py::class_<G4SubtractionSolid, G4BooleanSolid>(m, "G4SubtractionSolid")
+  py::class_<G4SubtractionSolid, G4BooleanSolid,
+             std::unique_ptr<G4SubtractionSolid, py::nodelete>>
+             (m, "G4SubtractionSolid")
   // ---
   .def(py::init<const G4String&, G4VSolid*, G4VSolid*>())
 

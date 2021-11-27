@@ -109,8 +109,9 @@ using c = MedicalBeam;
 
 void export_MedicalBeam(py::module& m)
 {
-  py::class_<MedicalBeam, G4VUserPrimaryGeneratorAction>
-  medical_beam(m, "MedicalBeam");
+  py::class_<MedicalBeam, G4VUserPrimaryGeneratorAction,
+             std::unique_ptr<MedicalBeam, py::nodelete>>
+             medical_beam(m, "MedicalBeam");
 
   medical_beam
   .def(py::init<>())

@@ -94,7 +94,8 @@ void EventCounter::EndOfEventAction(const G4Event* event)
 // ==========================================================================
 void export_EventCounter(py::module& m)
 {
-  py::class_<EventCounter, G4UserEventAction>(m, "EventCounter")
+  py::class_<EventCounter, G4UserEventAction,
+             std::unique_ptr<EventCounter, py::nodelete>>(m, "EventCounter")
   .def(py::init<>())
   .def("SetCheckCounter",  &EventCounter::SetCheckCounter)
   ;

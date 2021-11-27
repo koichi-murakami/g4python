@@ -35,7 +35,8 @@ namespace py = pybind11;
 void export_G4GDMLParser(py::module& m)
 {
 #ifdef ENABLE_GDML
-  py::class_<G4GDMLParser>(m, "G4GDMLParser")
+  py::class_<G4GDMLParser, std::unique_ptr<G4GDMLParser, py::nodelete>>
+  (m, "G4GDMLParser")
   .def(py::init<>())
   // ---
   .def("Read",           &G4GDMLParser::Read,

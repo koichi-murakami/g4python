@@ -30,7 +30,8 @@ namespace py = pybind11;
 // ==========================================================================
 void export_G4UnionSolid(py::module& m)
 {
-  py::class_<G4UnionSolid, G4BooleanSolid>(m, "G4UnionSolid")
+  py::class_<G4UnionSolid, G4BooleanSolid,
+             std::unique_ptr<G4UnionSolid, py::nodelete>>(m, "G4UnionSolid")
   // ---
   .def(py::init<const G4String&, G4VSolid*, G4VSolid*>())
 

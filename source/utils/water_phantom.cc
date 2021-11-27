@@ -86,7 +86,8 @@ using c = WaterPhantom;
 
 void export_WaterPhantom(py::module& m)
 {
-  py::class_<WaterPhantom, G4VUserDetectorConstruction>(m, "WaterPhantom")
+  py::class_<WaterPhantom, G4VUserDetectorConstruction,
+             std::unique_ptr<WaterPhantom, py::nodelete>>(m, "WaterPhantom")
   .def(py::init<>())
   // ---
   .def_readwrite("phantomXY", &c::phantomXY)

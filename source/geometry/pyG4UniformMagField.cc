@@ -30,7 +30,8 @@ namespace py = pybind11;
 // ==========================================================================
 void export_G4UniformMagField(py::module& m)
 {
-  py::class_<G4UniformMagField, G4MagneticField>
+  py::class_<G4UniformMagField, G4MagneticField,
+  std::unique_ptr<G4UniformMagField, py::nodelete>>
   (m, "G4UniformMagField")
   // ---
   .def(py::init<const G4ThreeVector&>())

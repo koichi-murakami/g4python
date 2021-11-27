@@ -63,7 +63,8 @@ void GPS::GeneratePrimaries(G4Event* event)
 // ==========================================================================
 void export_GPS(py::module& m)
 {
-  py::class_<GPS, G4VUserPrimaryGeneratorAction>(m, "GPS")
+  py::class_<GPS, G4VUserPrimaryGeneratorAction,
+             std::unique_ptr<GPS, py::nodelete>>(m, "GPS")
   .def(py::init<>())
   ;
 }

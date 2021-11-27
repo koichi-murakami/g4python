@@ -30,7 +30,9 @@ namespace py = pybind11;
 // ==========================================================================
 void export_G4IntersectionSolid(py::module& m)
 {
-  py::class_<G4IntersectionSolid, G4BooleanSolid>(m, "G4IntersectionSolid")
+  py::class_<G4IntersectionSolid, G4BooleanSolid,
+             std::unique_ptr<G4IntersectionSolid, py::nodelete>>
+             (m, "G4IntersectionSolid")
   // ---
   .def(py::init<const G4String&, G4VSolid*, G4VSolid*>())
 

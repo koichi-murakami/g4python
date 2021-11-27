@@ -45,7 +45,7 @@ void export_G4EllipticalTube(py::module& m)
 {
   py::class_<G4EllipticalTube, G4VSolid,
              std::unique_ptr<G4EllipticalTube, py::nodelete>>
-  (m, "G4EllipticalTube")
+             (m, "G4EllipticalTube")
   // ---
   .def(py::init<const G4String&, G4double, G4double, G4double>())
   // ---
