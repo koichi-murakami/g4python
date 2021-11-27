@@ -609,8 +609,9 @@ it automatically connects the session on your browser.
 
 
 ## Examples/phantom_dose
-This example shows a more practical application. In the example,
-we calculate dose distributions in a water phantom
+This example shows a more practical application.
+It contains a complete chain of simulation and analysis processes.
+In the example, we calculate dose distributions in a water phantom
 for electron and proton beams.
 Voxel doses are scored with Geant4 command-line scoring capability
 and stored into CSV files. Then, this data is analyzed with Pandas
