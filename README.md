@@ -538,6 +538,40 @@ In [1]: %run tets.py
 *** (ERA) run ID =  0
 ~~~~
 
+> !!! Tips !!!
+>
+> You can use the Geant4 UI terminal with `StartUIsession()` function
+> from the Python frontend. You can isssue Geant4 UI comands
+> in the UI terminal. After exiting the terminal session, you return
+> to the Python. Note that this terminal is NOT available in
+> Jupyter.
+
+~~~~
+In [3]: StartUISession()
+geant4(Idle)[/]:ls
+Command directory path : /
+ Sub-directories :
+   /control/   UI control commands.
+   /units/   Available units.
+   /profiler/   Profiler controls.
+   /particle/   Particle control commands.
+   /tracking/   TrackingManager and SteppingManager control commands.
+   /geometry/   Geometry control commands.
+   /process/   Process Table control commands.
+   /event/   EventManager control commands.
+   /cuts/   Commands for G4VUserPhysicsList.
+   /run/   Run control commands.
+   /random/   Random number status control commands.
+   /material/   Commands for materials
+   /score/   Interactive scoring commands.
+   /vis/   Visualization commands.
+   /physics_lists/   commands related to the physics simulation engine.
+   /gun/   Particle Gun control commands.
+   /physics_engine/   ...Title not available...
+ Commands :
+geant4(Idle)[/]:
+~~~~
+
 -----
 ## Examples/exampleB1
 This example has the same capability as Geant4 basic example B1.
