@@ -350,7 +350,7 @@ forcibly by setting `G4FORCE_RUN_MANAGER_TYPE` inside `__init__.py`
 script. In the future release, we can lift this limit hopefully.
 
 ----
-## How to run Python
+## How to run Geant4 on Python
 
 You have several ways of running Python. If you install Anaconda,
 you can run several variants of Python instances.
