@@ -23,24 +23,64 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 #include <pybind11/pybind11.h>
+#include "G4Box.hh"
+#include "G4LogicalVolume.hh"
+#include "G4NistManager.hh"
+#include "G4PVPlacement.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VUserDetectorConstruction.hh"
 
 namespace py = pybind11;
 
 // --------------------------------------------------------------------------
-void export_EventCounter(py::module&);
-void export_ParticleGun(py::module&);
-void export_GPS(py::module&);
-void export_MedicalBeam(py::module&);
-void export_WaterPhantom(py::module&);
-void export_SimpleBox(py::module&);
+class SimpleBox : public G4VUserDetectorConstruction {
+public:
+  SimpleBox();
+  ~SimpleBox() override = default;
+
+  G4VPhysicalVolume* Construct() override;
+
+  double boxXYZ;
+  G4Material* material;
+};
 
 // --------------------------------------------------------------------------
-PYBIND11_MODULE(G4utils, m)
+SimpleBox::SimpleBox()
 {
-  export_EventCounter(m);
-  export_ParticleGun(m);
-  export_GPS(m);
-  export_MedicalBeam(m);
-  export_WaterPhantom(m);
-  export_SimpleBox(m);
+  boxXYZ = 1.*m;
+  material = nullptr;
+}
+
+// --------------------------------------------------------------------------
+G4VPhysicalVolume* SimpleBox::Construct()
+{
+  auto nist_manager = G4NistManager::Instance();
+
+  auto world_box = new G4Box("world", boxXYZ/2., boxXYZ/2., boxXYZ/2.);
+
+  if ( material == nullptr ) {
+    material = nist_manager-> FindOrBuildMaterial("G4_WATER");
+  }
+
+  auto world_lv = new G4LogicalVolume(world_box, material, "world");
+
+  auto world_pv = new G4PVPlacement(nullptr, G4ThreeVector(), "world",
+                                    world_lv, nullptr, false, 0);
+
+  return world_pv;
+}
+
+
+// ==========================================================================
+using c = SimpleBox;
+
+void export_SimpleBox(py::module& m)
+{
+  py::class_<SimpleBox, G4VUserDetectorConstruction,
+             std::unique_ptr<SimpleBox, py::nodelete>>(m, "SimpleBox")
+  .def(py::init<>())
+  // ---
+  .def_readwrite("boxXYZ",   &c::boxXYZ)
+  .def_readwrite("material", &c::material, py::return_value_policy::reference)
+  ;
 }

@@ -8,6 +8,7 @@ pybind11_add_module(${MODULE}
   particlegun.cc
   gps.cc
   water_phantom.cc
+  simplebox.cc
   pymod_utils.cc
 )
 
