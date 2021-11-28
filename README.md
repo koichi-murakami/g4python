@@ -644,7 +644,7 @@ build/  geomB1/  CMakeLists.txt  exampleB1.ipynb  geomB1.so
 
 Now you are ready to play around on Jupyter.
 Launch Jupyter with `jupyter-lab` (`jupyter-notebook`) command,
-it automatically connects the session on your browser.
+it automatically connects the session to your browser.
 
 [Jupyter notebook for exampleB1](https://github.com/koichi-murakami/g4python/blob/79522962dd772c93778d46668c7b532d3d8bfc21/examples/exampleB1/exampleB1.ipynb)
 
@@ -676,7 +676,25 @@ from geant4.utils import EventCounter
 These modules are provided as utility modules that should be loaded on demand.
 * WaterPhantom: Water phantom geometry
 * MedicalBeam: Primary generator with medical beam profile (SSD/beam shaping)
-* EventCount: Event conter in event action
+* EventCount: Event counter in event action
+
+
+## Examples/emplot
+This example shows how to retrieve the photon cross-sections and stopping
+powers of charged particles. It prepares a simple Geant4 mockup,
+then changes the target materials. The EM calculator can calculate
+a cross-section for each process and stopping powers. For stopping power,
+the ionization and bremsstrahlung components can be calculated for electrons.
+The example includes plots by Matplotlib.
+
+Used modules:
+* geant4.utils.SimpleBox
+* geant4.utils.ParticleGun
+* geant4.utils.emcalculator
+
+
+[Jupyter notebook for emplot](https://github.com/koichi-murakami/g4python/blob/0a1f271d5b112e91e3b91bf07105c54f6fd34af4/examples/emplot/emplot.ipynb)
+
 
 ----
 ## Tips
