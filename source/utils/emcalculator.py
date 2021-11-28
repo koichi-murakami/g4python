@@ -13,8 +13,7 @@ __all__ = [ 'CalculatePhotonCrossSection', 'CalculateDEDX' ]
 # ==================================================================
 # Photon Cross Section
 # ==================================================================
-def CalculatePhotonCrossSection(mat, elist=None, verbose=0,
-                                plist=["compt", "", "phot", "conv"]):
+def CalculatePhotonCrossSection(material_name=None, Elist=None, verbose=0):
     """
 Calculate photon cross section for a given material and
 a list of energy, returing a list of cross sections for
@@ -22,11 +21,9 @@ the components of "Copmton scattering", "rayleigh scattering",
 "photoelectric effect", "pair creation" and total one.
 
 Arguments:
-  mat:      material name
-  elist:    list of energy [None]
-  verbose:  verbose level [0]
-  plist:    list of process name
-            (compton/rayleigh/photoelectic/conversion) [StandardEM set]
+  material_name:  material name (String)
+  Elist:          energy list [None]
+  verbose:        verbose level [0]
 
 Keys of index:
   "compt":     Compton Scattering
@@ -37,15 +34,17 @@ Keys of index:
 
 Example:
   xsec_list = CalculatePhotonCrossSection(...)
-  value = xsec_list[energy_index]["compt"]
-    """
+  value = xsec_list[energy_index]["compt"]"""
 
-    if elist == None :
+    if material_name == None:
+        raise RuntimeError("!!! material name is not specified.")
+
+    if Elist == None :
         elist = []
 
     if verbose > 0 :
         print("-------------------------------------------------------------------")
-        print("                  Photon Cross Section (", mat, ")")
+        print("                  Photon Cross Section (", material_name, ")")
         print("Energy      Compton     Raleigh     Photo-      Pair        Total")
         print("            Scattering  Scattering  electric    Creation")
         print("(MeV)       (cm2/g)     (cm2/g)     (cm2/g)     (cm2/g)     (cm2/g)")
@@ -53,19 +52,19 @@ Example:
 
     xsection_list = []
 
-    for ekin in elist:
-        xsec= {}
+    for ekin in Elist:
+        xsec = {}
         xsec["compt"] = gEmCalculator.ComputeCrossSectionPerVolume(
-                        ekin, "gamma", plist[0], mat) * cm2/g
+                        ekin, "gamma", "compt", material_name) * cm2/g
 
         xsec["rayleigh"] = gEmCalculator.ComputeCrossSectionPerVolume(
-                           ekin, "gamma", plist[1], mat) * cm2/g
+                           ekin, "gamma", "rayleigh", material_name) * cm2/g
 
         xsec["phot"] = gEmCalculator.ComputeCrossSectionPerVolume(
-                       ekin, "gamma", plist[2], mat) * cm2/g
+                       ekin, "gamma", "phot", material_name) * cm2/g
 
         xsec["conv"] = gEmCalculator.ComputeCrossSectionPerVolume(
-                       ekin, "gamma", plist[3], mat) * cm2/g
+                       ekin, "gamma", "conv", material_name) * cm2/g
 
         xsec["tot"] = xsec["compt"] + xsec["rayleigh"] + xsec["phot"] + xsec["conv"]
 
@@ -82,21 +81,18 @@ Example:
 # ==================================================================
 # Stopping Power
 # ==================================================================
-def CalculateDEDX(part, mat, elist=None, verbose=0,
-                  plist=["eIoni", "eBrem", "muIoni", "muBrems", "hIoni"]):
+def CalculateDEDX(particle_name=None, material_name=None,
+                  Elist=None, verbose=0):
     """
 Calculate stopping powers for a give particle, material and
 a list of energy, returing stopping power for the components of
 "Ionization", "Radiation" and total one.
 
 Arguments:
-  part:     particle name
-  mat:      material name
-  elist:    list of energy
-  verbose:  verbose level [0]
-  plist:    list of process name
-            (electron ionization/electron brems/
-             muon ionization/muon brems/hadron ionization) [StandardEM set]
+  particle_name:   particle name
+  materia_name:    material name
+  Elist:           list of energy
+  verbose:         verbose level [0]
 
 Keys of index:
   "ioni":   ionization
@@ -105,14 +101,20 @@ Keys of index:
 
 Example:
   dedx_list = CalculateDEDX(...)
-  value = dedx_list[energy_index]["ioni"]
-  """
-    if elist == None :
-        elist = []
+  value = dedx_list[energy_index]["ioni"]"""
+
+    if particle_name == None :
+        raise RuntimeError("!!! partice neme is not specifed.")
+
+    if material_name == None :
+        raise RuntimeError("!!! material neme is not specifed.")
+
+    if Elist == None :
+        Elist = []
 
     if verbose > 0 :
         print("------------------------------------------------------")
-        print("       Stopping Power (", part, ",", mat, ")")
+        print("       Stopping Power (", particle_name, ",", material_name, ")")
         print("  Energy       Ionization    Radiation     Total")
         print("  (MeV)        (MeVcm2/g)    (MeVcm2/g)    (MeVcm2/g)")
         print("------------------------------------------------------")
@@ -120,27 +122,35 @@ Example:
     procname_brems = ""
     procname_ioni = ""
 
-    if part == "e+" or part == "e-" :
-        procname_ioni = plist[0]
-        procname_brems = plist[1]
+    if particle_name == "e+" or particle_name == "e-" :
+        procname_ioni = "eIoni"
+        procname_brems = "eBrem"
 
-    elif ( part == "mu+" or part == "mu-"):
-        procname_ioni = plist[2]
-        procname_brems = plist[3]
+    elif particle_name == "mu+" or particle_name == "mu-" :
+        procname_ioni = "muIoni"
+        procname_brems = "muBrems"
 
-    else:
-        procname_ioni = plist[4]
+    elif particle_name == "proton" or particle_name == "deutron" or \
+         particle_name == "triton" :
+        procname_ioni = "hIoni"
         procname_brems = ""
 
-    dedx_list= []
+    elif particle_name == "alpha" or particle_name == "He3" or \
+         particle_name == "GenericIon" :
+        procname_ioni = "ionIoni"
+        procname_brems = ""
+    else :
+        raise RuntimeError("!!! particle name is not supported.")
 
-    for ekin in elist:
-        dedx= {}
+    dedx_list = []
+
+    for ekin in Elist:
+        dedx = {}
         dedx["ioni"] = gEmCalculator.ComputeDEDX(
-                       ekin, part, procname_ioni, mat) * MeV*cm2/g
+                       ekin, particle_name, procname_ioni, material_name) * MeV*cm2/g
 
         dedx["brems"] = gEmCalculator.ComputeDEDX(
-                        ekin, part, procname_brems, mat) * MeV*cm2/g
+                        ekin, particle_name, procname_brems, material_name) * MeV*cm2/g
 
         dedx["tot"] = dedx["ioni"] + dedx["brems"]
 
