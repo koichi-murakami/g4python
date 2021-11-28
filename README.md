@@ -8,6 +8,12 @@ Formerly c++-python bridge was realized with Boost-Python.
 In Geant4 version 11, we migrate to `pybind11` as a Python binding tool
 and revise the toolset using pybind11.
 
+The purpose of Geant4Py is to realize Geant4 applications in Python.
+Geaant4Py does not export all Geant4 APIs. Geat4Py exports only
+limited public APIs of Geant4, especially for creating light-weight
+applications.
+Also, it demonstrates how to bridge your C++ components to Python.
+
 ## System Requirements
 
 ### Tested Platforms
@@ -49,7 +55,7 @@ macOS
 ~~~~
 
 ### Geant4
-Install Geant4 library in a normal way. Here assume the following installation
+Install Geant4 library in a usual way. Here assume the following installation
 directory.
 
 ~~~~
