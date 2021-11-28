@@ -648,7 +648,7 @@ it automatically connects the session to your browser.
 Before launching Jupyter, do not forget to define necessary
 environment variables described above.
 
-[Jupyter notebook for exampleB1](https://github.com/koichi-murakami/g4python/blob/79522962dd772c93778d46668c7b532d3d8bfc21/examples/exampleB1/exampleB1.ipynb)
+[Jupyter notebook for exampleB1](https://github.com/koichi-murakami/g4python/blob/main/examples/exampleB1/exampleB1.ipynb)
 
 
 ## Examples/phantom_dose
@@ -664,7 +664,7 @@ Finally, dose maps and depth dose curves are obtained.
 > In this example, there are no user modules. We use only installed
 > modules.
 
-[Jupyter notebook for phantom_dose](https://github.com/koichi-murakami/g4python/blob/a41b5a86644aac08dd92c0f689bfd277a0ae6105/examples/phantom_dose/phantomdose.ipynb)
+[Jupyter notebook for phantom_dose](https://github.com/koichi-murakami/g4python/blob/main/examples/phantom_dose/phantomdose.ipynb)
 
 You can see that we use some extra `utils` module components.
 
@@ -694,9 +694,7 @@ Used modules:
 * geant4.utils.ParticleGun
 * geant4.utils.emcalculator
 
-
-[Jupyter notebook for emplot](https://github.com/koichi-murakami/g4python/blob/0a1f271d5b112e91e3b91bf07105c54f6fd34af4/examples/emplot/emplot.ipynb)
-
+[Jupyter notebook for emplot](https://github.com/koichi-murakami/g4python/blob/main/examples/emplot/emplot.ipynb)
 
 ----
 ## Tips
