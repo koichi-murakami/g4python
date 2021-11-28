@@ -670,7 +670,7 @@ from geant4.utils import EventCounter
 These modules are provided as utility modules that should be loaded on demand.
 * WaterPhantom: Water phantom geometry
 * MedicalBeam: Primary generator with medical beam profile (SSD/beam shaping)
-* EventCount: Event content event action
+* EventCount: Event conter in event action
 
 ----
 ## Tips
@@ -703,6 +703,6 @@ Some classes are taken care as `nodeleted` objects in Geant4Py,
 but still not perfect. If there is a weird behavior (seg. fault),
 set the Python variable as `global`.
 
-> !!! Note !!!
+> !!! Important !!!
 >
 >  An object of user inherited class in Python should be set as global.
