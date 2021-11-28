@@ -645,6 +645,8 @@ build/  geomB1/  CMakeLists.txt  exampleB1.ipynb  geomB1.so
 Now you are ready to play around on Jupyter.
 Launch Jupyter with `jupyter-lab` (`jupyter-notebook`) command,
 it automatically connects the session to your browser.
+Before launching Jupyter, do not forget to define necessary
+environment variables described above.
 
 [Jupyter notebook for exampleB1](https://github.com/koichi-murakami/g4python/blob/79522962dd772c93778d46668c7b532d3d8bfc21/examples/exampleB1/exampleB1.ipynb)
 
