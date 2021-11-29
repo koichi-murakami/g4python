@@ -54,7 +54,7 @@ public:
   void SetSurfaceZ(double zpos);
   double GetSurfaceZ() const;
 
-  virtual void GeneratePrimaries(G4Event* event);
+  void GeneratePrimaries(G4Event* event) override;
 
 private:
   ParticleType particle_type_;

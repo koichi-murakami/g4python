@@ -38,8 +38,8 @@ public:
 
   void SetCheckCounter(int val);
 
-  virtual void BeginOfEventAction(const G4Event* event);
-  virtual void EndOfEventAction(const G4Event* event);
+  void BeginOfEventAction(const G4Event* event) override;
+  void EndOfEventAction(const G4Event* event) override;
 
 private:
   int check_counter_;
