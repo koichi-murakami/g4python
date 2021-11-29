@@ -297,10 +297,10 @@ Also, the library location (`LD_LIBRARY_PATH`) is defined.
 > In macOS, this environment is not necessary.
 
 
-**PYTHON_PATH**
+**PYTHONPATH**
 
 Python needs to know where the Geant4Py module is installed.
-The location can be specified with `PYTHON_PATH`.
+The location can be specified with `PYTHONPATH`.
 
 ~~~
 # export PYTHONPATH=~/opt/geant4/geant4py-11.0.0/site-packages (bash/zsh)
