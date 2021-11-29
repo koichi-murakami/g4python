@@ -731,7 +731,7 @@ set the Python variable as `global`.
 >
 >  An object of user inherited class in Python should be set as global.
 
-### Notes of Anaconda in macOS
+### Notes on Anaconda in macOS
 Currently, we cannot run Geant4py on the Anaconda version of Python
 due to a technical problem.
 Please use the system Python and install the additional
